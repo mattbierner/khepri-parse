@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Khepri Tests</title>
+    <link rel="stylesheet" href="resources/qunit-1.9.0.css">
+</head>
+
+<body lang="en">
+    <div id="qunit"></div>
+    
+    <script type="application/javascript" src="../resources/require.js"></script>
+    <script type="application/javascript" src="resources/qunit-1.9.0.js"></script>
+   
+    <script type="application/javascript">
+        requirejs.config({
+            paths: {
+                'bennu': '../dependencies/bennu/dist',
+                'nu-stream': '../dependencies/nu/dist',
+                'seshet': '../dependencies/seshet/dist/seshet',
+                
+                'khepri-ast': '../dependencies/khepri-ast/dist',
+                'khepri': '../dist',
+            }
+        });
+        require(
+            ['testLex', 'testParse'],
+            function(testLex, testParse, testCompile)
+            {
+                testLex();
+                testParse();
+                testCompile();
+            });
+    </script>
+
+</body>
+    
+</html>

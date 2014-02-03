@@ -1,0 +1,12 @@
+[submodule "dependencies/nu"]
+	path = dependencies/nu
+	url = https://github.com/mattbierner/nu.git
+[submodule "dependencies/bennu"]
+	path = dependencies/bennu
+	url = https://github.com/mattbierner/bennu.git
+[submodule "dependencies/seshet"]
+	path = dependencies/seshet
+	url = https://github.com/mattbierner/seshet.git
+[submodule "dependencies/khepri-ast"]
+	path = dependencies/khepri-ast
+	url = https://github.com/mattbierner/khepri-ast.git

@@ -1,0 +1,46 @@
+{
+    "name": "khepri-parse",
+    "version": "0.0.0",
+    "description": "Khepri language lexer and parser",
+    "author": "Matt Bierner",
+    "license": "MIT",
+    "homepage": "http://khepri-lang.com",
+    "keywords": [
+        "Khepri",
+        "parser",
+        "lexer"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mattbierner/khepri-parse.git"
+    },
+    "bugs": {
+       "url" : "https://github.com/mattbierner/khepri/issues"
+    },
+    
+
+    "main": "index.js",
+    "directories": {
+        "lib": "dist_node/"
+    },
+    "files": [
+        "dist_node/",
+        "dependencies/",
+        "bin/",
+        "lib/",
+        "tests/",
+        "index.js",
+        "test.js"
+    ],
+    "dependencies": {
+        "nu-stream": "3.1.x",
+        "bennu": "16.1.x",
+        
+        "khepri-ast": "3.4.x",
+        
+        "require-directory": "1.2.x"
+    },
+    "devDependencies": {
+        "nodeunit": "0.8.x"
+    }
+}
