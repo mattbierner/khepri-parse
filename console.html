@@ -191,21 +191,14 @@
                 'bennu': 'dependencies/bennu/dist',
                 'nu-stream': 'dependencies/nu/dist',
                 'seshet': 'dependencies/seshet/dist/seshet',
-                'bes': 'dependencies/bes/dist',
-                
-                'ecma-unparse': '../ecma-unparse/dist',
-                'ecma-ast': '../ecma-ast/dist',
+
                 'khepri-ast': 'dependencies/khepri-ast/dist',
-                
-                'neith': 'dependencies/neith/dist',
-                'ecma-ast-zipper': 'dependencies/ecma-ast-zipper/dist/ecma_zipper',
-                'khepri-ast-zipper': 'dependencies/khepri-ast-zipper/dist/khepri_zipper'
             }
         });
         
         $(function(){
-            require(['nu-stream/stream', 'khepri/compile/lexical', 'khepri/lex/lexer', 'khepri/parse/parser', 'khepri-ast/node'],
-                function(stream, lexical, lexer, parser, node)
+            require(['nu-stream/stream','khepri/lex/lexer', 'khepri/parse/parser', 'khepri-ast/node'],
+                function(stream, lexer, parser, node)
             {
                 var lexOut = $('.LexOut');
                 
@@ -282,7 +275,6 @@
                         console.profile();
                        
                         var ast = parser.parseStream(nodes);
-                        lexical.checkStage(ast);
                         console.profileEnd();
                         var end = new Date().getTime();
                         var diff = end - start;
