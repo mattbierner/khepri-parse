@@ -78,30 +78,28 @@ precedence = \p, table -> {
 
 // State Interaction
 ////////////////////////////////////////
-positionParser = extract \{position} -> position;
+positionParser = extract \{position} -> position.sourcePosition;
 
-var locParser = extract \{loc} -> loc ;
-
-var prevEnd = extract \{_prevEnd} -> _prevEnd;
+var prevEnd = extract \{position} -> position.prevEnd;
 
 // Ast Node
 ////////////////////////////////////////
 node = \p, f ->
     binds(
         enumeration(
-            locParser,
+            positionParser,
             p,
             prevEnd),
         \o, x, c ->
-            always <| f(new SourceLocation(o && o.start, c), x));
+            always <| f(new SourceLocation(o, c), x));
 
 nodea = \p, f ->
     binds(
         enumeration(
-            locParser,
+            positionParser,
             p,
             prevEnd),
         \o, x, c ->
-            always <| f.apply(undefined, stream.toArray(stream.cons(new SourceLocation(o && o.start, c), x))));
+            always <| f.apply(undefined, stream.toArray(stream.cons(new SourceLocation(o , c), x))));
 
 }

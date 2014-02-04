@@ -65,25 +65,21 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "../position"],
     }));
     (positionParser = extract((function(__o0) {
         var position = __o0["position"];
-        return position;
+        return position.sourcePosition;
     })));
-    var locParser = extract((function(__o0) {
-        var loc = __o0["loc"];
-        return loc;
-    })),
-        prevEnd = extract((function(__o0) {
-            var _prevEnd = __o0["_prevEnd"];
-            return _prevEnd;
-        }));
+    var prevEnd = extract((function(__o0) {
+        var position = __o0["position"];
+        return position.prevEnd;
+    }));
     (node = (function(p, f) {
-        return binds(enumeration(locParser, p, prevEnd), (function(o, x, c) {
-            return always(f(new(SourceLocation)((o && o.start), c), x));
+        return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
+            return always(f(new(SourceLocation)(o, c), x));
         }));
     }));
     (nodea = (function(p, f) {
-        return binds(enumeration(locParser, p, prevEnd), (function(o, x, c) {
-            return always(f.apply(undefined, stream.toArray(stream.cons(new(SourceLocation)((o &&
-                o.start), c), x))));
+        return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
+            return always(f.apply(undefined, stream.toArray(stream.cons(new(SourceLocation)(o,
+                c), x))));
         }));
     }));
     (exports.precedence = precedence);

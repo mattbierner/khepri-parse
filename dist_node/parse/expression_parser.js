@@ -15,7 +15,6 @@ var __o = require("bennu")["parse"],
     either = __o["either"],
     enumeration = __o["enumeration"],
     expected = __o["expected"],
-    lookahead = __o["lookahead"],
     many = __o["many"],
     memo = __o["memo"],
     next = __o["next"],
@@ -53,9 +52,9 @@ var __o = require("bennu")["parse"],
     pattern = require("./pattern_parser"),
     arrayLiteral, propertyName, propertyInitializer, objectProperties, objectLiteral, functionExpression,
         operatorExpression, primaryExpression, curryExpression, args, applicationExpression, dotAccessor,
-        bracketAccessor, accessor, memberExpression, newExpression, leftHandReferenceExpression, unaryOperator,
-        unaryExpression, binaryExpression, conditionalExpression, letExpression, assignmentOperator,
-        assignmentExpression, expression, topLevelExpression, sourceElements = (function() {
+        bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression, binaryExpression,
+        conditionalExpression, letExpression, leftHandReferenceExpression, assignmentOperator, assignmentExpression,
+        expression, topLevelExpression, sourceElements = (function() {
             var args = arguments,
                 __o6 = require("./program_parser"),
                 sourceElements = __o6["sourceElements"];
@@ -301,12 +300,12 @@ var deleteOperator = keyword("delete"),
 (exports.accessor = accessor);
 (exports.memberExpression = memberExpression);
 (exports.newExpression = newExpression);
-(exports.leftHandReferenceExpression = leftHandReferenceExpression);
 (exports.unaryOperator = unaryOperator);
 (exports.unaryExpression = unaryExpression);
 (exports.binaryExpression = binaryExpression);
 (exports.conditionalExpression = conditionalExpression);
 (exports.letExpression = letExpression);
+(exports.leftHandReferenceExpression = leftHandReferenceExpression);
 (exports.assignmentOperator = assignmentOperator);
 (exports.assignmentExpression = assignmentExpression);
 (exports.expression = expression);

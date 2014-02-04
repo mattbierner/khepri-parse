@@ -4,19 +4,18 @@
 */
 "use strict";
 var parse = require("bennu")["parse"],
-    stream = require("nu-stream")["stream"],
-    first = stream["first"],
-    filter = stream["filter"],
-    isEmpty = stream["isEmpty"],
-    rest = stream["rest"],
-    NIL = stream["NIL"],
-    streamFrom = stream["from"],
-    __o = require("../position"),
-    SourceLocation = __o["SourceLocation"],
-    SourcePosition = __o["SourcePosition"],
-    __o0 = require("./program_parser"),
-    program = __o0["program"],
-    parserStream, ParserPosition, ParserState, parseInput, parseStream;
+    ParserState = parse["ParserState"],
+    __o = require("nu-stream")["stream"],
+    filter = __o["filter"],
+    isEmpty = __o["isEmpty"],
+    first = __o["first"],
+    streamFrom = __o["from"],
+    __o0 = require("../position"),
+    SourceLocation = __o0["SourceLocation"],
+    SourcePosition = __o0["SourcePosition"],
+    __o1 = require("./program_parser"),
+    program = __o1["program"],
+    parserStream, ParserPosition, parseInput, parseStream;
 (parserStream = filter.bind(null, (function(x) {
     switch (x.type) {
         case "Whitespace":
@@ -27,17 +26,19 @@ var parse = require("bennu")["parse"],
             return true;
     }
 })));
-(ParserPosition = (function(tokenPosition, sourcePosition) {
+(ParserPosition = (function(tokenPosition, sourcePosition, prevEnd) {
     var self = this;
     (self.tokenPosition = tokenPosition);
     (self.sourcePosition = sourcePosition);
+    (self.prevEnd = prevEnd);
 }));
 (ParserPosition.prototype = new(parse.Position)());
 (ParserPosition.prototype.constructor = ParserPosition);
-(ParserPosition.initial = new(ParserPosition)(parse.Position.initial, SourcePosition.initial));
-(ParserPosition.prototype.increment = (function(tok, end) {
+(ParserPosition.initial = new(ParserPosition)(parse.Position.initial, SourcePosition.initial, parse.Position.initial));
+(ParserPosition.prototype.increment = (function(tok, r) {
     var self = this;
-    return new(ParserPosition)(self.tokenPosition.increment(tok), end);
+    return new(ParserPosition)(self.tokenPosition.increment(tok), (isEmpty(r) ? tok.loc.end : first(r)
+        .loc.start), tok.loc.end);
 }));
 (ParserPosition.prototype.toString = (function() {
     var self = this;
@@ -46,41 +47,6 @@ var parse = require("bennu")["parse"],
 (ParserPosition.prototype.compare = (function(pos) {
     var self = this;
     return self.tokenPosition.compare(pos.tokenPosition);
-}));
-(ParserState = (function(input, pos, prevEnd) {
-    var self = this;
-    parse.ParserState.call(self, input, pos);
-    (self._prevEnd = prevEnd);
-}));
-(ParserState.prototype = new(parse.ParserState)());
-(ParserState.initial = new(ParserState)(NIL, ParserPosition.initial, SourcePosition.initial));
-(ParserState.prototype.setInput = (function(input) {
-    var self = this;
-    return new(ParserState)(input, self.position, self._prevEnd);
-}));
-(ParserState.prototype.setPosition = (function(position) {
-    var self = this;
-    return new(ParserState)(self.input, position, self._prevEnd);
-}));
-(ParserState.prototype.next = (function(tok) {
-    var self = this;
-    if ((!self._next)) {
-        var r = rest(self.input),
-            end = (isEmpty(r) ? tok.loc.end : first(r)
-                .loc.start),
-            s = new(ParserState)(r, self.position.increment(tok, end), self.loc.end);
-        (self._next = (function(_, m, cok) {
-            return cok(tok, s, m);
-        }));
-    }
-    return self._next;
-}));
-Object.defineProperty(ParserState.prototype, "loc", ({
-    "get": (function() {
-        var self = this;
-        return (isEmpty(self.input) ? new(SourceLocation)(self._prevEnd, self._prevEnd) : first(self.input)
-            .loc);
-    })
 }));
 (parseStream = (function(s) {
     return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
@@ -92,6 +58,5 @@ Object.defineProperty(ParserState.prototype, "loc", ({
 })(parseStream, streamFrom));
 (exports.parserStream = parserStream);
 (exports.ParserPosition = ParserPosition);
-(exports.ParserState = ParserState);
 (exports.parseInput = parseInput);
 (exports.parseStream = parseStream);

@@ -4,19 +4,22 @@
 package (
     parserStream
     ParserPosition
-    ParserState
     
     parseInput
     parseStream)
 with
-    import 'bennu::parse' parse,
-    import 'nu-stream::stream' stream#{first filter isEmpty rest NIL 'from': streamFrom},
+    import 'bennu::parse' parse#{ParserState},
+    import 'nu-stream::stream' {
+        filter
+        isEmpty
+        first
+        'from': streamFrom},
     
     import '../position' {SourceLocation SourcePosition},
     import './program_parser' {program}
 in {
 
-/* Streams
+/* Stream
  ******************************************************************************/
 /**
  * Maps a lex stream to a parse stream.
@@ -38,24 +41,26 @@ parserStream = filter @ \x -> {
 
 /* Position
  ******************************************************************************/
-/**
- * Position in an ECMAScript parser.
- * 
- * Tracks position in lex stream and source positions.
- */
-ParserPosition = function\tokenPosition, sourcePosition =self-> {
+ParserPosition = function \tokenPosition, sourcePosition, prevEnd =self-> {
     self.tokenPosition = tokenPosition;
     self.sourcePosition = sourcePosition;
+    self.prevEnd = prevEnd;
 };
 ParserPosition.prototype = new parse.Position();
 ParserPosition.prototype.constructor = ParserPosition;
 
 ParserPosition.initial = new ParserPosition(
     parse.Position.initial,
-    SourcePosition.initial);
+    SourcePosition.initial,
+    parse.Position.initial);
 
-ParserPosition.prototype.increment = \tok, end =self->
-    new ParserPosition(self.tokenPosition.increment(tok), end);
+ParserPosition.prototype.increment = \tok r =self->
+    new ParserPosition(
+        self.tokenPosition.increment(tok),
+        ?isEmpty r
+            :tok.loc.end
+            :first(r).loc.start,
+        tok.loc.end);
 
 ParserPosition.prototype.toString = \() =self->
     '' + self.sourcePosition;
@@ -63,48 +68,6 @@ ParserPosition.prototype.toString = \() =self->
 ParserPosition.prototype.compare = \pos =self->
     self.tokenPosition.compare(pos.tokenPosition);
 
-/* State
- ******************************************************************************/
-ParserState = function\input, pos, prevEnd =self-> {
-    parse.ParserState.call(self, input, pos);
-    self._prevEnd = prevEnd;
-};
-ParserState.prototype = new parse.ParserState();
-
-ParserState.initial = new ParserState(NIL,
-    ParserPosition.initial,
-    SourcePosition.initial);
-
-ParserState.prototype.setInput = \input =self->
-    new ParserState(
-        input,
-        self.position,
-        self._prevEnd);
-    
-ParserState.prototype.setPosition = \position =self->
-    new ParserState(
-        self.input,
-        position,
-        self._prevEnd);
-    
-ParserState.prototype.next = \tok =self-> {
-    if (!self._next) {
-        var r = rest self.input;
-        var end =? isEmpty r
-            :tok.loc.end
-            :(first(r)).loc.start;
-        var s = new ParserState(r, self.position.increment(tok, end), self.loc.end);
-        self._next = \_, m, cok -> cok(tok, s, m);
-    }
-    return self._next;
-};
-
-Object.defineProperty(ParserState.prototype, 'loc', {
-    'get': \() =self->
-        ?isEmpty self.input
-            :new SourceLocation(self._prevEnd, self._prevEnd)
-            :(first(self.input)).loc
-});
 
 /* Running
  ******************************************************************************/

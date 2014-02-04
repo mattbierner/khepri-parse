@@ -36,9 +36,6 @@ package (
 // New Expression
     newExpression
     
-// Left hand side expression
-    leftHandReferenceExpression
-    
 // Unary Expression
     unaryOperator
     unaryExpression
@@ -53,12 +50,12 @@ package (
     letExpression
 
 // Assignment
+    leftHandReferenceExpression
     assignmentOperator
     assignmentExpression
 
 // Expression
     expression
-    
     topLevelExpression)
 with
     import 'bennu::parse' {
@@ -73,7 +70,6 @@ with
         either
         enumeration
         expected
-        lookahead
         many
         memo
         next
