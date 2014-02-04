@@ -40,8 +40,7 @@ with
         letter
         string},
     import 'nu-stream::stream' {foldl},
-    import './reserved_word_lexer' {reservedWord},
-    import './string_lexer' {escape, unicodeEscapeSequence}
+    import './reserved_word_lexer' {reservedWord}
 in {
 
 var join = foldl@((+), '');
@@ -117,12 +116,9 @@ unicodeCombiningMark = never();
 /**
  * Lexer for the start of an identifier.
  */
-identifierStart = choice(
+identifierStart = either(
     unicodeLetter,
-    characters '$_',
-    next(
-        escape,
-        unicodeEscapeSequence));
+    characters '$_');
 
 /**
  * Lexer for the rest of an identifier after the first character.

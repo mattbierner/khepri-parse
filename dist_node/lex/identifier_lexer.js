@@ -28,9 +28,6 @@ var __o = require("bennu")["parse"],
     foldl = __o1["foldl"],
     __o2 = require("./reserved_word_lexer"),
     reservedWord = __o2["reservedWord"],
-    __o3 = require("./string_lexer"),
-    escape = __o3["escape"],
-    unicodeEscapeSequence = __o3["unicodeEscapeSequence"],
     zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark, identifierStart,
         identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(null, (function(x, y) {
             return (x + y);
@@ -41,7 +38,7 @@ var __o = require("bennu")["parse"],
 (unicodeDigit = digit);
 (unicodeConnectorPunctuation = characters(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
 (unicodeCombiningMark = never());
-(identifierStart = choice(unicodeLetter, characters("$_"), next(escape, unicodeEscapeSequence)));
+(identifierStart = either(unicodeLetter, characters("$_")));
 (identifierPart = choice(attempt(identifierStart), unicodeCombiningMark, unicodeDigit, unicodeConnectorPunctuation,
     zwnj, zwj));
 (identifierParts = many(identifierPart));

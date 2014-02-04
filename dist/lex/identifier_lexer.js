@@ -2,9 +2,8 @@
  * THIS FILE IS AUTO GENERATED from 'lib/lex/identifier_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer",
-    "./string_lexer"
-], (function(require, exports, __o, __o0, __o1, __o2, __o3) {
+define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
+    require, exports, __o, __o0, __o1, __o2) {
     "use strict";
     var always = __o["always"],
         attempt = __o["attempt"],
@@ -27,8 +26,6 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         string = __o0["string"],
         foldl = __o1["foldl"],
         reservedWord = __o2["reservedWord"],
-        escape = __o3["escape"],
-        unicodeEscapeSequence = __o3["unicodeEscapeSequence"],
         zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark,
             identifierStart, identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(
                 null, (function(x, y) {
@@ -40,7 +37,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
     (unicodeDigit = digit);
     (unicodeConnectorPunctuation = characters(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
     (unicodeCombiningMark = never());
-    (identifierStart = choice(unicodeLetter, characters("$_"), next(escape, unicodeEscapeSequence)));
+    (identifierStart = either(unicodeLetter, characters("$_")));
     (identifierPart = choice(attempt(identifierStart), unicodeCombiningMark, unicodeDigit,
         unicodeConnectorPunctuation, zwnj, zwj));
     (identifierParts = many(identifierPart));

@@ -16,23 +16,23 @@ function(parse,
         'module': "Array Literal Tests",
         'tests': [
             ["Empty Array Literal",
-            function(){
+            exports. = function(test) {
                 var result = testParser(lexer.lex("[];"));
-                assert.equal(result.elements.length, 0);
-            }],
+                test.equal(result.elements.length, 0);
+            };
             ["Single Element Array Literal",
-            function(){
+            exports. = function(test) {
                 var result = testParser(lexer.lex("[3];"));
-                assert.equal(result.elements.length, 1);
-                assert.equal(result.elements[0].value, 3);
-            }],
+                test.equal(result.elements.length, 1);
+                test.equal(result.elements[0].value, 3);
+            };
             ["Simple Multi Element Array Literal",
-            function(){
+            exports. = function(test) {
                 var result = testParser(lexer.lex("[3, 4];"));
-                assert.equal(result.elements.length, 2);
-                assert.equal(result.elements[0].value, 3);
-                assert.equal(result.elements[1].value, 4);
-            }],
+                test.equal(result.elements.length, 2);
+                test.equal(result.elements[0].value, 3);
+                test.equal(result.elements[1].value, 4);
+            };
         ],
     };
 });
