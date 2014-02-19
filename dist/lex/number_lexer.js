@@ -35,14 +35,14 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
                     return (x + y);
                 }), "")));
             });
-    (decimal = Parser("Decimal Lexer", character(".")));
-    (negativeSign = Parser("Negative Sign Lexer", character("-")));
-    (positiveSign = Parser("Positive Sign Lexer", character("+")));
-    (exponentIndicator = Parser("Exponent Indicator Lexer", characters("eE")));
-    (hexIndicator = Parser("Hex Indicator Lexer", either(string("0x"), string("0X"))));
-    (decimalDigit = Parser("Decimal Digit Lexer", characters("0123456789")));
-    (nonZeroDigit = Parser("Non Zero Digit Lexer", characters("123456789")));
-    (hexDigit = Parser("Hex Digit Lexer", characters("0123456789abcdefABCDEF")));
+    (decimal = character("."));
+    (negativeSign = character("-"));
+    (positiveSign = character("+"));
+    (exponentIndicator = characters("eE"));
+    (hexIndicator = either(string("0x"), string("0X")));
+    (decimalDigit = characters("0123456789"));
+    (nonZeroDigit = characters("123456789"));
+    (hexDigit = characters("0123456789abcdefABCDEF"));
     (decimalDigits = Parser("Decimal Digits Lexer", join(many1(decimalDigit))));
     (hexDigits = Parser("Hex Digits Lexer", join(many1(hexDigit))));
     (unsignedInteger = Parser("Unsigned Integer Lexer", bind(decimalDigits, (function(f, g) {

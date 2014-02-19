@@ -56,41 +56,34 @@ var join = \p ->
  ******************************************************************************/
 // Constants
 ////////////////////////////////////////
-decimal = Parser('Decimal Lexer',
-    character '.');
+decimal = character '.';
 
-negativeSign = Parser('Negative Sign Lexer',
-    character '-');
+negativeSign = character '-';
 
-positiveSign = Parser('Positive Sign Lexer',
-    character '+');
+positiveSign = character '+';
 
-exponentIndicator = Parser('Exponent Indicator Lexer',
-    characters('eE'));
+exponentIndicator = characters 'eE';
 
-hexIndicator = Parser@'Hex Indicator Lexer' <|
+hexIndicator =
     either(
         string '0x',
         string '0X');
 
 // Digits
 ////////////////////////////////////////
-decimalDigit = Parser('Decimal Digit Lexer',
-    characters('0123456789'));
+decimalDigit = characters '0123456789';
 
-nonZeroDigit = Parser('Non Zero Digit Lexer',
-    characters('123456789'));
+nonZeroDigit = characters '123456789';
 
-hexDigit = Parser('Hex Digit Lexer',
-    characters('0123456789abcdefABCDEF'));
+hexDigit = characters '0123456789abcdefABCDEF';
 
 // Strings
 ////////////////////////////////////////
 decimalDigits = Parser@'Decimal Digits Lexer' <|
-    join <| many1(decimalDigit);
+    join <| many1 decimalDigit;
 
 hexDigits = Parser@'Hex Digits Lexer' <|
-    join <| many1(hexDigit);
+    join <| many1 hexDigit;
 
 // Integers
 ////////////////////////////////////////
@@ -98,7 +91,6 @@ unsignedInteger = Parser@'Unsigned Integer Lexer' <|
     bind(
         decimalDigits,
         parseInt \> always);
-
 
 signedInteger = Parser@'Signed Integer Lexer' <|
     either(
@@ -150,9 +142,9 @@ decimalLiteral = Parser@'Decimal Literal Lexer' <|
                 enumeration(
                     decimalDigits,
                     optional(0,
-                        attempt(next(
+                        attempt <| next(
                             decimal,
-                            decimalDigits)))),
+                            decimalDigits))),
                 \whole, fractional ->
                     always(parseFloat(whole + '.' + fractional))),
             optional(0, exponentPart)),

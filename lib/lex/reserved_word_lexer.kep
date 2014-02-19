@@ -180,9 +180,6 @@ futureReservedWord = choice(
 
 //ReservedWord
 ////////////////////////////////////////
-/**
- * 
- */
 reservedWord = Parser('ReservedWordLexer',
     choice(
        trie(keywordList),

@@ -49,15 +49,9 @@ var join = foldl@((+), '');
  ******************************************************************************/
 // Parts
 ////////////////////////////////////////
-/**
- * Lexer for non terminator character in a regular expression.
- */
 regularExpressionNonTerminator = token(
     (!) <\ test@lineTerminator);
 
-/**
- * Lexer for regular expression backslash sequence.
- */
 regularExpressionBackslashSequence = next(
     character '\\',
     bind(
@@ -72,17 +66,16 @@ regularExpressionClassChar = either(
             tok !== ']' && tok !== '\\'),
     regularExpressionBackslashSequence);
 
-regularExpressionClassChars = many(regularExpressionClassChar);
+regularExpressionClassChars = many regularExpressionClassChar;
 
 regularExpressionClass = between(character '[', character ']', 
-    bind(regularExpressionClassChars, \body ->
-        always('[' + join(body) + ']')));
+    bind(
+        regularExpressionClassChars,
+        \body ->
+            always <| '[' + join(body) + ']'));
 
 // Characters
 ////////////////////////////////////////
-/**
- * Lexer for first character of a regular expression.
- */
 regularExpressionFirstChar = choice(
     token(
         \tok ->
@@ -91,9 +84,6 @@ regularExpressionFirstChar = choice(
     regularExpressionBackslashSequence,
     regularExpressionClass);
 
-/**
- * Lexer for a character in a regular expression.
- */
 regularExpressionChar =  choice(
     token(
         \tok ->
@@ -102,23 +92,16 @@ regularExpressionChar =  choice(
     regularExpressionBackslashSequence,
     regularExpressionClass);
 
-/**
- * Lexer for string of regular expression chars.
- */
 regularExpressionChars = many regularExpressionChar;
 
 // Literal Parts
 ////////////////////////////////////////
-/**
- * Lexer for regular expression flags.
- */
 regularExpressionFlags = many identifierPart;
 
-/**
- * Lexer for the body of a regular expression
- */
 regularExpressionBody = bind(
-    cons(regularExpressionFirstChar, regularExpressionChars),
+    cons(
+        regularExpressionFirstChar,
+        regularExpressionChars),
     join \> always);
 
 // Literal

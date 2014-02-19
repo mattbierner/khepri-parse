@@ -179,14 +179,19 @@ var argumentElements = eager <| sepBy(sep, topLevelPattern);
 
 var selfPattern = next(
     punctuator '=',
-    identifierPattern);
+    choice(
+        arrayPattern,
+        objectPattern,
+        asPattern,
+        identifierPattern));
 
 argumentList = Parser@'Argument List' <|
     nodea(
         enumeration(
             argumentElements,
             optional(null, selfPattern)),
-        \loc, elements, self -> ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
+        \loc, elements, self ->
+            ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
 
 argumentsPattern = Parser@'Arguments Pattern' <|
     either(

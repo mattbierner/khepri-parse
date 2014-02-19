@@ -77,7 +77,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/pattern",
     (subPattern = Parser("Sub Pattern", attempt(nodea(enumeration(identifierPattern, between(punctuator("("),
         punctuator(")"), subPatternElements)), ast_pattern.ArgumentsPattern.create))));
     var argumentElements = eager(sepBy(sep, topLevelPattern)),
-        selfPattern = next(punctuator("="), identifierPattern);
+        selfPattern = next(punctuator("="), choice(arrayPattern, objectPattern, asPattern, identifierPattern));
     (argumentList = Parser("Argument List", nodea(enumeration(argumentElements, optional(null, selfPattern)), (
         function(loc, elements, self) {
             return ast_pattern.ArgumentsPattern.create(loc, null, elements, self);

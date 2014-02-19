@@ -79,6 +79,6 @@ whitespace = Parser@'Whitespace Character Lexer' <|
  * Many Whitespace characters
  */
 //whitespace = (Parser, 'Whitespace Lexer') <|
- //   join <| many1(whitespaceCharacter);
+//   join <| many1(whitespaceCharacter);
 
 }
