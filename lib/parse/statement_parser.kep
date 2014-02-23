@@ -145,11 +145,14 @@ withStatement = Parser@'With Statement' <| let
         importPattern,
         nodea(
             enumeration(
-                then(
-                    withIdentifier,
-                    punctuator '='),
+                withIdentifier,
+                punctuator('=', '=:', ':='),
                 expression),
-            ast_declaration.Binding.create)),
+            \loc pattern rec value ->
+                ast_declaration.Binding.create(loc,
+                    pattern,
+                    value,
+                    (rec.value === ':=')))),
     
     bindings =
         eager <| sepBy1(punctuator ',',

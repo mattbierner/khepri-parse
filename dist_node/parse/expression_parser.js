@@ -85,8 +85,10 @@ var formalParameterList = pattern.argumentsPattern,
 (functionExpression = Parser("Function Expression", nodea(cons(optional(null, next(keyword("function"), optional(null,
     identifier))), next(punctuator("\\"), enumeration(formalParameterList, next(punctuator("->"),
     expected("function body", functionBody))))), ast_expression.FunctionExpression.create)));
-var letBinding = Parser("Let Binding", nodea(enumeration(then(expected("pattern", pattern.topLevelPattern), punctuator(
-    "=")), expected("let binding expression", expression)), ast_declaration.Binding.create));
+var letBinding = Parser("Let Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern), punctuator("=",
+    "=:", ":="), expected("let binding expression", expression)), (function(loc, pattern, rec, expr) {
+    return ast_declaration.Binding.create(loc, pattern, expr, (rec.value === ":="));
+})));
 (letExpression = Parser("Let Expression", ((letBindings = expected("let bindings", sepBy1(punctuator(","), letBinding))), (
     letBody = expected("let body expression", expression)), nodea(next(keyword("let"), enumeration(eager(
     letBindings), next(keyword("in"), letBody))), ast_expression.LetExpression.create))));

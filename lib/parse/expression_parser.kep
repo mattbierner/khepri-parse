@@ -186,11 +186,14 @@ functionExpression = Parser@'Function Expression' <|
 var letBinding = Parser@'Let Binding' <|
     nodea(
         enumeration(
-            then(
-                pattern.topLevelPattern |> expected@'pattern',
-                punctuator '='),
+            pattern.topLevelPattern |> expected@'pattern',
+            punctuator('=', '=:', ':='),
             expression |> expected@'let binding expression'),
-       ast_declaration.Binding.create);
+       \loc pattern rec expr ->
+            ast_declaration.Binding.create(loc,
+                pattern,
+                expr,
+                (rec.value === ':=')));
 
 letExpression = Parser@'Let Expression' <| let
     letBindings = sepBy1(punctuator ',',

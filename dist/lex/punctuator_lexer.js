@@ -15,8 +15,8 @@ define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, e
             multiplication, mod, division, compose, composeNary, reverseCompose, reverseComposeNary, pipe,
             reversePipe, ellipsis, as, argumentList, lambda, punctuator, punctuators = ["{", "}", "(", ")", "[",
                 "]", ",", ".", ";", ":", "?", "&&", "||", "<<", ">>", ">>>", "<=", "<", ">=", ">", "===", "!==",
-                "==", "!=", "=", "!", "~", "++", "--", "&", "|", "^", "+", "-", "*", "/", "%", "@", "\\>",
-                "\\>>", "<\\", "<<\\", "|>", "<|", "...", "#", "\\", "->"
+                "==", "!=", "=", ":=", "=:", "!", "~", "++", "--", "&", "|", "^", "+", "-", "*", "/", "%", "@",
+                "\\>", "\\>>", "<\\", "<<\\", "|>", "<|", "...", "#", "\\", "->"
         ];
     (openBrace = character("{"));
     (closeBrace = character("}"));

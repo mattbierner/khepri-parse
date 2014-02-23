@@ -1,8 +1,12 @@
 # ChangeLog #
 
+## 0.3.0 - Feb 23, 2014
+* Added support for rec binding op `:=` plus normal binding op `=:` in let and
+  with statements.
+
 ## 0.2.0 - Feb 23, 2014
 * Fixed curry expression args not always being an array.
-* Better error for curry expression.
+* Better error messages for curry expression.
 
 ## 0.1.0 - Feb 19, 2014
 * Allow self unpack to be any of: array pattern, as pattern, object pattern,
