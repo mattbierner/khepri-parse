@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/parser.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var parse = require("bennu")["parse"],
     ParserState = parse["ParserState"],

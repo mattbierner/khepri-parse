@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/reserved_word_lexer.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var __o = require("bennu")["parse"],
     attempt = __o["attempt"],

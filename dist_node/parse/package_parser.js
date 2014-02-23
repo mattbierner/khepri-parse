@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var __o = require("bennu")["parse"],
     eager = __o["eager"],
@@ -25,14 +21,14 @@ var __o = require("bennu")["parse"],
     identifier = __o3["identifier"],
     khepriPackage, withStatement = (function() {
         var args = arguments,
-            __o4 = require("./statement_parser"),
-            withStatement = __o4["withStatement"];
+            __o = require("./statement_parser"),
+            withStatement = __o["withStatement"];
         return withStatement.apply(undefined, args);
     }),
     blockStatement = (function() {
         var args = arguments,
-            __o4 = require("./statement_parser"),
-            blockStatement = __o4["blockStatement"];
+            __o = require("./statement_parser"),
+            blockStatement = __o["blockStatement"];
         return blockStatement.apply(undefined, args);
     }),
     packageExport = Parser("Package Export", node(identifier, ast_package.PackageExport.create)),

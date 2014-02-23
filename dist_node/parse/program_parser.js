@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/program_parser.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
@@ -22,14 +18,14 @@ var __o = require("bennu")["parse"],
     node = __o2["node"],
     sourceElement, sourceElements, program, statementParser = (function() {
         var args = arguments,
-            __o3 = require("./statement_parser"),
-            statement = __o3["statement"];
+            __o = require("./statement_parser"),
+            statement = __o["statement"];
         return statement.apply(undefined, args);
     }),
     khepriPackage = (function() {
         var args = arguments,
-            __o3 = require("./package_parser"),
-            khepriPackage = __o3["khepriPackage"];
+            __o = require("./package_parser"),
+            khepriPackage = __o["khepriPackage"];
         return khepriPackage.apply(undefined, args);
     });
 (sourceElement = statementParser);

@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
@@ -29,7 +25,7 @@ var __o = require("bennu")["parse"],
     lineTerminator = __o4["lineTerminator"],
     regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
         regularExpressionClassChars, regularExpressionClass, regularExpressionChar, regularExpressionChars,
-        regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral, join =
+        regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral, x, join =
         foldl.bind(null, (function(x, y) {
             return (x + y);
         }), "");
@@ -44,10 +40,9 @@ var __o = require("bennu")["parse"],
     return (function(x) {
         return f(g(x));
     });
-})(always, (function(x, y) {
-        return (x + y);
-    })
-    .bind(null, "\\")))));
+})(always, ((x = "\\"), (function(y) {
+    return (x + y);
+}))))));
 (regularExpressionClassChar = either(attempt(token((function(tok) {
     return (((!test(lineTerminator, tok)) && (tok !== "]")) && (tok !== "\\"));
 }))), regularExpressionBackslashSequence));

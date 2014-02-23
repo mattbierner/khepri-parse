@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var parse = require("bennu")["parse"],
     punctuator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral, numericLiteral, stringLiteral,

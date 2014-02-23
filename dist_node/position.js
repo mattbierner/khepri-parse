@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/position.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var parse = require("bennu")["parse"],
     SourcePosition, SourceLocation;

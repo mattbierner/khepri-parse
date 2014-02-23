@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
- * DO NOT EDIT
-*/
 "use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
@@ -59,9 +55,9 @@ var parse = require("bennu")["parse"],
         }));
     }),
     buildToken = (function(p) {
-        return binds(enumeration(getPosition, p, getPosition), (function(start, __o13, end) {
-            var type = __o13[0],
-                value = __o13[1];
+        return binds(enumeration(getPosition, p, getPosition), (function(start, __o, end) {
+            var type = __o[0],
+                value = __o[1];
             return always(new(type)(new(SourceLocation)(start, end), value));
         }));
     }),

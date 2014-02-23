@@ -27,7 +27,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
             regularExpressionClassChars, regularExpressionClass, regularExpressionChar, regularExpressionChars,
             regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral,
-            join = foldl.bind(null, (function(x, y) {
+            x, join = foldl.bind(null, (function(x, y) {
                 return (x + y);
             }), "");
     (regularExpressionNonTerminator = token((function(f, g) {
@@ -42,10 +42,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         return (function(x) {
             return f(g(x));
         });
-    })(always, (function(x, y) {
-            return (x + y);
-        })
-        .bind(null, "\\")))));
+    })(always, ((x = "\\"), (function(y) {
+        return (x + y);
+    }))))));
     (regularExpressionClassChar = either(attempt(token((function(tok) {
         return (((!test(lineTerminator, tok)) && (tok !== "]")) && (tok !== "\\"));
     }))), regularExpressionBackslashSequence));
