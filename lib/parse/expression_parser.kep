@@ -387,7 +387,7 @@ curryExpression = Parser@'Curry Expression' <| let
         ast_expression.CurryExpression.create(
             SourceLocation.merge(f.loc, args.loc),
             f,
-            args)
+            [].concat(args))
 in
     binds(
         enumeration(
@@ -397,7 +397,8 @@ in
                     punctuator '@',
                     either(
                         args,
-                        leftHandSideExpression)))),
+                        leftHandSideExpression)
+                    |> expected@'curry argument'))),
         foldl@reducer \>> always);
 
 // Application Expression

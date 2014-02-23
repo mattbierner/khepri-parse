@@ -54,10 +54,11 @@ var __o = require("bennu")["parse"],
         operatorExpression, primaryExpression, curryExpression, args, applicationExpression, dotAccessor,
         bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression, binaryExpression,
         conditionalExpression, letExpression, leftHandReferenceExpression, assignmentOperator, assignmentExpression,
-        expression, topLevelExpression, sourceElements = (function() {
+        expression, topLevelExpression, arrayElement, arrayElements, letBindings, letBody, element, reducer, reducer0,
+        reducer1, sourceElements = (function() {
             var args = arguments,
-                __o6 = require("./program_parser"),
-                sourceElements = __o6["sourceElements"];
+                __o = require("./program_parser"),
+                sourceElements = __o["sourceElements"];
             return sourceElements.apply(undefined, args);
         });
 (expression = (function() {
@@ -68,12 +69,9 @@ var __o = require("bennu")["parse"],
     var args = arguments;
     return memberExpression.apply(undefined, args);
 }));
-(arrayLiteral = Parser("Array Literal", (function() {
-    var arrayElement = expression,
-        arrayElements = expected("array element", Parser("Array Elements", eager(sepBy(punctuator(","),
-            arrayElement))));
-    return node(between(punctuator("["), punctuator("]"), arrayElements), ast_expression.ArrayExpression.create);
-})()));
+(arrayLiteral = Parser("Array Literal", ((arrayElement = expression), (arrayElements = expected("array element", Parser(
+    "Array Elements", eager(sepBy(punctuator(","), arrayElement))))), node(between(punctuator("["),
+    punctuator("]"), arrayElements), ast_expression.ArrayExpression.create))));
 (propertyName = stringLiteral);
 (propertyInitializer = Parser("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
     ast_value.ObjectValue.create)));
@@ -89,32 +87,29 @@ var formalParameterList = pattern.argumentsPattern,
     expected("function body", functionBody))))), ast_expression.FunctionExpression.create)));
 var letBinding = Parser("Let Binding", nodea(enumeration(then(expected("pattern", pattern.topLevelPattern), punctuator(
     "=")), expected("let binding expression", expression)), ast_declaration.Binding.create));
-(letExpression = Parser("Let Expression", (function() {
-    var letBindings = expected("let bindings", sepBy1(punctuator(","), letBinding)),
-        letBody = expected("let body expression", expression);
-    return nodea(next(keyword("let"), enumeration(eager(letBindings), next(keyword("in"), letBody))),
-        ast_expression.LetExpression.create);
-})()));
+(letExpression = Parser("Let Expression", ((letBindings = expected("let bindings", sepBy1(punctuator(","), letBinding))), (
+    letBody = expected("let body expression", expression)), nodea(next(keyword("let"), enumeration(eager(
+    letBindings), next(keyword("in"), letBody))), ast_expression.LetExpression.create))));
 (conditionalExpression = Parser("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression, next(
         punctuator(":"), expected("conditional consequent expression", expression)), next(punctuator(
         ":"), expected("conditional alternate expression", expression)))), ast_expression.ConditionalExpression
     .create)));
 var unaryOperatorExpression = Parser("Unary Operator Expression", bind(either(keyword("typeof"), punctuator("void", "~",
-    "!", "++", "--")), (function(__o6) {
-    var loc = __o6["loc"],
-        value = __o6["value"];
+    "!", "++", "--")), (function(__o) {
+    var loc = __o["loc"],
+        value = __o["value"];
     return always(ast_expression.UnaryOperatorExpression.create(loc, value));
 }))),
     binaryOperatorExpression = Parser("Binary Operator Expression", bind(either(keyword("instanceof"), punctuator("*",
         "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^",
-        "|", "||", "&&", "\\>", "|>")), (function(__o6) {
-        var loc = __o6["loc"],
-            value = __o6["value"];
+        "|", "||", "&&", "\\>", "|>")), (function(__o) {
+        var loc = __o["loc"],
+            value = __o["value"];
         return always(ast_expression.BinaryOperatorExpression.create(loc, value));
     }))),
-    ternayOperatorExpression = Parser("Ternary Operator Expression", bind(punctuator("?"), (function(__o6) {
-        var loc = __o6["loc"],
-            value = __o6["value"];
+    ternayOperatorExpression = Parser("Ternary Operator Expression", bind(punctuator("?"), (function(__o) {
+        var loc = __o["loc"],
+            value = __o["value"];
         return always(ast_expression.TernaryOperatorExpression.create(loc, value));
     })));
 (operatorExpression = Parser("Operator Expression", choice(unaryOperatorExpression, binaryOperatorExpression,
@@ -122,22 +117,19 @@ var unaryOperatorExpression = Parser("Unary Operator Expression", bind(either(ke
 (primaryExpression = Parser("Primary Expression", choice(letExpression, conditionalExpression, identifier, literal,
     arrayLiteral, objectLiteral, functionExpression, attempt(between(punctuator("("), punctuator(")"),
         operatorExpression)), between(punctuator("("), punctuator(")"), expected("expression", expression)))));
-(args = Parser("Arguments", (function() {
-    var element = expected("argument", expression);
-    return node(between(punctuator("("), punctuator(")"), eager(sepBy(punctuator(","), element))), (
-        function(loc, x) {
-            (x.loc = loc);
-            return x;
-        }));
-})()));
+(args = Parser("Arguments", ((element = expected("argument", expression)), node(between(punctuator("("), punctuator(")"),
+    eager(sepBy(punctuator(","), element))), (function(loc, x) {
+    (x.loc = loc);
+    return x;
+})))));
 (accessor = Parser("Accessor", node(next(punctuator("."), either(bind(identifier, (function(x) {
     return always([x, false]);
 })), bind(between(punctuator("("), punctuator(")"), expected("accessor expression", expression)), (
     function(x) {
         return always([x, true]);
-    })))), (function(loc, __o6) {
-    var x = __o6[0],
-        computed = __o6[1];
+    })))), (function(loc, __o) {
+    var x = __o[0],
+        computed = __o[1];
     return ({
         "loc": loc,
         "property": x,
@@ -155,43 +147,35 @@ var accessorReducer = (function(p, c) {
         return f(g.apply(null, arguments));
     });
 })(always, foldl.bind(null, accessorReducer)))));
-var leftHandSideExpression = Parser("Call Expression", (function() {
-    var reducer = (function(p, c) {
-        return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(SourceLocation.merge(
-            p.loc, c.loc), p, c.property, c.computed) : ast_expression.CallExpression.create(
-            SourceLocation.merge(p.loc, c.loc), p, c));
+var leftHandSideExpression = Parser("Call Expression", ((reducer = (function(p, c) {
+    return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(SourceLocation.merge(
+        p.loc, c.loc), p, c.property, c.computed) : ast_expression.CallExpression.create(
+        SourceLocation.merge(p.loc, c.loc), p, c));
+})), binds(enumeration(memberExpression, many(either(args, accessor))), (function(f, g) {
+    return (function() {
+        return f(g.apply(null, arguments));
     });
-    return binds(enumeration(memberExpression, many(either(args, accessor))), (function(f, g) {
-        return (function() {
-            return f(g.apply(null, arguments));
-        });
-    })(always, foldl.bind(null, reducer)));
-})());
-(curryExpression = Parser("Curry Expression", (function() {
-    var reducer0 = (function(f, args) {
-        return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args.loc), f, args);
+})(always, foldl.bind(null, reducer)))));
+(curryExpression = Parser("Curry Expression", ((reducer0 = (function(f, args) {
+    return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args.loc), f, [].concat(
+        args));
+})), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected("curry argument", either(
+    args, leftHandSideExpression))))), (function(f, g) {
+    return (function() {
+        return f(g.apply(null, arguments));
     });
-    return binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), either(args,
-        leftHandSideExpression)))), (function(f, g) {
-        return (function() {
-            return f(g.apply(null, arguments));
-        });
-    })(always, foldl.bind(null, reducer0)));
-})()));
+})(always, foldl.bind(null, reducer0))))));
 (applicationExpression = Parser("Call Expression", chainl1(always((function(p, c) {
     return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [c]);
 })), curryExpression)));
 (unaryOperator = Parser("Unary Operator", either(keyword("typeof", "void"), punctuator("++", "--", "~", "!"))));
-(unaryExpression = Parser("Unary Expression", (function() {
-    var reducer1 = (function(argument, op) {
-        return ast_expression.UnaryExpression.create(SourceLocation.merge(op.loc, argument.loc), op.value,
-            argument);
-    });
-    return binds(enumeration(many(unaryOperator), expected("unary argument", applicationExpression)), (
-        function(ops, expression) {
-            return always(foldr(reducer1, expression, ops));
-        }));
-})()));
+(unaryExpression = Parser("Unary Expression", ((reducer1 = (function(argument, op) {
+    return ast_expression.UnaryExpression.create(SourceLocation.merge(op.loc, argument.loc), op.value,
+        argument);
+})), binds(enumeration(many(unaryOperator), expected("unary argument", applicationExpression)), (function(
+    ops, expression) {
+    return always(foldr(reducer1, expression, ops));
+})))));
 var multiplicativeOperator = punctuator("*", "/", "%"),
     additiveOperator = punctuator("+", "-"),
     shiftOperator = punctuator("<<", ">>", ">>>"),
