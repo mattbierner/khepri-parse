@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/parser.kep'
+ * DO NOT EDIT
+*/
 "use strict";
 var parse = require("bennu")["parse"],
     ParserState = parse["ParserState"],
@@ -6,7 +10,7 @@ var parse = require("bennu")["parse"],
     isEmpty = __o["isEmpty"],
     first = __o["first"],
     streamFrom = __o["from"],
-    __o0 = require("../position"),
+    __o0 = require("khepri-ast")["position"],
     SourceLocation = __o0["SourceLocation"],
     SourcePosition = __o0["SourcePosition"],
     __o1 = require("./program_parser"),

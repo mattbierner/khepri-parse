@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
+ * DO NOT EDIT
+*/
 "use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
@@ -23,7 +27,7 @@ var parse = require("bennu")["parse"],
     NIL = __o0["NIL"],
     streamFrom = __o0["from"],
     lexToken = require("khepri-ast")["token"],
-    __o1 = require("../position"),
+    __o1 = require("khepri-ast")["position"],
     SourceLocation = __o1["SourceLocation"],
     SourcePosition = __o1["SourcePosition"],
     __o2 = require("./boolean_lexer"),
@@ -61,17 +65,13 @@ var parse = require("bennu")["parse"],
             return always(new(type)(new(SourceLocation)(start, end), value));
         }));
     }),
-    literalImpl = choice(expected("string literal", makeToken(lexToken.StringToken, stringLiteral)), expected(
-            "regular expression literal", makeToken(lexToken.RegularExpressionToken, regularExpressionLiteral)),
-        expected("boolean literal", makeToken(lexToken.BooleanToken, booleanLiteral)), expected("null literal",
-            makeToken(lexToken.NullToken, nullLiteral)), expected("number literal", makeToken(lexToken.NumberToken,
-            numericLiteral))),
-    tokenImpl = choice(expected("identifier", attempt(makeToken(lexToken.IdentifierToken, identifier))), attempt(
-        literalImpl), expected("reserved word", attempt(makeToken(lexToken.KeywordToken, reservedWord))), expected(
-        "puctuator", makeToken(lexToken.PunctuatorToken, punctuator))),
-    inputElementImpl = choice(expected("comment", makeToken(lexToken.CommentToken, comment)), expected("whitespace",
-        makeToken(lexToken.WhitespaceToken, whitespace)), expected("line terminator", makeToken(lexToken.LineTerminatorToken,
-        lineTerminator)), tokenImpl);
+    literalImpl = choice(makeToken(lexToken.StringToken, stringLiteral), makeToken(lexToken.RegularExpressionToken,
+        regularExpressionLiteral), makeToken(lexToken.BooleanToken, booleanLiteral), makeToken(lexToken.NullToken,
+        nullLiteral), makeToken(lexToken.NumberToken, numericLiteral)),
+    tokenImpl = choice(attempt(makeToken(lexToken.IdentifierToken, identifier)), attempt(literalImpl), makeToken(
+        lexToken.KeywordToken, reservedWord), makeToken(lexToken.PunctuatorToken, punctuator)),
+    inputElementImpl = choice(makeToken(lexToken.CommentToken, comment), makeToken(lexToken.WhitespaceToken, whitespace),
+        makeToken(lexToken.LineTerminatorToken, lineTerminator), tokenImpl);
 (literal = buildToken(literalImpl));
 (token = buildToken(tokenImpl));
 (inputElement = buildToken(inputElementImpl));

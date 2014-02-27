@@ -83,13 +83,14 @@ with
         sepBy1
         then},
     import 'nu-stream::stream' {foldl foldr},
+    
     import 'khepri-ast::declaration' ast_declaration,
     import 'khepri-ast::expression' ast_expression,
     import 'khepri-ast::statement' ast_statement,
     import 'khepri-ast::pattern' ast_pattern,
     import 'khepri-ast::value' ast_value,
+    import 'khepri-ast::position' {SourceLocation},
     
-    import '../position' {SourceLocation},
     import './common' {node nodea precedence},
     import './token_parser' {keyword punctuator},
     import './program_parser' program_parser,
@@ -120,13 +121,12 @@ memberExpression = \args(...) -> memberExpression.apply(undefined, args);
 arrayLiteral = Parser@'Array Literal' <| let
     arrayElement = expression,
     
-    arrayElements = Parser@'Array Elements' <|
-        eager <| sepBy(punctuator ',', arrayElement)
-            |> expected@"array element"
+    arrayElements = sepBy(punctuator ',',
+        arrayElement)
 in
     node(
         between(punctuator '[', punctuator ']',
-            arrayElements),
+            arrayElements |> expected@"array element"),
         ast_expression.ArrayExpression.create);
 
 // Object Literal
@@ -188,7 +188,7 @@ var letBinding = Parser@'Let Binding' <|
         enumeration(
             pattern.topLevelPattern |> expected@'pattern',
             punctuator('=', '=:', ':='),
-            expression |> expected@'let binding expression'),
+            expression |> expected@'bound value'),
        \loc pattern rec expr ->
             ast_declaration.Binding.create(loc,
                 pattern,
@@ -280,11 +280,25 @@ var ternayOperatorExpression = Parser@'Ternary Operator Expression' <|
         punctuator '?',
         \{loc, value} -> always(ast_expression.TernaryOperatorExpression.create(loc, value)));
 
-operatorExpression = Parser@'Operator Expression' <|
-    choice(
+operatorExpression = Parser@'Operator Expression' <| let
+    op = choice(
         unaryOperatorExpression,
         binaryOperatorExpression,
-        ternayOperatorExpression);
+        ternayOperatorExpression)
+in
+    nodea(
+        between(punctuator '(', punctuator ')',
+            enumeration(
+                op,
+                optional(null,
+                    next(
+                        punctuator ',',
+                        eager <| sepBy1(punctuator ',',
+                            expression |> expected@"argument"))))),
+        \loc target args ->
+            ?args
+                :ast_expression.CurryExpression.create(loc, target, args)
+                :target);
 
 // Primary Expression
 ////////////////////////////////////////
@@ -297,8 +311,7 @@ primaryExpression = Parser@'Primary Expression' <|
         arrayLiteral,
         objectLiteral,
         functionExpression,
-        attempt <| between(punctuator '(', punctuator ')',
-            operatorExpression),
+        attempt <| operatorExpression,
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
 
@@ -438,93 +451,65 @@ in
 
 // Binary Expressions
 ////////////////////////////////////////
-var multiplicativeOperator = punctuator('*', '/', '%');
-
-var additiveOperator = punctuator('+', '-');
-
-var shiftOperator = punctuator('<<', '>>', '>>>');
-
-var relationalOperator = either(
-    punctuator('<', '>', '<=', '>='),
-    keyword 'instanceof');
-
-var equalityOperator = punctuator('==', '!=', '===', '!==');
-
-var bitwiseANDOperator = punctuator '&';
-
-var bitwiseXOROperator = punctuator '^';
-
-var bitwiseOROperator = punctuator '|';
-
-var logicalANDOperator = punctuator '&&';
-
-var logicalOROperator = punctuator '||';
-
-var composeOperator = punctuator('\\>', '\\>>');
-
-var reverseComposeOperator = punctuator('<\\', '<<\\');
-
-var pipeOperator = punctuator '|>';
-
-var reversePipeOperator = punctuator '<|';
-
 var precedenceTable = [
     {
-        'sep': multiplicativeOperator,
+        'sep': punctuator('*', '/', '%'),
         'precedence': 1,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': additiveOperator,
+        'sep': punctuator('+', '-'),
         'precedence': 2,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': shiftOperator,
+        'sep': punctuator('<<', '>>', '>>>'),
         'precedence': 3,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': relationalOperator,
+        'sep': either(
+            punctuator('<', '>', '<=', '>='),
+            keyword 'instanceof'),
         'precedence': 4,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': equalityOperator,
+        'sep':  punctuator('==', '!=', '===', '!=='),
         'precedence': 5,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': bitwiseANDOperator,
+        'sep': punctuator '&',
         'precedence': 6,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': bitwiseXOROperator,
+        'sep': punctuator '^',
         'precedence': 7,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': bitwiseOROperator,
+        'sep': punctuator '|',
         'precedence': 8,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': composeOperator,
+        'sep': punctuator('\\>', '\\>>'),
         'precedence': 9,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': reverseComposeOperator,
+        'sep': punctuator('<\\', '<<\\'),
         'precedence': 9,
         'right': true,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': pipeOperator,
+        'sep': punctuator '|>',
         'precedence': 10,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': reversePipeOperator,
+        'sep': punctuator '<|',
         'precedence': 10,
         'right': true,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': logicalOROperator,
+        'sep': punctuator '||',
         'precedence': 11,
         'node': ast_expression.LogicalExpression
     }, {
-        'sep': logicalANDOperator,
+        'sep': punctuator '&&',
         'precedence': 12,
         'node': ast_expression.LogicalExpression
     }
@@ -538,7 +523,6 @@ binaryExpression = Parser@'Binary Expression' <|
 // Expression
 ////////////////////////////////////////
 expression = binaryExpression;
-
 
 // Left Hand Reference Expression
 ////////////////////////////////////////

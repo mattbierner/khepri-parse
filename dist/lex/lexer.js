@@ -2,10 +2,10 @@
  * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token", "../position",
-    "./boolean_lexer", "./comment_lexer", "./identifier_lexer", "./line_terminator_lexer", "./null_lexer",
-    "./number_lexer", "./punctuator_lexer", "./reserved_word_lexer", "./string_lexer", "./whitespace_lexer",
-    "./regular_expression_lexer"
+define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token",
+    "khepri-ast/position", "./boolean_lexer", "./comment_lexer", "./identifier_lexer", "./line_terminator_lexer",
+    "./null_lexer", "./number_lexer", "./punctuator_lexer", "./reserved_word_lexer", "./string_lexer",
+    "./whitespace_lexer", "./regular_expression_lexer"
 ], (function(require, exports, parse, __o, __o0, lexToken, __o1, __o2, __o3, __o4, __o5, __o6, __o7, __o8, __o9,
     __o10, __o11, __o12) {
     "use strict";
@@ -49,23 +49,19 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
             }));
         }),
         buildToken = (function(p) {
-            return binds(enumeration(getPosition, p, getPosition), (function(start, __o13, end) {
-                var type = __o13[0],
-                    value = __o13[1];
+            return binds(enumeration(getPosition, p, getPosition), (function(start, __o, end) {
+                var type = __o[0],
+                    value = __o[1];
                 return always(new(type)(new(SourceLocation)(start, end), value));
             }));
         }),
-        literalImpl = choice(expected("string literal", makeToken(lexToken.StringToken, stringLiteral)),
-            expected("regular expression literal", makeToken(lexToken.RegularExpressionToken,
-                regularExpressionLiteral)), expected("boolean literal", makeToken(lexToken.BooleanToken,
-                booleanLiteral)), expected("null literal", makeToken(lexToken.NullToken, nullLiteral)),
-            expected("number literal", makeToken(lexToken.NumberToken, numericLiteral))),
-        tokenImpl = choice(expected("identifier", attempt(makeToken(lexToken.IdentifierToken, identifier))),
-            attempt(literalImpl), expected("reserved word", attempt(makeToken(lexToken.KeywordToken,
-                reservedWord))), expected("puctuator", makeToken(lexToken.PunctuatorToken, punctuator))),
-        inputElementImpl = choice(expected("comment", makeToken(lexToken.CommentToken, comment)), expected(
-            "whitespace", makeToken(lexToken.WhitespaceToken, whitespace)), expected("line terminator",
-            makeToken(lexToken.LineTerminatorToken, lineTerminator)), tokenImpl);
+        literalImpl = choice(makeToken(lexToken.StringToken, stringLiteral), makeToken(lexToken.RegularExpressionToken,
+            regularExpressionLiteral), makeToken(lexToken.BooleanToken, booleanLiteral), makeToken(lexToken
+            .NullToken, nullLiteral), makeToken(lexToken.NumberToken, numericLiteral)),
+        tokenImpl = choice(attempt(makeToken(lexToken.IdentifierToken, identifier)), attempt(literalImpl),
+            makeToken(lexToken.KeywordToken, reservedWord), makeToken(lexToken.PunctuatorToken, punctuator)),
+        inputElementImpl = choice(makeToken(lexToken.CommentToken, comment), makeToken(lexToken.WhitespaceToken,
+            whitespace), makeToken(lexToken.LineTerminatorToken, lineTerminator), tokenImpl);
     (literal = buildToken(literalImpl));
     (token = buildToken(tokenImpl));
     (inputElement = buildToken(inputElementImpl));

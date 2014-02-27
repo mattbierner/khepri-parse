@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
+ * DO NOT EDIT
+*/
 "use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
@@ -9,7 +13,7 @@ var parse = require("bennu")["parse"],
     optional = parse["optional"],
     stream = require("nu-stream")["stream"],
     NIL = stream["NIL"],
-    __o = require("../position"),
+    __o = require("khepri-ast")["position"],
     SourceLocation = __o["SourceLocation"],
     precedence, node, nodea, positionParser;
 (precedence = (function(p, table) {

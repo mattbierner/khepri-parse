@@ -3,8 +3,8 @@
  * DO NOT EDIT
 */
 define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
-    "khepri-ast/expression", "khepri-ast/statement", "khepri-ast/pattern", "khepri-ast/value", "../position",
-    "./common", "./token_parser", "./program_parser", "./value_parser", "./pattern_parser"
+    "khepri-ast/expression", "khepri-ast/statement", "khepri-ast/pattern", "khepri-ast/value",
+    "khepri-ast/position", "./common", "./token_parser", "./program_parser", "./value_parser", "./pattern_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_declaration, ast_expression, ast_statement, ast_pattern,
     ast_value, __o2, __o3, __o4, program_parser, __o5, pattern) {
     "use strict";
@@ -46,7 +46,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
             bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression,
             binaryExpression, conditionalExpression, letExpression, leftHandReferenceExpression,
             assignmentOperator, assignmentExpression, expression, topLevelExpression, arrayElement,
-            arrayElements, letBindings, letBody, element, reducer, reducer0, reducer1, sourceElements = (
+            arrayElements, letBindings, letBody, op, element, reducer, reducer0, reducer1, sourceElements = (
                 function() {
                     var args = arguments,
                         __o = require("./program_parser"),
@@ -61,10 +61,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         var args = arguments;
         return memberExpression.apply(undefined, args);
     }));
-    (arrayLiteral = Parser("Array Literal", ((arrayElement = expression), (arrayElements = expected(
-            "array element", Parser("Array Elements", eager(sepBy(punctuator(","), arrayElement))))),
-        node(between(punctuator("["), punctuator("]"), arrayElements), ast_expression.ArrayExpression.create)
-    )));
+    (arrayLiteral = Parser("Array Literal", ((arrayElement = expression), (arrayElements = sepBy(punctuator(","),
+        arrayElement)), node(between(punctuator("["), punctuator("]"), expected("array element",
+        arrayElements)), ast_expression.ArrayExpression.create))));
     (propertyName = stringLiteral);
     (propertyInitializer = Parser("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")),
         expression), ast_value.ObjectValue.create)));
@@ -81,8 +80,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
             next(punctuator("->"), expected("function body", functionBody))))), ast_expression.FunctionExpression
         .create)));
     var letBinding = Parser("Let Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern),
-        punctuator("=", "=:", ":="), expected("let binding expression", expression)), (function(loc,
-        pattern, rec, expr) {
+        punctuator("=", "=:", ":="), expected("bound value", expression)), (function(loc, pattern, rec,
+        expr) {
         return ast_declaration.Binding.create(loc, pattern, expr, (rec.value === ":="));
     })));
     (letExpression = Parser("Let Expression", ((letBindings = expected("let bindings", sepBy1(punctuator(","),
@@ -111,12 +110,16 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
                 value = __o["value"];
             return always(ast_expression.TernaryOperatorExpression.create(loc, value));
         })));
-    (operatorExpression = Parser("Operator Expression", choice(unaryOperatorExpression,
-        binaryOperatorExpression, ternayOperatorExpression)));
+    (operatorExpression = Parser("Operator Expression", ((op = choice(unaryOperatorExpression,
+        binaryOperatorExpression, ternayOperatorExpression)), nodea(between(punctuator("("),
+        punctuator(")"), enumeration(op, optional(null, next(punctuator(","), eager(sepBy1(
+            punctuator(","), expected("argument", expression))))))), (function(loc, target,
+        args) {
+        return (args ? ast_expression.CurryExpression.create(loc, target, args) : target);
+    })))));
     (primaryExpression = Parser("Primary Expression", choice(letExpression, conditionalExpression, identifier,
-        literal, arrayLiteral, objectLiteral, functionExpression, attempt(between(punctuator("("),
-            punctuator(")"), operatorExpression)), between(punctuator("("), punctuator(")"), expected(
-            "expression", expression)))));
+        literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(
+            punctuator("("), punctuator(")"), expected("expression", expression)))));
     (args = Parser("Arguments", ((element = expected("argument", expression)), node(between(punctuator("("),
         punctuator(")"), eager(sepBy(punctuator(","), element))), (function(loc, x) {
         (x.loc = loc);
@@ -179,79 +182,65 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         function(ops, expression) {
             return always(foldr(reducer1, expression, ops));
         })))));
-    var multiplicativeOperator = punctuator("*", "/", "%"),
-        additiveOperator = punctuator("+", "-"),
-        shiftOperator = punctuator("<<", ">>", ">>>"),
-        relationalOperator = either(punctuator("<", ">", "<=", ">="), keyword("instanceof")),
-        equalityOperator = punctuator("==", "!=", "===", "!=="),
-        bitwiseANDOperator = punctuator("&"),
-        bitwiseXOROperator = punctuator("^"),
-        bitwiseOROperator = punctuator("|"),
-        logicalANDOperator = punctuator("&&"),
-        logicalOROperator = punctuator("||"),
-        composeOperator = punctuator("\\>", "\\>>"),
-        reverseComposeOperator = punctuator("<\\", "<<\\"),
-        pipeOperator = punctuator("|>"),
-        reversePipeOperator = punctuator("<|"),
-        precedenceTable = [({
-            "sep": multiplicativeOperator,
-            "precedence": 1,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": additiveOperator,
-            "precedence": 2,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": shiftOperator,
-            "precedence": 3,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": relationalOperator,
-            "precedence": 4,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": equalityOperator,
-            "precedence": 5,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": bitwiseANDOperator,
-            "precedence": 6,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": bitwiseXOROperator,
-            "precedence": 7,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": bitwiseOROperator,
-            "precedence": 8,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": composeOperator,
-            "precedence": 9,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": reverseComposeOperator,
-            "precedence": 9,
-            "right": true,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": pipeOperator,
-            "precedence": 10,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": reversePipeOperator,
-            "precedence": 10,
-            "right": true,
-            "node": ast_expression.BinaryExpression
-        }), ({
-            "sep": logicalOROperator,
-            "precedence": 11,
-            "node": ast_expression.LogicalExpression
-        }), ({
-            "sep": logicalANDOperator,
-            "precedence": 12,
-            "node": ast_expression.LogicalExpression
-        })];
+    var precedenceTable = [({
+        "sep": punctuator("*", "/", "%"),
+        "precedence": 1,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("+", "-"),
+        "precedence": 2,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("<<", ">>", ">>>"),
+        "precedence": 3,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": either(punctuator("<", ">", "<=", ">="), keyword("instanceof")),
+        "precedence": 4,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("==", "!=", "===", "!=="),
+        "precedence": 5,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("&"),
+        "precedence": 6,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("^"),
+        "precedence": 7,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("|"),
+        "precedence": 8,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("\\>", "\\>>"),
+        "precedence": 9,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("<\\", "<<\\"),
+        "precedence": 9,
+        "right": true,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("|>"),
+        "precedence": 10,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("<|"),
+        "precedence": 10,
+        "right": true,
+        "node": ast_expression.BinaryExpression
+    }), ({
+        "sep": punctuator("||"),
+        "precedence": 11,
+        "node": ast_expression.LogicalExpression
+    }), ({
+        "sep": punctuator("&&"),
+        "precedence": 12,
+        "node": ast_expression.LogicalExpression
+    })];
     (binaryExpression = Parser("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
     (expression = binaryExpression);
     (leftHandReferenceExpression = Parser("Left Hand Reference Expression", binds(enumeration(memo(identifier),

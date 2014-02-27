@@ -10,7 +10,6 @@ package (
     bom
     usp
     
-   // whitespaceCharacter,
     whitespace)
 with
     import 'bennu::parse' {always, bind many1 Parser},
@@ -74,11 +73,5 @@ usp = match `^\s$`;
  */
 whitespace = Parser@'Whitespace Character Lexer' <|
     characters [tabChar, vtChar, ffChar, spChar, nbspChar, bomChar];
-
-/**
- * Many Whitespace characters
- */
-//whitespace = (Parser, 'Whitespace Lexer') <|
-//   join <| many1(whitespaceCharacter);
 
 }

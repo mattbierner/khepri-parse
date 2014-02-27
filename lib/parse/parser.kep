@@ -15,7 +15,7 @@ with
         first
         'from': streamFrom},
     
-    import '../position' {SourceLocation SourcePosition},
+    import 'khepri-ast::position' {SourceLocation SourcePosition},
     import './program_parser' {program}
 in {
 

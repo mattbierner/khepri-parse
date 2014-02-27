@@ -25,7 +25,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         letter = __o0["letter"],
         string = __o0["string"],
         foldl = __o1["foldl"],
-        reservedWord = __o2["reservedWord"],
+        keywordList = __o2["keywordList"],
         zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark,
             identifierStart, identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(
                 null, (function(x, y) {
@@ -42,9 +42,9 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         unicodeConnectorPunctuation, zwnj, zwj));
     (identifierParts = many(identifierPart));
     (identifierName = cons(identifierStart, identifierParts));
-    var reservedWordTest = next(reservedWord, eof);
     (identifier = Parser("Identifier Lexer", bind(identifierName, (function(name) {
-        return (testStream(reservedWordTest, name) ? fail() : always(join(name)));
+        var n = join(name);
+        return ((keywordList.indexOf(n) >= 0) ? fail() : always(n));
     }))));
     (exports.zwnj = zwnj);
     (exports.zwj = zwj);

@@ -20,11 +20,14 @@ package (
     
     statement)
 with
+    import 'nu-stream::stream' {NIL},
+    
     import 'bennu::parse' {
         always
         attempt
         binds
         choice
+        cons
         eager
         either
         enumeration
@@ -37,7 +40,7 @@ with
         between
         sepBy1
         then},
-    
+
     import 'khepri-ast::clause' ast_clause,
     import 'khepri-ast::declaration' ast_declaration,
     import 'khepri-ast::statement' ast_statement,
@@ -63,7 +66,7 @@ statement = \args(...) -> statement.apply(undefined, args);
  ******************************************************************************/
 var logicalSemiColon = punctuator ';';
 
-var statementList = eager(many(statement));
+var statementList = eager <| many statement;
 
 // Block Statement
 ////////////////////////////////////////
@@ -91,16 +94,16 @@ debuggerStatement = Parser@'Debugger Statement' <|
 
 // Expression Statement
 ////////////////////////////////////////
-expressionStatement = Parser('Expression Statement',
+expressionStatement = Parser@'Expression Statement' <|
     node(
         then(
             topLevelExpression,
             logicalSemiColon),
-        ast_statement.ExpressionStatement.create));
+        ast_statement.ExpressionStatement.create);
 
 // Static Declaration Statement
 ////////////////////////////////////////
-staticStatement = Parser('Static Statement', let
+staticStatement = Parser@'Static Statement' <| let
     staticDeclaration = node(
         identifier,
         ast_declaration.StaticDeclarator.create),
@@ -112,29 +115,35 @@ in
     node(
         between(keyword 'static', logicalSemiColon,
             staticDeclarationList),
-        ast_declaration.StaticDeclaration.create));
+        ast_declaration.StaticDeclaration.create);
 
 // Variable Declaration Statement
 ////////////////////////////////////////
 var variableDeclarationList = let
-    initialiser = next(
-        punctuator '=',
+    initialiser = enumeration(
+        punctuator('=', ':=', '=:'),
         expression |> expected@"variable initilizer"),
 
     variableDeclaration = nodea(
-        enumeration(
+        cons(
             identifier,
-            optional(null, initialiser)),
-        ast_declaration.VariableDeclarator.create)
+            optional(NIL, initialiser)),
+        \loc id op init ->
+            ast_declaration.VariableDeclarator.create(
+                loc,
+                id,
+                init,
+                (op.value === ':=' || op.value === '=:'),
+                (op.value === ':=' || op.value === '=')))
 in
     eager <| sepBy1(punctuator ',',
         variableDeclaration);
 
-variableStatement = Parser('Variable Statement',
+variableStatement = Parser@'Variable Statement' <|
     node(
         between(keyword 'var', logicalSemiColon,
             variableDeclarationList),
-        ast_declaration.VariableDeclaration.create));
+        ast_declaration.VariableDeclaration.create);
 
 // With Statement
 ////////////////////////////////////////

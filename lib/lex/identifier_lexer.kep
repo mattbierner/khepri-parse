@@ -40,7 +40,7 @@ with
         letter
         string},
     import 'nu-stream::stream' {foldl},
-    import './reserved_word_lexer' {reservedWord}
+    import './reserved_word_lexer' {keywordList}
 in {
 
 var join = foldl@((+), '');
@@ -50,12 +50,12 @@ var join = foldl@((+), '');
 // Characters
 ////////////////////////////////////////
 /**
- * Zero Width non-joiner Lexer
+ * Zero Width non-joiner
  */
 zwnj = character '\u200c';
 
 /**
- * Zero Width joiner Lexer
+ * Zero Width joiner
  */
 zwj = character '\u200d';
 
@@ -113,16 +113,10 @@ unicodeCombiningMark = never();
 
 // Parts
 ////////////////////////////////////////
-/**
- * Lexer for the start of an identifier.
- */
 identifierStart = either(
     unicodeLetter,
     characters '$_');
 
-/**
- * Lexer for the rest of an identifier after the first character.
- */
 identifierPart = choice(
     attempt identifierStart,
     unicodeCombiningMark,
@@ -134,7 +128,7 @@ identifierPart = choice(
 identifierParts = many identifierPart;
 
 /**
- * Lexer for any identifier name.
+ * Identifier.
  * 
  * May be a keyword.
  */
@@ -142,19 +136,15 @@ identifierName = cons(identifierStart, identifierParts);
 
 // Identifier
 ////////////////////////////////////////
-var reservedWordTest = next(
-    reservedWord,
-    eof);
-
 /**
  * Lexer for an identifier.
  * 
  * Checks to make sure returned identifier is not a keyword.
  */
 identifier = Parser@'Identifier Lexer' <|
-    bind(identifierName, \name ->
-        ?testStream(reservedWordTest, name)
+    bind(identifierName, \name -> let n = join name in
+        ?keywordList.indexOf(n) >= 0
             :fail()
-            :always(join name));
+            :always n);
 
 }

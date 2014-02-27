@@ -87,7 +87,6 @@ $(function(){
         $('.ParseError').text('');
         $('.LexError').text('');
         
-        console.profile();
         var start = new Date().getTime();
         
         var nodes;
@@ -98,6 +97,7 @@ $(function(){
             console.profileEnd();
             return;
         }
+        console.profile();
 
         var ast;
         try
@@ -118,7 +118,7 @@ $(function(){
         });
         
         stream.forEach(function(v) {
-            var type =  v.type,
+            var type = v.type,
                 value = (type === 'Whitespace' ? '' : v.value),
                 location = v.loc;
             lexOut.append($("<span class='Token'>" + value + "</span>")

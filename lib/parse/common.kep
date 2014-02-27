@@ -17,7 +17,7 @@ with
         optional},
     import 'nu-stream::stream' stream#{NIL},
 
-    import '../position' {SourceLocation}
+    import 'khepri-ast::position' {SourceLocation}
 in {
 
 // Operator Precedence

@@ -2,25 +2,27 @@
  * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse"], (function(require, exports, parse) {
+define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     "use strict";
-    var punctuator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral, numericLiteral,
+    var ExpectError = __o["ExpectError"],
+        token = __o["token"],
+        punctuator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral, numericLiteral,
             stringLiteral, regularExpressionLiteral, indexOf = Function.prototype.call.bind(Array.prototype.indexOf),
         join = Function.prototype.call.bind(Array.prototype.join),
         expectError = (function(msg) {
             return (function(pos, tok) {
-                return new(parse.ExpectError)(pos, msg, ((tok === null) ? "end of input" : tok.value));
+                return new(ExpectError)(pos, msg, ((tok === null) ? "end of input" : tok.value));
             });
         }),
         typeParser = (function(type, msg) {
-            return parse.token((function(tok) {
+            return token((function(tok) {
                 return (tok.type === type);
             }), expectError(msg));
         }),
         selectAny = (function(type) {
             return (function() {
                 var options = arguments;
-                return parse.token((function(tok) {
+                return token((function(tok) {
                     return ((tok.type === type) && (indexOf(options, tok.value) >= 0));
                 }), expectError(join(options, ", ")));
             });

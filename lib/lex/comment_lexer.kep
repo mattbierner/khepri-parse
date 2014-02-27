@@ -76,7 +76,7 @@ multiLineCommentChars = RecParser@'Multi Line Comment Characters Lexer' <|\self 
         cons(anyToken, self));
 
 /**
- * Lexer for a multi line comment.
+ * Multi line comment.
  * 
  * Returns the contents of the comment.
  */

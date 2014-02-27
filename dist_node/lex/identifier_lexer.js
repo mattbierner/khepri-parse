@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/identifier_lexer.kep'
+ * DO NOT EDIT
+*/
 "use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
@@ -23,7 +27,7 @@ var __o = require("bennu")["parse"],
     __o1 = require("nu-stream")["stream"],
     foldl = __o1["foldl"],
     __o2 = require("./reserved_word_lexer"),
-    reservedWord = __o2["reservedWord"],
+    keywordList = __o2["keywordList"],
     zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark, identifierStart,
         identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(null, (function(x, y) {
             return (x + y);
@@ -39,9 +43,9 @@ var __o = require("bennu")["parse"],
     zwnj, zwj));
 (identifierParts = many(identifierPart));
 (identifierName = cons(identifierStart, identifierParts));
-var reservedWordTest = next(reservedWord, eof);
 (identifier = Parser("Identifier Lexer", bind(identifierName, (function(name) {
-    return (testStream(reservedWordTest, name) ? fail() : always(join(name)));
+    var n = join(name);
+    return ((keywordList.indexOf(n) >= 0) ? fail() : always(n));
 }))));
 (exports.zwnj = zwnj);
 (exports.zwj = zwj);

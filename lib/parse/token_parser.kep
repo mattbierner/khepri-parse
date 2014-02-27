@@ -13,7 +13,9 @@ package (
     stringLiteral,
     regularExpressionLiteral)
 with
-    import 'bennu::parse' parse
+    import 'bennu::parse' {
+        ExpectError
+        token}
 in {
 
 var indexOf = Function.prototype.call.bind(Array.prototype.indexOf);
@@ -22,16 +24,16 @@ var join = Function.prototype.call.bind(Array.prototype.join);
 
 var expectError = \msg ->
     \pos, tok ->
-        new parse.ExpectError(pos, msg, ?tok === null :"end of input" :tok.value);
+        new ExpectError(pos, msg, ?tok === null :"end of input" :tok.value);
 
 var typeParser = \type, msg ->
-    parse.token(
+    token(
         \tok -> (tok.type === type),
         expectError(msg));
 
 var selectAny = \type ->
     \options(...) ->
-        parse.token(
+        token(
             \tok -> (tok.type === type && indexOf(options, tok.value) >= 0),
             expectError(join(options, ', ')));
 

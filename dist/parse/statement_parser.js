@@ -2,35 +2,38 @@
  * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/clause", "khepri-ast/declaration",
-    "khepri-ast/statement", "./common", "./token_parser", "./expression_parser", "./pattern_parser",
-    "./value_parser"
-], (function(require, exports, __o, __o0, ast_clause, ast_declaration, ast_statement, __o1, __o2, __o3, __o4, __o5) {
+define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
+    "khepri-ast/declaration", "khepri-ast/statement", "./common", "./token_parser", "./expression_parser",
+    "./pattern_parser", "./value_parser"
+], (function(require, exports, __o, __o0, __o1, ast_clause, ast_declaration, ast_statement, __o2, __o3, __o4, __o5,
+    __o6) {
     "use strict";
-    var always = __o["always"],
-        attempt = __o["attempt"],
-        binds = __o["binds"],
-        choice = __o["choice"],
-        eager = __o["eager"],
-        either = __o["either"],
-        enumeration = __o["enumeration"],
-        expected = __o["expected"],
-        many = __o["many"],
-        next = __o["next"],
-        optional = __o["optional"],
-        Parser = __o["Parser"],
-        between = __o0["between"],
-        sepBy1 = __o0["sepBy1"],
-        then = __o0["then"],
-        node = __o1["node"],
-        nodea = __o1["nodea"],
-        keyword = __o2["keyword"],
-        punctuator = __o2["punctuator"],
-        expression = __o3["expression"],
-        topLevelExpression = __o3["topLevelExpression"],
-        importPattern = __o4["importPattern"],
-        pattern = __o4["pattern"],
-        identifier = __o5["identifier"],
+    var NIL = __o["NIL"],
+        always = __o0["always"],
+        attempt = __o0["attempt"],
+        binds = __o0["binds"],
+        choice = __o0["choice"],
+        cons = __o0["cons"],
+        eager = __o0["eager"],
+        either = __o0["either"],
+        enumeration = __o0["enumeration"],
+        expected = __o0["expected"],
+        many = __o0["many"],
+        next = __o0["next"],
+        optional = __o0["optional"],
+        Parser = __o0["Parser"],
+        between = __o1["between"],
+        sepBy1 = __o1["sepBy1"],
+        then = __o1["then"],
+        node = __o2["node"],
+        nodea = __o2["nodea"],
+        keyword = __o3["keyword"],
+        punctuator = __o3["punctuator"],
+        expression = __o4["expression"],
+        topLevelExpression = __o4["topLevelExpression"],
+        importPattern = __o5["importPattern"],
+        pattern = __o5["pattern"],
+        identifier = __o6["identifier"],
         blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement,
             withStatement, iterationStatement, continueStatement, breakStatement, returnStatement,
             switchStatement, throwStatement, tryStatement, debuggerStatement, statement, staticDeclaration,
@@ -54,9 +57,12 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/clause", 
             .create)), (staticDeclarationList = eager(sepBy1(punctuator(","), staticDeclaration))),
         node(between(keyword("static"), logicalSemiColon, staticDeclarationList), ast_declaration.StaticDeclaration
             .create))));
-    var variableDeclarationList = ((initialiser = next(punctuator("="), expected("variable initilizer",
-        expression))), (variableDeclaration = nodea(enumeration(identifier, optional(null, initialiser)),
-        ast_declaration.VariableDeclarator.create)), eager(sepBy1(punctuator(","), variableDeclaration)));
+    var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", "=:"), expected(
+        "variable initilizer", expression))), (variableDeclaration = nodea(cons(identifier, optional(NIL,
+        initialiser)), (function(loc, id, op, init) {
+        return ast_declaration.VariableDeclarator.create(loc, id, init, ((op.value === ":=") ||
+            (op.value === "=:")), ((op.value === ":=") || (op.value === "=")));
+    }))), eager(sepBy1(punctuator(","), variableDeclaration)));
     (variableStatement = Parser("Variable Statement", node(between(keyword("var"), logicalSemiColon,
         variableDeclarationList), ast_declaration.VariableDeclaration.create)));
     (withStatement = Parser("With Statement", ((withIdentifier = expected("pattern", pattern)), (withBinding =

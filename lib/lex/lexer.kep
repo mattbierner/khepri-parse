@@ -28,9 +28,10 @@ with
         ParserState},
     import 'bennu::lang' {then},
     import 'nu-stream::stream' {memoStream, NIL, 'from': streamFrom},
-    import 'khepri-ast::token' lexToken,
     
-    import '../position' {SourceLocation, SourcePosition},
+    import 'khepri-ast::token' lexToken,
+    import 'khepri-ast::position' {SourceLocation, SourcePosition},
+    
     import './boolean_lexer' {booleanLiteral},
     import './comment_lexer' {comment},
     import './identifier_lexer' {identifier, identifierName},
@@ -61,36 +62,24 @@ var buildToken = \p ->
 /* Lexers
  ******************************************************************************/
 var literalImpl = choice(
-    makeToken(lexToken.StringToken, stringLiteral)
-        |> expected@"string literal",
-    makeToken(lexToken.RegularExpressionToken, regularExpressionLiteral)
-        |> expected@"regular expression literal",
-    makeToken(lexToken.BooleanToken, booleanLiteral)
-        |> expected@"boolean literal",
-    makeToken(lexToken.NullToken, nullLiteral)
-        |> expected@"null literal",
-    makeToken(lexToken.NumberToken, numericLiteral)
-        |> expected@"number literal");
+    makeToken(lexToken.StringToken, stringLiteral),
+    makeToken(lexToken.RegularExpressionToken, regularExpressionLiteral),
+    makeToken(lexToken.BooleanToken, booleanLiteral),
+    makeToken(lexToken.NullToken, nullLiteral),
+    makeToken(lexToken.NumberToken, numericLiteral));
 
 var tokenImpl = choice(
-    attempt
-        <| makeToken(lexToken.IdentifierToken, identifier)
-        |> expected@"identifier",
-    attempt
-        <| literalImpl,
-    attempt
-        <| makeToken(lexToken.KeywordToken, reservedWord)
-        |> expected@"reserved word",
-    makeToken(lexToken.PunctuatorToken, punctuator)
-        |> expected@"puctuator");
+    attempt <|
+        makeToken(lexToken.IdentifierToken, identifier),
+    attempt <|
+        literalImpl,
+    makeToken(lexToken.KeywordToken, reservedWord),
+    makeToken(lexToken.PunctuatorToken, punctuator));
 
 var inputElementImpl = choice(
-    makeToken(lexToken.CommentToken, comment)
-        |> expected@"comment",
-    makeToken(lexToken.WhitespaceToken, whitespace)
-        |> expected@"whitespace",
-    makeToken(lexToken.LineTerminatorToken, lineTerminator)
-        |> expected@"line terminator",
+    makeToken(lexToken.CommentToken, comment),
+    makeToken(lexToken.WhitespaceToken, whitespace),
+    makeToken(lexToken.LineTerminatorToken, lineTerminator),
     tokenImpl);
 
 literal = buildToken(literalImpl);
@@ -100,7 +89,7 @@ token = buildToken(tokenImpl);
 inputElement = buildToken(inputElementImpl);
 
 lexer = then(
-    many(inputElement),
+    many inputElement,
     eof);
 
 /* Running
