@@ -64,8 +64,8 @@ var logicalSemiColon = punctuator(";"),
 var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", "=:"), expected("variable initilizer",
     expression))), (variableDeclaration = nodea(cons(identifier, optional(NIL, initialiser)), (function(loc, id, op,
     init) {
-    return ast_declaration.VariableDeclarator.create(loc, id, init, ((op.value === ":=") || (op.value ===
-        "=:")), ((op.value === ":=") || (op.value === "=")));
+    return ast_declaration.VariableDeclarator.create(loc, id, init, (op && ((op.value === ":=") || (op.value ===
+        "=:"))), (!(op && (op.value === "=:"))));
 }))), eager(sepBy1(punctuator(","), variableDeclaration)));
 (variableStatement = Parser("Variable Statement", node(between(keyword("var"), logicalSemiColon,
     variableDeclarationList), ast_declaration.VariableDeclaration.create)));

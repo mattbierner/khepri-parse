@@ -133,8 +133,8 @@ var variableDeclarationList = let
                 loc,
                 id,
                 init,
-                (op.value === ':=' || op.value === '=:'),
-                (op.value === ':=' || op.value === '=')))
+                op && (op.value === ':=' || op.value === '=:'),
+                !(op && op.value === '=:')))
 in
     eager <| sepBy1(punctuator ',',
         variableDeclaration);
