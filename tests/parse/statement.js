@@ -34,37 +34,6 @@ exports.simple_block = function(test) {
     test.done();
 };
 
-exports.single_variable_statement = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("var a;")));
-    test.equal(result.type, "VariableDeclaration");
-    test.deepEqual(result.declarations.length, 1);
-    test.deepEqual(result.declarations[0].id.name, 'a');
-    test.ok(!result.declarations[0].init);
-    
-    test.done();
-};
-
-exports.variable_statement_initilizer = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("var a = 1;")));
-    test.equal(result.type, "VariableDeclaration");
-    test.deepEqual(result.declarations.length, 1);
-    test.deepEqual(result.declarations[0].id.name, 'a');
-    test.deepEqual(result.declarations[0].init.value, 1);
-    
-    test.done();
-};
-
-exports.multi_variable_statement = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("var a = 1, b;")));
-    test.equal(result.type, "VariableDeclaration");
-    test.deepEqual(result.declarations.length, 2);
-    test.deepEqual(result.declarations[0].id.name, 'a');
-    test.deepEqual(result.declarations[0].init.value, 1);
-    test.deepEqual(result.declarations[1].id.name, 'b');
-    test.ok(!result.declarations[1].init);
-    
-    test.done();
-};
 
 exports.if_statement = function(test) {
     var result = testParser(parser.parserStream(lexer.lex("if (a) debugger;")));
