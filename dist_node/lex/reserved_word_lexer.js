@@ -14,18 +14,18 @@ var __o = require("bennu")["parse"],
     booleanLiteral = __o1["booleanLiteral"],
     __o2 = require("./null_lexer"),
     nullLiteral = __o2["nullLiteral"],
-    keywordList, reservedWord, futureReservedWord, breakKeyword, caseKeyword, catchKeyword, continueKeyword,
+    reservedWordList, reservedWord, futureReservedWord, breakKeyword, caseKeyword, catchKeyword, continueKeyword,
         debuggerKeyword, defaultKeyword, deleteKeyword, doKeyword, elseKeyword, finallyKeyword, forKeyword,
         functionKeyword, ifKeyword, inKeyword, instanceofKeyword, typeofKeyword, newKeyword, Keyword, returnKeyword,
         voidKeyword, switchKeyword, whileKeyword, thisKeyword, withKeyword, throwKeyword, tryKeyword, keyword,
-        getKeyword, setKeyword, classKeyword, enumKeyword, extendsKeyword, superKeyword, constKeyword, exportKeyword,
-        importKeyword, implementsKeyword, letKeyword, privateKeyword, publicKeyword, interfaceKeyword, packageKeyword,
-        protectedKeyword, staticKeyword, yieldKeyword;
-(keywordList = ["break", "case", "catch", "continue", "debugger", "default", "delete", "do", "else", "finally", "for",
-    "function", "if", "in", "instanceof", "typeof", "new", "var", "return", "void", "switch", "while", "this",
-    "with", "throw", "try", "export", "package", "class", "enum", "interface", "extends", "implements", "private",
-    "public", "protected", "super", "const", "yield", "import", "let", "static", "_"
-]);
+        classKeyword, enumKeyword, extendsKeyword, superKeyword, constKeyword, exportKeyword, importKeyword,
+        implementsKeyword, letKeyword, privateKeyword, publicKeyword, interfaceKeyword, packageKeyword,
+        protectedKeyword, staticKeyword, yieldKeyword, keywordList = ["break", "case", "catch", "continue", "debugger",
+            "default", "delete", "do", "else", "finally", "for", "function", "if", "in", "instanceof", "typeof", "new",
+            "var", "return", "void", "switch", "while", "this", "with", "throw", "try", "export", "package", "class",
+            "enum", "interface", "extends", "implements", "private", "public", "protected", "super", "const", "yield",
+            "import", "let", "static", "_"
+    ];
 (breakKeyword = string("break"));
 (caseKeyword = string("case"));
 (catchKeyword = string("catch"));
@@ -52,8 +52,6 @@ var __o = require("bennu")["parse"],
 (withKeyword = string("with"));
 (throwKeyword = string("throw"));
 (tryKeyword = string("try"));
-(getKeyword = string("get"));
-(setKeyword = string("set"));
 (keyword = choice(attempt(breakKeyword), attempt(caseKeyword), attempt(catchKeyword), attempt(continueKeyword), attempt(
         debuggerKeyword), attempt(defaultKeyword), attempt(deleteKeyword), attempt(doKeyword), attempt(elseKeyword),
     attempt(finallyKeyword), attempt(forKeyword), attempt(functionKeyword), attempt(ifKeyword), attempt(inKeyword),
@@ -81,7 +79,8 @@ var __o = require("bennu")["parse"],
         letKeyword), attempt(privateKeyword), attempt(publicKeyword), attempt(interfaceKeyword), attempt(
         packageKeyword), attempt(protectedKeyword), attempt(staticKeyword), yieldKeyword));
 (reservedWord = Parser("ReservedWordLexer", choice(trie(keywordList), nullLiteral, booleanLiteral)));
-(exports.keywordList = keywordList);
+(reservedWordList = keywordList.concat("null", "true", "false"));
+(exports.reservedWordList = reservedWordList);
 (exports.reservedWord = reservedWord);
 (exports.futureReservedWord = futureReservedWord);
 (exports.breakKeyword = breakKeyword);
@@ -111,8 +110,6 @@ var __o = require("bennu")["parse"],
 (exports.throwKeyword = throwKeyword);
 (exports.tryKeyword = tryKeyword);
 (exports.keyword = keyword);
-(exports.getKeyword = getKeyword);
-(exports.setKeyword = setKeyword);
 (exports.classKeyword = classKeyword);
 (exports.enumKeyword = enumKeyword);
 (exports.extendsKeyword = extendsKeyword);

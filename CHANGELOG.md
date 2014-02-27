@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.4.1 - Feb 26, 2014
+* Fixed booleans getting lexed to identifiers.
+
 ## 0.4.0 - Feb 26, 2014
 * Added support for defining immutable and/or non recursive variable declarators.
 * Added back syntax `(OP, ARG1)` for currying operators.

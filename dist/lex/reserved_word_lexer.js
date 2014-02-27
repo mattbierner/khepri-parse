@@ -12,20 +12,19 @@ define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", ".
         trie = __o0["trie"],
         booleanLiteral = __o1["booleanLiteral"],
         nullLiteral = __o2["nullLiteral"],
-        keywordList, reservedWord, futureReservedWord, breakKeyword, caseKeyword, catchKeyword, continueKeyword,
-            debuggerKeyword, defaultKeyword, deleteKeyword, doKeyword, elseKeyword, finallyKeyword, forKeyword,
-            functionKeyword, ifKeyword, inKeyword, instanceofKeyword, typeofKeyword, newKeyword, Keyword,
-            returnKeyword, voidKeyword, switchKeyword, whileKeyword, thisKeyword, withKeyword, throwKeyword,
-            tryKeyword, keyword, getKeyword, setKeyword, classKeyword, enumKeyword, extendsKeyword,
+        reservedWordList, reservedWord, futureReservedWord, breakKeyword, caseKeyword, catchKeyword,
+            continueKeyword, debuggerKeyword, defaultKeyword, deleteKeyword, doKeyword, elseKeyword,
+            finallyKeyword, forKeyword, functionKeyword, ifKeyword, inKeyword, instanceofKeyword, typeofKeyword,
+            newKeyword, Keyword, returnKeyword, voidKeyword, switchKeyword, whileKeyword, thisKeyword,
+            withKeyword, throwKeyword, tryKeyword, keyword, classKeyword, enumKeyword, extendsKeyword,
             superKeyword, constKeyword, exportKeyword, importKeyword, implementsKeyword, letKeyword,
             privateKeyword, publicKeyword, interfaceKeyword, packageKeyword, protectedKeyword, staticKeyword,
-            yieldKeyword;
-    (keywordList = ["break", "case", "catch", "continue", "debugger", "default", "delete", "do", "else",
-        "finally", "for", "function", "if", "in", "instanceof", "typeof", "new", "var", "return", "void",
-        "switch", "while", "this", "with", "throw", "try", "export", "package", "class", "enum",
-        "interface", "extends", "implements", "private", "public", "protected", "super", "const", "yield",
-        "import", "let", "static", "_"
-    ]);
+            yieldKeyword, keywordList = ["break", "case", "catch", "continue", "debugger", "default", "delete",
+                "do", "else", "finally", "for", "function", "if", "in", "instanceof", "typeof", "new", "var",
+                "return", "void", "switch", "while", "this", "with", "throw", "try", "export", "package",
+                "class", "enum", "interface", "extends", "implements", "private", "public", "protected",
+                "super", "const", "yield", "import", "let", "static", "_"
+        ];
     (breakKeyword = string("break"));
     (caseKeyword = string("case"));
     (catchKeyword = string("catch"));
@@ -52,8 +51,6 @@ define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", ".
     (withKeyword = string("with"));
     (throwKeyword = string("throw"));
     (tryKeyword = string("try"));
-    (getKeyword = string("get"));
-    (setKeyword = string("set"));
     (keyword = choice(attempt(breakKeyword), attempt(caseKeyword), attempt(catchKeyword), attempt(
             continueKeyword), attempt(debuggerKeyword), attempt(defaultKeyword), attempt(deleteKeyword),
         attempt(doKeyword), attempt(elseKeyword), attempt(finallyKeyword), attempt(forKeyword), attempt(
@@ -83,7 +80,8 @@ define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", ".
         attempt(interfaceKeyword), attempt(packageKeyword), attempt(protectedKeyword), attempt(
             staticKeyword), yieldKeyword));
     (reservedWord = Parser("ReservedWordLexer", choice(trie(keywordList), nullLiteral, booleanLiteral)));
-    (exports.keywordList = keywordList);
+    (reservedWordList = keywordList.concat("null", "true", "false"));
+    (exports.reservedWordList = reservedWordList);
     (exports.reservedWord = reservedWord);
     (exports.futureReservedWord = futureReservedWord);
     (exports.breakKeyword = breakKeyword);
@@ -113,8 +111,6 @@ define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", ".
     (exports.throwKeyword = throwKeyword);
     (exports.tryKeyword = tryKeyword);
     (exports.keyword = keyword);
-    (exports.getKeyword = getKeyword);
-    (exports.setKeyword = setKeyword);
     (exports.classKeyword = classKeyword);
     (exports.enumKeyword = enumKeyword);
     (exports.extendsKeyword = extendsKeyword);

@@ -27,7 +27,7 @@ var __o = require("bennu")["parse"],
     __o1 = require("nu-stream")["stream"],
     foldl = __o1["foldl"],
     __o2 = require("./reserved_word_lexer"),
-    keywordList = __o2["keywordList"],
+    reservedWordList = __o2["reservedWordList"],
     zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark, identifierStart,
         identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(null, (function(x, y) {
             return (x + y);
@@ -45,7 +45,7 @@ var __o = require("bennu")["parse"],
 (identifierName = cons(identifierStart, identifierParts));
 (identifier = Parser("Identifier Lexer", bind(identifierName, (function(name) {
     var n = join(name);
-    return ((keywordList.indexOf(n) >= 0) ? fail() : always(n));
+    return ((reservedWordList.indexOf(n) >= 0) ? fail() : always(n));
 }))));
 (exports.zwnj = zwnj);
 (exports.zwj = zwj);

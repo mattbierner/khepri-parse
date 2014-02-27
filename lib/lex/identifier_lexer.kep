@@ -40,7 +40,7 @@ with
         letter
         string},
     import 'nu-stream::stream' {foldl},
-    import './reserved_word_lexer' {keywordList}
+    import './reserved_word_lexer' {reservedWordList}
 in {
 
 var join = foldl@((+), '');
@@ -143,7 +143,7 @@ identifierName = cons(identifierStart, identifierParts);
  */
 identifier = Parser@'Identifier Lexer' <|
     bind(identifierName, \name -> let n = join name in
-        ?keywordList.indexOf(n) >= 0
+        ?reservedWordList.indexOf(n) >= 0
             :fail()
             :always n);
 

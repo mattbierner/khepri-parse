@@ -2,9 +2,9 @@
  * @fileOverviewLexersforECMAScript5.1reservedwords.
  */
 package (
-    keywordList
-        
-   reservedWord,
+    reservedWordList
+    
+   reservedWord
    futureReservedWord
     
 //keywords
@@ -35,9 +35,7 @@ package (
    throwKeyword
    tryKeyword
    keyword
-   getKeyword
-   setKeyword
-
+   
 //FutureReservedWord
    classKeyword
    enumKeyword
@@ -65,7 +63,7 @@ with
    import './null_lexer' {nullLiteral}
 in {
 
-keywordList =  [
+var keywordList = [
     'break', 'case', 'catch', 'continue', 'debugger', 'default', 'delete', 
     'do', 'else', 'finally', 'for', 'function', 'if', 'in', 'instanceof', 
     'typeof', 'new', 'var', 'return', 'void', 'switch', 'while', 'this', 
@@ -112,8 +110,6 @@ thisKeyword = string 'this';
 withKeyword = string 'with';
 throwKeyword = string 'throw';
 tryKeyword = string 'try';
-getKeyword = string 'get';
-setKeyword = string 'set';
 
 keyword = choice(
     attempt breakKeyword,
@@ -187,5 +183,7 @@ reservedWord = Parser('ReservedWordLexer',
        trie(keywordList),
        nullLiteral,
        booleanLiteral));
+
+reservedWordList = keywordList.concat('null', 'true', 'false');
 
 }
