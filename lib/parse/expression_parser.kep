@@ -121,7 +121,7 @@ memberExpression = \args(...) -> memberExpression.apply(undefined, args);
 arrayLiteral = Parser@'Array Literal' <| let
     arrayElement = expression,
     
-    arrayElements = sepBy(punctuator ',',
+    arrayElements = eager <| sepBy(punctuator ',',
         arrayElement)
 in
     node(

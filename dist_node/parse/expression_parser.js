@@ -69,8 +69,8 @@ var __o = require("bennu")["parse"],
     var args = arguments;
     return memberExpression.apply(undefined, args);
 }));
-(arrayLiteral = Parser("Array Literal", ((arrayElement = expression), (arrayElements = sepBy(punctuator(","),
-    arrayElement)), node(between(punctuator("["), punctuator("]"), expected("array element", arrayElements)),
+(arrayLiteral = Parser("Array Literal", ((arrayElement = expression), (arrayElements = eager(sepBy(punctuator(","),
+    arrayElement))), node(between(punctuator("["), punctuator("]"), expected("array element", arrayElements)),
     ast_expression.ArrayExpression.create))));
 (propertyName = stringLiteral);
 (propertyInitializer = Parser("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
