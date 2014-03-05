@@ -32,6 +32,7 @@ with
         either
         enumeration
         expected
+        lookahead
         many
         next
         optional
@@ -246,18 +247,20 @@ var whileStatement = Parser('While Statement',
                 statement)),
         ast_statement.WhileStatement.create));
 
-var doWhileStatement = Parser('Do While Statement',
-    nodea(
-        next(
-            keyword 'do',
-            enumeration(
-                then(
-                    statement,
-                    keyword 'while'),
-                between(punctuator '(', punctuator ')',
-                    expression),
-                punctuator ';')),
-        ast_statement.DoWhileStatement.create));
+var doWhileStatement = Parser@'Do While Statement' <|
+    next(
+        attempt <| lookahead <| next(keyword 'do', punctuator '{'),
+        nodea(
+            next(
+                keyword 'do',
+                enumeration(
+                    blockStatement,
+                    next(
+                        keyword 'while',
+                        between(punctuator '(', punctuator ')',
+                            expression)),
+                    punctuator ';')),
+            ast_statement.DoWhileStatement.create));
 
 var forStatement = Parser('For Statement', let
     forInitExpression = optional(null, 
@@ -308,7 +311,7 @@ continueStatement = Parser@'Continue Statement' <|
 
 // Break Statement
 ////////////////////////////////////////
-breakStatement = Parser@'Break Statement'  <|
+breakStatement = Parser@'Break Statement' <|
     node(
         next(
             keyword 'break',
@@ -317,7 +320,7 @@ breakStatement = Parser@'Break Statement'  <|
 
 // Return Statement
 ////////////////////////////////////////
-returnStatement = Parser@'Return Statement'  <|
+returnStatement = Parser@'Return Statement' <|
     node(
         between(keyword 'return', logicalSemiColon,
             optional(null, expression)),
@@ -359,22 +362,22 @@ in
 // Statement
 ////////////////////////////////////////
 statement = Parser@'Statement' <|
-    choice
-        (blockStatement
-        ,staticStatement
-        ,variableStatement
-        ,emptyStatement
-        ,ifStatement
-        ,withStatement
-        ,iterationStatement
-        ,continueStatement
-        ,breakStatement
-        ,returnStatement
-        ,switchStatement
-        ,throwStatement
-        ,tryStatement
-        ,debuggerStatement
-        ,expressionStatement)
+    choice(
+        blockStatement,
+        staticStatement,
+        variableStatement,
+        emptyStatement,
+        ifStatement,
+        withStatement,
+        iterationStatement,
+        continueStatement,
+        breakStatement,
+        returnStatement,
+        switchStatement,
+        throwStatement,
+        tryStatement,
+        debuggerStatement,
+        expressionStatement)
     |> expected@'statement';
 
 }

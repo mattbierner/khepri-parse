@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("nu-stream")["stream"],
     NIL = __o["NIL"],
     __o0 = require("bennu")["parse"],
@@ -15,6 +14,7 @@ var __o = require("nu-stream")["stream"],
     either = __o0["either"],
     enumeration = __o0["enumeration"],
     expected = __o0["expected"],
+    lookahead = __o0["lookahead"],
     many = __o0["many"],
     next = __o0["next"],
     optional = __o0["optional"],
@@ -90,9 +90,9 @@ var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", 
     "switch discriminant", expression)), caseBlock)), ast_statement.SwitchStatement.create))));
 var whileStatement = Parser("While Statement", nodea(next(keyword("while"), enumeration(between(punctuator("("),
     punctuator(")"), expression), statement)), ast_statement.WhileStatement.create)),
-    doWhileStatement = Parser("Do While Statement", nodea(next(keyword("do"), enumeration(then(statement, keyword(
-            "while")), between(punctuator("("), punctuator(")"), expression), punctuator(";"))), ast_statement.DoWhileStatement
-        .create)),
+    doWhileStatement = Parser("Do While Statement", next(attempt(lookahead(next(keyword("do"), punctuator("{")))),
+        nodea(next(keyword("do"), enumeration(blockStatement, next(keyword("while"), between(punctuator("("),
+            punctuator(")"), expression)), punctuator(";"))), ast_statement.DoWhileStatement.create))),
     forStatement = Parser("For Statement", ((forInitExpression = optional(null, either(node(next(keyword("var"),
         variableDeclarationList), ast_declaration.VariableDeclaration.create), topLevelExpression))), (
         forTestExpression = optional(null, expression)), (forUpdateExpression = optional(null,
@@ -115,19 +115,19 @@ var whileStatement = Parser("While Statement", nodea(next(keyword("while"), enum
 (statement = expected("statement", Parser("Statement", choice(blockStatement, staticStatement, variableStatement,
     emptyStatement, ifStatement, withStatement, iterationStatement, continueStatement, breakStatement,
     returnStatement, switchStatement, throwStatement, tryStatement, debuggerStatement, expressionStatement))));
-(exports.blockStatement = blockStatement);
-(exports.staticStatement = staticStatement);
-(exports.variableStatement = variableStatement);
-(exports.emptyStatement = emptyStatement);
-(exports.expressionStatement = expressionStatement);
-(exports.ifStatement = ifStatement);
-(exports.withStatement = withStatement);
-(exports.iterationStatement = iterationStatement);
-(exports.continueStatement = continueStatement);
-(exports.breakStatement = breakStatement);
-(exports.returnStatement = returnStatement);
-(exports.switchStatement = switchStatement);
-(exports.throwStatement = throwStatement);
-(exports.tryStatement = tryStatement);
-(exports.debuggerStatement = debuggerStatement);
-(exports.statement = statement);
+(exports["blockStatement"] = blockStatement);
+(exports["staticStatement"] = staticStatement);
+(exports["variableStatement"] = variableStatement);
+(exports["emptyStatement"] = emptyStatement);
+(exports["expressionStatement"] = expressionStatement);
+(exports["ifStatement"] = ifStatement);
+(exports["withStatement"] = withStatement);
+(exports["iterationStatement"] = iterationStatement);
+(exports["continueStatement"] = continueStatement);
+(exports["breakStatement"] = breakStatement);
+(exports["returnStatement"] = returnStatement);
+(exports["switchStatement"] = switchStatement);
+(exports["throwStatement"] = throwStatement);
+(exports["tryStatement"] = tryStatement);
+(exports["debuggerStatement"] = debuggerStatement);
+(exports["statement"] = statement);

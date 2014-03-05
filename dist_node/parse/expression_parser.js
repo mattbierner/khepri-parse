@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     append = __o["append"],
@@ -53,9 +52,9 @@ var __o = require("bennu")["parse"],
     arrayLiteral, propertyName, propertyInitializer, objectProperties, objectLiteral, functionExpression,
         operatorExpression, primaryExpression, curryExpression, args, applicationExpression, dotAccessor,
         bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression, binaryExpression,
-        conditionalExpression, letExpression, leftHandReferenceExpression, assignmentOperator, assignmentExpression,
-        expression, topLevelExpression, arrayElement, arrayElements, letBindings, letBody, op, element, reducer,
-        reducer0, reducer1, sourceElements = (function() {
+        conditionalExpression, letExpression, doExpression, leftHandReferenceExpression, assignmentOperator,
+        assignmentExpression, expression, topLevelExpression, arrayElement, arrayElements, letBindings, letBody,
+        doBindings, doBody, op, element, reducer, reducer0, reducer1, sourceElements = (function() {
             var args = arguments,
                 __o = require("./program_parser"),
                 sourceElements = __o["sourceElements"];
@@ -92,6 +91,14 @@ var letBinding = Parser("Let Binding", nodea(enumeration(expected("pattern", pat
 (letExpression = Parser("Let Expression", ((letBindings = expected("let bindings", sepBy1(punctuator(","), letBinding))), (
     letBody = expected("let body expression", expression)), nodea(next(keyword("let"), enumeration(eager(
     letBindings), next(keyword("in"), letBody))), ast_expression.LetExpression.create))));
+var yieldExpression = Parser("Yield Expression", node(next(keyword("yield"), expression), ast_expression.YieldExpression
+    .create)),
+    doBinding = Parser("Do Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern), next(punctuator(
+        "<-"), expected("bound value", expression))), ast_declaration.Binding.create));
+(doExpression = Parser("Do Expression", ((doBindings = expected("do bindings", sepBy(punctuator(","), doBinding))), (
+    doBody = either(yieldExpression, next(keyword("in"), expected("do body", expression)))), nodea(next(
+    keyword("do"), enumeration(between(punctuator("("), punctuator(")"), optional(null, expression)),
+        eager(doBindings), doBody)), ast_expression.DoExpression.create))));
 (conditionalExpression = Parser("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression, next(
         punctuator(":"), expected("conditional consequent expression", expression)), next(punctuator(
         ":"), expected("conditional alternate expression", expression)))), ast_expression.ConditionalExpression
@@ -120,9 +127,9 @@ var unaryOperatorExpression = Parser("Unary Operator Expression", bind(either(ke
 ))), (function(loc, target, args) {
     return (args ? ast_expression.CurryExpression.create(loc, target, args) : target);
 })))));
-(primaryExpression = Parser("Primary Expression", choice(letExpression, conditionalExpression, identifier, literal,
-    arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(punctuator("("),
-        punctuator(")"), expected("expression", expression)))));
+(primaryExpression = Parser("Primary Expression", choice(letExpression, doExpression, conditionalExpression, identifier,
+    literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(punctuator(
+        "("), punctuator(")"), expected("expression", expression)))));
 (args = Parser("Arguments", ((element = expected("argument", expression)), node(between(punctuator("("), punctuator(")"),
     eager(sepBy(punctuator(","), element))), (function(loc, x) {
     (x.loc = loc);
@@ -260,29 +267,30 @@ var deleteOperator = keyword("delete"),
         return ast_expression.UnaryExpression.create(loc, op.value, expression);
     })));
 (topLevelExpression = choice(deleteExpression, assignmentExpression, expression));
-(exports.arrayLiteral = arrayLiteral);
-(exports.propertyName = propertyName);
-(exports.propertyInitializer = propertyInitializer);
-(exports.objectProperties = objectProperties);
-(exports.objectLiteral = objectLiteral);
-(exports.functionExpression = functionExpression);
-(exports.operatorExpression = operatorExpression);
-(exports.primaryExpression = primaryExpression);
-(exports.curryExpression = curryExpression);
-(exports.args = args);
-(exports.applicationExpression = applicationExpression);
-(exports.dotAccessor = dotAccessor);
-(exports.bracketAccessor = bracketAccessor);
-(exports.accessor = accessor);
-(exports.memberExpression = memberExpression);
-(exports.newExpression = newExpression);
-(exports.unaryOperator = unaryOperator);
-(exports.unaryExpression = unaryExpression);
-(exports.binaryExpression = binaryExpression);
-(exports.conditionalExpression = conditionalExpression);
-(exports.letExpression = letExpression);
-(exports.leftHandReferenceExpression = leftHandReferenceExpression);
-(exports.assignmentOperator = assignmentOperator);
-(exports.assignmentExpression = assignmentExpression);
-(exports.expression = expression);
-(exports.topLevelExpression = topLevelExpression);
+(exports["arrayLiteral"] = arrayLiteral);
+(exports["propertyName"] = propertyName);
+(exports["propertyInitializer"] = propertyInitializer);
+(exports["objectProperties"] = objectProperties);
+(exports["objectLiteral"] = objectLiteral);
+(exports["functionExpression"] = functionExpression);
+(exports["operatorExpression"] = operatorExpression);
+(exports["primaryExpression"] = primaryExpression);
+(exports["curryExpression"] = curryExpression);
+(exports["args"] = args);
+(exports["applicationExpression"] = applicationExpression);
+(exports["dotAccessor"] = dotAccessor);
+(exports["bracketAccessor"] = bracketAccessor);
+(exports["accessor"] = accessor);
+(exports["memberExpression"] = memberExpression);
+(exports["newExpression"] = newExpression);
+(exports["unaryOperator"] = unaryOperator);
+(exports["unaryExpression"] = unaryExpression);
+(exports["binaryExpression"] = binaryExpression);
+(exports["conditionalExpression"] = conditionalExpression);
+(exports["letExpression"] = letExpression);
+(exports["doExpression"] = doExpression);
+(exports["leftHandReferenceExpression"] = leftHandReferenceExpression);
+(exports["assignmentOperator"] = assignmentOperator);
+(exports["assignmentExpression"] = assignmentExpression);
+(exports["expression"] = expression);
+(exports["topLevelExpression"] = topLevelExpression);

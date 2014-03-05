@@ -49,6 +49,9 @@ package (
 // Let Expression
     letExpression
 
+// Do Expression
+    doExpression
+    
 // Assignment
     leftHandReferenceExpression
     assignmentOperator
@@ -213,6 +216,46 @@ in
                     letBody))),
         ast_expression.LetExpression.create);
 
+// Do Expression
+////////////////////////////////////////
+var yieldExpression = Parser@'Yield Expression' <|
+    node(
+        next(
+            keyword 'yield',
+            expression),
+        ast_expression.YieldExpression.create);
+
+var doBinding = Parser@'Do Binding' <|
+    nodea(
+        enumeration(
+            pattern.topLevelPattern |> expected@'pattern',
+            next(
+                punctuator '<-',
+                expression |> expected@'bound value')),
+        ast_declaration.Binding.create);
+
+doExpression = Parser@'Do Expression' <| let
+    doBindings = sepBy(punctuator ',',
+        doBinding)
+        |> expected@'do bindings',
+    
+    doBody = either(
+        yieldExpression,
+        next(
+            keyword 'in',
+            expression
+                |> expected@'do body'))
+in
+    nodea(
+        next(
+            keyword 'do',
+            enumeration(
+                between(punctuator '(', punctuator')',
+                    optional(null, expression)),
+                eager doBindings,
+                doBody)),
+        ast_expression.DoExpression.create);
+
 // Conditional Expression
 ////////////////////////////////////////
 conditionalExpression = Parser@'Conditional Expression' <|
@@ -305,6 +348,7 @@ in
 primaryExpression = Parser@'Primary Expression' <|
     choice(
         letExpression,
+        doExpression,
         conditionalExpression,
         identifier,
         literal,

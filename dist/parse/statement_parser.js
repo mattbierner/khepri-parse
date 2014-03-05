@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
+*/define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
     "khepri-ast/declaration", "khepri-ast/statement", "./common", "./token_parser", "./expression_parser",
     "./pattern_parser", "./value_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_clause, ast_declaration, ast_statement, __o2, __o3, __o4, __o5,
@@ -18,6 +17,7 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
         either = __o0["either"],
         enumeration = __o0["enumeration"],
         expected = __o0["expected"],
+        lookahead = __o0["lookahead"],
         many = __o0["many"],
         next = __o0["next"],
         optional = __o0["optional"],
@@ -90,9 +90,10 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
         .create))));
     var whileStatement = Parser("While Statement", nodea(next(keyword("while"), enumeration(between(punctuator(
         "("), punctuator(")"), expression), statement)), ast_statement.WhileStatement.create)),
-        doWhileStatement = Parser("Do While Statement", nodea(next(keyword("do"), enumeration(then(statement,
-                keyword("while")), between(punctuator("("), punctuator(")"), expression),
-            punctuator(";"))), ast_statement.DoWhileStatement.create)),
+        doWhileStatement = Parser("Do While Statement", next(attempt(lookahead(next(keyword("do"), punctuator(
+            "{")))), nodea(next(keyword("do"), enumeration(blockStatement, next(keyword("while"),
+                between(punctuator("("), punctuator(")"), expression)), punctuator(";"))),
+            ast_statement.DoWhileStatement.create))),
         forStatement = Parser("For Statement", ((forInitExpression = optional(null, either(node(next(keyword(
                 "var"), variableDeclarationList), ast_declaration.VariableDeclaration.create),
             topLevelExpression))), (forTestExpression = optional(null, expression)), (
@@ -118,20 +119,20 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
         variableStatement, emptyStatement, ifStatement, withStatement, iterationStatement,
         continueStatement, breakStatement, returnStatement, switchStatement, throwStatement,
         tryStatement, debuggerStatement, expressionStatement))));
-    (exports.blockStatement = blockStatement);
-    (exports.staticStatement = staticStatement);
-    (exports.variableStatement = variableStatement);
-    (exports.emptyStatement = emptyStatement);
-    (exports.expressionStatement = expressionStatement);
-    (exports.ifStatement = ifStatement);
-    (exports.withStatement = withStatement);
-    (exports.iterationStatement = iterationStatement);
-    (exports.continueStatement = continueStatement);
-    (exports.breakStatement = breakStatement);
-    (exports.returnStatement = returnStatement);
-    (exports.switchStatement = switchStatement);
-    (exports.throwStatement = throwStatement);
-    (exports.tryStatement = tryStatement);
-    (exports.debuggerStatement = debuggerStatement);
-    (exports.statement = statement);
+    (exports["blockStatement"] = blockStatement);
+    (exports["staticStatement"] = staticStatement);
+    (exports["variableStatement"] = variableStatement);
+    (exports["emptyStatement"] = emptyStatement);
+    (exports["expressionStatement"] = expressionStatement);
+    (exports["ifStatement"] = ifStatement);
+    (exports["withStatement"] = withStatement);
+    (exports["iterationStatement"] = iterationStatement);
+    (exports["continueStatement"] = continueStatement);
+    (exports["breakStatement"] = breakStatement);
+    (exports["returnStatement"] = returnStatement);
+    (exports["switchStatement"] = switchStatement);
+    (exports["throwStatement"] = throwStatement);
+    (exports["tryStatement"] = tryStatement);
+    (exports["debuggerStatement"] = debuggerStatement);
+    (exports["statement"] = statement);
 }));

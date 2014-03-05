@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.6.0 - March 5, 2014
+* Added do expression parsing.
+
 ## 0.5.1 - March 4, 2014
 * Reversed alias and Id on package export.
 
