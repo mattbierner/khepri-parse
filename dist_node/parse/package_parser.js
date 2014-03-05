@@ -37,7 +37,9 @@ var __o = require("bennu")["parse"],
         return blockStatement.apply(undefined, args);
     }),
     packageExport = Parser("Package Export", either(node(identifier, ast_package.PackageExport.create), nodea(
-        enumeration(stringLiteral, next(punctuator(":"), identifier)), ast_package.PackageExport.create))),
+        enumeration(stringLiteral, next(punctuator(":"), identifier)), (function(loc, alias, id) {
+            return ast_package.PackageExport.create(loc, id, alias);
+        })))),
     packageExportList = Parser("Package Export List", node(between(punctuator("("), punctuator(")"), eager(sepBy(
         optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
     packageExports = Parser("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport.create))),

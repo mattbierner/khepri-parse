@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.5.1 - March 4, 2014
+* Reversed alias and Id on package export.
+
 ## 0.5.0 - March 4, 2014
 * Added package export alias support.
 * Added module exports package support.

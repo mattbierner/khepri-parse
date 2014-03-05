@@ -45,7 +45,8 @@ var packageExport = Parser@'Package Export' <|
                 next(
                     punctuator ':',
                     identifier)),
-            ast_package.PackageExport.create));
+            \loc alias id ->
+                ast_package.PackageExport.create(loc, id, alias)));
 
 var packageExportList = Parser@'Package Export List' <|
     node(
