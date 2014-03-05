@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 0.5.0 - March 4, 2014
+* Added package export alias support.
+* Added module exports package support.
+
 ## 0.4.1 - Feb 26, 2014
 * Fixed booleans getting lexed to identifiers.
 
