@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
+ * DO NOT EDIT
+*/
 "use strict";
 var __o = require("bennu")["parse"],
     eager = __o["eager"],
@@ -19,6 +23,7 @@ var __o = require("bennu")["parse"],
     punctuator = __o2["punctuator"],
     __o3 = require("./value_parser"),
     identifier = __o3["identifier"],
+    stringLiteral = __o3["stringLiteral"],
     khepriPackage, withStatement = (function() {
         var args = arguments,
             __o = require("./statement_parser"),
@@ -31,10 +36,12 @@ var __o = require("bennu")["parse"],
             blockStatement = __o["blockStatement"];
         return blockStatement.apply(undefined, args);
     }),
-    packageExport = Parser("Package Export", node(identifier, ast_package.PackageExport.create)),
-    packageExports = Parser("Package Exports", node(between(punctuator("("), punctuator(")"), eager(sepBy(optional(null,
-        punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+    packageExport = Parser("Package Export", either(node(identifier, ast_package.PackageExport.create), nodea(
+        enumeration(stringLiteral, next(punctuator(":"), identifier)), ast_package.PackageExport.create))),
+    packageExportList = Parser("Package Export List", node(between(punctuator("("), punctuator(")"), eager(sepBy(
+        optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+    packageExports = Parser("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport.create))),
     packageBody = Parser("Package Body", either(withStatement, blockStatement));
-(khepriPackage = Parser("Package", nodea(next(keyword("package"), enumeration(expected("package export list",
+(khepriPackage = Parser("Package", nodea(next(keyword("package"), enumeration(expected("package exports",
     packageExports), packageBody)), ast_package.Package.create)));
 (exports.khepriPackage = khepriPackage);

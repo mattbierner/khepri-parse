@@ -20,23 +20,28 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
         keyword = __o2["keyword"],
         punctuator = __o2["punctuator"],
         identifier = __o3["identifier"],
+        stringLiteral = __o3["stringLiteral"],
         khepriPackage, withStatement = (function() {
             var args = arguments,
-                __o4 = require("./statement_parser"),
-                withStatement = __o4["withStatement"];
+                __o = require("./statement_parser"),
+                withStatement = __o["withStatement"];
             return withStatement.apply(undefined, args);
         }),
         blockStatement = (function() {
             var args = arguments,
-                __o4 = require("./statement_parser"),
-                blockStatement = __o4["blockStatement"];
+                __o = require("./statement_parser"),
+                blockStatement = __o["blockStatement"];
             return blockStatement.apply(undefined, args);
         }),
-        packageExport = Parser("Package Export", node(identifier, ast_package.PackageExport.create)),
-        packageExports = Parser("Package Exports", node(between(punctuator("("), punctuator(")"), eager(sepBy(
-            optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+        packageExport = Parser("Package Export", either(node(identifier, ast_package.PackageExport.create),
+            nodea(enumeration(stringLiteral, next(punctuator(":"), identifier)), ast_package.PackageExport.create)
+        )),
+        packageExportList = Parser("Package Export List", node(between(punctuator("("), punctuator(")"), eager(
+            sepBy(optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+        packageExports = Parser("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport
+            .create))),
         packageBody = Parser("Package Body", either(withStatement, blockStatement));
-    (khepriPackage = Parser("Package", nodea(next(keyword("package"), enumeration(expected(
-        "package export list", packageExports), packageBody)), ast_package.Package.create)));
+    (khepriPackage = Parser("Package", nodea(next(keyword("package"), enumeration(expected("package exports",
+        packageExports), packageBody)), ast_package.Package.create)));
     (exports.khepriPackage = khepriPackage);
 }));
