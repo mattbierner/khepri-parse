@@ -68,19 +68,19 @@ exports.if_else_statement = function(test) {
 };
 
 exports.do_while_statement = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("do debugger; while (a);")));
+    var result = testParser(parser.parserStream(lexer.lex("do {} while (a);")));
     test.equal(result.type, "DoWhileStatement");
     test.equal(result.test.name, 'a');
-    test.equal(result.body.type, 'DebuggerStatement');
+    test.equal(result.body.type, 'BlockStatement');
     
     test.done();
 };
 
 exports.do_while_while_body = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("do while (a) debugger; while (b);")));
+    var result = testParser(parser.parserStream(lexer.lex("do { while (a) debugger; }while (b);")));
     test.equal(result.type, "DoWhileStatement");
     test.equal(result.test.name, 'b');
-    test.equal(result.body.type, 'WhileStatement');
+    test.equal(result.body.body[0].type, 'WhileStatement');
     
     test.done();
 };
@@ -95,7 +95,7 @@ exports.while_statement = function(test) {
 };
 
 exports.while_statement_do_while_body = function(test) {
-    var result = testParser(parser.parserStream(lexer.lex("while (a) do debugger; while (b);")));
+    var result = testParser(parser.parserStream(lexer.lex("while (a) do {} while (b);")));
     test.equal(result.type, "WhileStatement");
     test.equal(result.test.name, 'a');
     test.equal(result.body.type, 'DoWhileStatement');
