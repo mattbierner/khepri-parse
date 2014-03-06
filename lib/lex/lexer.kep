@@ -24,7 +24,7 @@ with
         next
         many
         runState
-        Parser
+        label
         ParserState},
     import 'bennu::lang' {then},
     import 'nu-stream::stream' {memoStream, NIL, 'from': streamFrom},

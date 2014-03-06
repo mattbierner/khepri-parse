@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/identifier_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -15,12 +14,12 @@ var __o = require("bennu")["parse"],
     many = __o["many"],
     never = __o["never"],
     next = __o["next"],
-    Parser = __o["Parser"],
+    label = __o["label"],
     testStream = __o["testStream"],
     token = __o["token"],
     __o0 = require("bennu")["text"],
     character = __o0["character"],
-    characters = __o0["characters"],
+    oneOf = __o0["oneOf"],
     digit = __o0["digit"],
     letter = __o0["letter"],
     string = __o0["string"],
@@ -36,25 +35,25 @@ var __o = require("bennu")["parse"],
 (zwj = character("‍"));
 (unicodeLetter = letter);
 (unicodeDigit = digit);
-(unicodeConnectorPunctuation = characters(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
+(unicodeConnectorPunctuation = oneOf(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
 (unicodeCombiningMark = never());
-(identifierStart = either(unicodeLetter, characters("$_")));
+(identifierStart = either(unicodeLetter, oneOf("$_")));
 (identifierPart = choice(attempt(identifierStart), unicodeCombiningMark, unicodeDigit, unicodeConnectorPunctuation,
     zwnj, zwj));
 (identifierParts = many(identifierPart));
 (identifierName = cons(identifierStart, identifierParts));
-(identifier = Parser("Identifier Lexer", bind(identifierName, (function(name) {
+(identifier = label("Identifier Lexer", bind(identifierName, (function(name) {
     var n = join(name);
     return ((reservedWordList.indexOf(n) >= 0) ? fail() : always(n));
 }))));
-(exports.zwnj = zwnj);
-(exports.zwj = zwj);
-(exports.unicodeLetter = unicodeLetter);
-(exports.unicodeDigit = unicodeDigit);
-(exports.unicodeConnectorPunctuation = unicodeConnectorPunctuation);
-(exports.unicodeCombiningMark = unicodeCombiningMark);
-(exports.identifierStart = identifierStart);
-(exports.identifierPart = identifierPart);
-(exports.identifierParts = identifierParts);
-(exports.identifierName = identifierName);
-(exports.identifier = identifier);
+(exports["zwnj"] = zwnj);
+(exports["zwj"] = zwj);
+(exports["unicodeLetter"] = unicodeLetter);
+(exports["unicodeDigit"] = unicodeDigit);
+(exports["unicodeConnectorPunctuation"] = unicodeConnectorPunctuation);
+(exports["unicodeCombiningMark"] = unicodeCombiningMark);
+(exports["identifierStart"] = identifierStart);
+(exports["identifierPart"] = identifierPart);
+(exports["identifierParts"] = identifierParts);
+(exports["identifierName"] = identifierName);
+(exports["identifier"] = identifier);

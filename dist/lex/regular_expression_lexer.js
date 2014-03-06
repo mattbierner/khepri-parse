@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
     "./line_terminator_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -16,7 +15,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         enumeration = __o["enumeration"],
         many = __o["many"],
         next = __o["next"],
-        Parser = __o["Parser"],
+        label = __o["label"],
         token = __o["token"],
         test = __o["test"],
         between = __o0["between"],
@@ -68,19 +67,19 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
             return f(g(x));
         });
     })(always, join)));
-    (regularExpressionLiteral = Parser("Regular Expression Lexer", binds(enumeration(between(character("`"),
+    (regularExpressionLiteral = label("Regular Expression Lexer", binds(enumeration(between(character("`"),
         character("`"), regularExpressionBody), regularExpressionFlags), (function(body, flags) {
         return always(new(RegExp)(body, join(flags)));
     }))));
-    (exports.regularExpressionNonTerminator = regularExpressionNonTerminator);
-    (exports.regularExpressionBackslashSequence = regularExpressionBackslashSequence);
-    (exports.regularExpressionClassChar = regularExpressionClassChar);
-    (exports.regularExpressionClassChars = regularExpressionClassChars);
-    (exports.regularExpressionClass = regularExpressionClass);
-    (exports.regularExpressionChar = regularExpressionChar);
-    (exports.regularExpressionChars = regularExpressionChars);
-    (exports.regularExpressionFirstChar = regularExpressionFirstChar);
-    (exports.regularExpressionFlags = regularExpressionFlags);
-    (exports.regularExpressionBody = regularExpressionBody);
-    (exports.regularExpressionLiteral = regularExpressionLiteral);
+    (exports["regularExpressionNonTerminator"] = regularExpressionNonTerminator);
+    (exports["regularExpressionBackslashSequence"] = regularExpressionBackslashSequence);
+    (exports["regularExpressionClassChar"] = regularExpressionClassChar);
+    (exports["regularExpressionClassChars"] = regularExpressionClassChars);
+    (exports["regularExpressionClass"] = regularExpressionClass);
+    (exports["regularExpressionChar"] = regularExpressionChar);
+    (exports["regularExpressionChars"] = regularExpressionChars);
+    (exports["regularExpressionFirstChar"] = regularExpressionFirstChar);
+    (exports["regularExpressionFlags"] = regularExpressionFlags);
+    (exports["regularExpressionBody"] = regularExpressionBody);
+    (exports["regularExpressionLiteral"] = regularExpressionLiteral);
 }));

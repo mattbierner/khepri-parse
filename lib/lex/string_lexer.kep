@@ -37,7 +37,7 @@ with
         many
         next
         sequence
-        Parser
+        label
         test
         token},
     import 'bennu::text' {character},
@@ -125,7 +125,7 @@ escapeSequence = choice(
 /**
  * Character in single quoted string.
  */
-singleStringCharacter = Parser@'Single String Character' <|
+singleStringCharacter = label@'Single String Character' <|
     choice(
         attempt <| lineContinuation,
         next(escape, escapeSequence),
@@ -144,7 +144,7 @@ singleStringCharacters = many singleStringCharacter;
  * 
  * Returns the value of the string enclosed in the single quoted string literal.
  */
-singleStringLiteral = Parser@'Single String Literal' <|
+singleStringLiteral = label@'Single String Literal' <|
     between(singleQuote, singleQuote,
         bind(singleStringCharacters,
             join \> always));
@@ -172,7 +172,7 @@ doubleStringCharacters = many doubleStringCharacter;
  * 
  * Returns the value of the string enclosed in the double quoted string literal.
  */
-doubleStringLiteral = Parser@'Double String Literal' <|
+doubleStringLiteral = label@'Double String Literal' <|
     between(doubleQuote, doubleQuote,
         bind(doubleStringCharacters,
             join \> always));
@@ -184,7 +184,7 @@ doubleStringLiteral = Parser@'Double String Literal' <|
  * 
  * Returns the value of the string enclosed in the string literal.
  */
-stringLiteral = Parser@'Sting Literal Lexer' <|
+stringLiteral = label@'Sting Literal Lexer' <|
     either(
         singleStringLiteral,
         doubleStringLiteral);

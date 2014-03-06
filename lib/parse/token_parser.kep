@@ -1,5 +1,5 @@
 /**
- * @fileOverview Parsers for working with lex tokens.
+ * @fileOverview labels for working with lex tokens.
  */
 package (
     punctuator,
@@ -37,7 +37,7 @@ var selectAny = \type ->
             \tok -> (tok.type === type && indexOf(options, tok.value) >= 0),
             expectError(join(options, ', ')));
 
-/* Parsers
+/* labels
  ******************************************************************************/
 punctuator = selectAny('Punctuator');
 

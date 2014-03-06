@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/parser.kep'
- * DO NOT EDIT
-*/
 define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position", "./program_parser"], (function(
     require, exports, parse, __o, __o0, __o1) {
     "use strict";
@@ -56,8 +52,8 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
             return f(g(x));
         });
     })(parseStream, streamFrom));
-    (exports.parserStream = parserStream);
-    (exports.ParserPosition = ParserPosition);
-    (exports.parseInput = parseInput);
-    (exports.parseStream = parseStream);
+    (exports["parserStream"] = parserStream);
+    (exports["ParserPosition"] = ParserPosition);
+    (exports["parseInput"] = parseInput);
+    (exports["parseStream"] = parseStream);
 }));

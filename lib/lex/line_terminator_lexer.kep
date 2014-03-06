@@ -9,8 +9,8 @@ package (
     lineTerminator
     lineTerminatorSequence)
 with
-    import 'bennu::parse' {always choice next optional Parser token},
-    import 'bennu::text' {character characters}
+    import 'bennu::parse' {always choice next optional label token},
+    import 'bennu::text' {character oneOf}
 in {
 
 var lfChar = '\u000A',
@@ -23,39 +23,39 @@ var lfChar = '\u000A',
 /**
  * Line Feed
  */
-lf = Parser('Line Feed Lexer',
+lf = label('Line Feed Lexer',
     character lfChar);
 
 /**
  * Carriage Return
  */
-cr = Parser('Carriage Return Lexer',
+cr = label('Carriage Return Lexer',
     character crChar);
 
 /**
  * Line Separator
  */
-ls = Parser('Line Separator Lexer',
+ls = label('Line Separator Lexer',
     character lsChar);
 
 /**
  * Paragraph Separator
  */
-ps = Parser('Paragraph Separator Lexer',
+ps = label('Paragraph Separator Lexer',
     character psChar);
 
 /**
  * A line terminator character.
  */
-lineTerminator = Parser('Line Terminator Lexer',
-    characters [lfChar, crChar, lsChar, psChar]);
+lineTerminator = label('Line Terminator Lexer',
+    oneOf [lfChar, crChar, lsChar, psChar]);
 
 /**
  * A sequence of characters denoting a linter terminator.
  * 
  * crlf sequences are returned as a single token.
  */
-lineTerminatorSequence = Parser@'Line Terminator Sequence Lexer' <|
+lineTerminatorSequence = label@'Line Terminator Sequence Lexer' <|
     choice(
         lf,
         ls,

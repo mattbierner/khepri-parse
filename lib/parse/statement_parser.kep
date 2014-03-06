@@ -36,7 +36,8 @@ with
         many
         next
         optional
-        Parser},
+        label
+        late},
     import 'bennu::lang' {
         between
         sepBy1
@@ -61,7 +62,7 @@ in {
 
 /* Forward declarations
  ******************************************************************************/
-statement = \args(...) -> statement.apply(undefined, args);
+statement = late\->statement;
 
 /* Statement Parsers
  ******************************************************************************/
@@ -71,7 +72,7 @@ var statementList = eager <| many statement;
 
 // Block Statement
 ////////////////////////////////////////
-blockStatement = Parser@'Block Statement' <|
+blockStatement = label@'Block Statement' <|
     node(
         between(punctuator '{', punctuator '}', 
             statementList),
@@ -79,14 +80,14 @@ blockStatement = Parser@'Block Statement' <|
 
 // Empty Statement
 ////////////////////////////////////////
-emptyStatement = Parser@'Empty Statement' <|
+emptyStatement = label@'Empty Statement' <|
     node(
         punctuator ';',
         ast_statement.EmptyStatement.create);
 
 // Debugger Statement
 ////////////////////////////////////////
-debuggerStatement = Parser@'Debugger Statement' <|
+debuggerStatement = label@'Debugger Statement' <|
     node(
         next(
             keyword 'debugger',
@@ -95,7 +96,7 @@ debuggerStatement = Parser@'Debugger Statement' <|
 
 // Expression Statement
 ////////////////////////////////////////
-expressionStatement = Parser@'Expression Statement' <|
+expressionStatement = label@'Expression Statement' <|
     node(
         then(
             topLevelExpression,
@@ -104,7 +105,7 @@ expressionStatement = Parser@'Expression Statement' <|
 
 // Static Declaration Statement
 ////////////////////////////////////////
-staticStatement = Parser@'Static Statement' <| let
+staticStatement = label@'Static Statement' <| let
     staticDeclaration = node(
         identifier,
         ast_declaration.StaticDeclarator.create),
@@ -140,7 +141,7 @@ in
     eager <| sepBy1(punctuator ',',
         variableDeclaration);
 
-variableStatement = Parser@'Variable Statement' <|
+variableStatement = label@'Variable Statement' <|
     node(
         between(keyword 'var', logicalSemiColon,
             variableDeclarationList),
@@ -148,7 +149,7 @@ variableStatement = Parser@'Variable Statement' <|
 
 // With Statement
 ////////////////////////////////////////
-withStatement = Parser@'With Statement' <| let
+withStatement = label@'With Statement' <| let
     withIdentifier = pattern |> expected@"pattern",
 
     withBinding = either(
@@ -180,7 +181,7 @@ in
 
 // If Statement
 ////////////////////////////////////////
-ifStatement = Parser@'If Statement' <|
+ifStatement = label@'If Statement' <|
     nodea(
         next(
             keyword 'if',
@@ -195,7 +196,7 @@ ifStatement = Parser@'If Statement' <|
 
 // Switch Statement
 ////////////////////////////////////////
-switchStatement = Parser@'Switch Statement' <| let
+switchStatement = label@'Switch Statement' <| let
     caseClause = nodea(
         next(
             keyword 'case',
@@ -237,7 +238,7 @@ in
 
 // Iteration Statement
 ////////////////////////////////////////
-var whileStatement = Parser('While Statement',
+var whileStatement = label@'While Statement' <|
     nodea(
         next(
             keyword 'while',
@@ -245,9 +246,9 @@ var whileStatement = Parser('While Statement',
                 between(punctuator '(', punctuator ')',
                     expression),
                 statement)),
-        ast_statement.WhileStatement.create));
+        ast_statement.WhileStatement.create);
 
-var doWhileStatement = Parser@'Do While Statement' <|
+var doWhileStatement = label@'Do While Statement' <|
     next(
         attempt <| lookahead <| next(keyword 'do', punctuator '{'),
         nodea(
@@ -262,7 +263,7 @@ var doWhileStatement = Parser@'Do While Statement' <|
                     punctuator ';')),
             ast_statement.DoWhileStatement.create));
 
-var forStatement = Parser('For Statement', let
+var forStatement = label('For Statement', let
     forInitExpression = optional(null, 
         either(
             node(
@@ -294,7 +295,7 @@ in
                     statement))),
         ast_statement.ForStatement.create));
 
-iterationStatement = Parser@'Iteration Statement' <|
+iterationStatement = label@'Iteration Statement' <|
     choice
         (doWhileStatement
         ,whileStatement
@@ -302,7 +303,7 @@ iterationStatement = Parser@'Iteration Statement' <|
 
 // Continue Statement
 ////////////////////////////////////////
-continueStatement = Parser@'Continue Statement' <|
+continueStatement = label@'Continue Statement' <|
     node(
         next(
             keyword 'continue',
@@ -311,7 +312,7 @@ continueStatement = Parser@'Continue Statement' <|
 
 // Break Statement
 ////////////////////////////////////////
-breakStatement = Parser@'Break Statement' <|
+breakStatement = label@'Break Statement' <|
     node(
         next(
             keyword 'break',
@@ -320,7 +321,7 @@ breakStatement = Parser@'Break Statement' <|
 
 // Return Statement
 ////////////////////////////////////////
-returnStatement = Parser@'Return Statement' <|
+returnStatement = label@'Return Statement' <|
     node(
         between(keyword 'return', logicalSemiColon,
             optional(null, expression)),
@@ -328,7 +329,7 @@ returnStatement = Parser@'Return Statement' <|
 
 // Throw Statement
 ////////////////////////////////////////
-throwStatement = Parser@'Throw Statement'  <|
+throwStatement = label@'Throw Statement'  <|
     node(
         between(keyword 'throw', logicalSemiColon,
             expression),
@@ -336,7 +337,7 @@ throwStatement = Parser@'Throw Statement'  <|
 
 // Try Statement
 ////////////////////////////////////////
-tryStatement = Parser@'Try Statement'  <| let
+tryStatement = label@'Try Statement'  <| let
     catchBlock = nodea(
         next(
             keyword 'catch',
@@ -361,7 +362,7 @@ in
 
 // Statement
 ////////////////////////////////////////
-statement = Parser@'Statement' <|
+statement = label@'Statement' <|
     choice(
         blockStatement,
         staticStatement,

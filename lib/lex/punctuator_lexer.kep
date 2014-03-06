@@ -69,7 +69,7 @@ package (
 // Punctuators
     punctuator)
 with
-    import 'bennu::parse' {Parser},
+    import 'bennu::parse' {label},
     import 'bennu::text' {character string trie}
 in {
 
@@ -165,7 +165,7 @@ lambda = string '->';
 
 // Punctuators
 ////////////////////////////////////////
-punctuator = Parser('Punctuator Lexer',
+punctuator = label('Punctuator Lexer',
     trie(punctuators));
 
 }

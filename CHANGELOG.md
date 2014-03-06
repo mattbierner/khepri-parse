@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.6.2 - March 6, 2014
+* Update to Bennu 17.
+
 ## 0.6.0 - March 5, 2014
 * Added do expression parsing.
 

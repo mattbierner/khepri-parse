@@ -33,7 +33,7 @@ with
         enumeration,
         many,
         next,
-        Parser,
+        label,
         token,
         test},
     import 'bennu::lang' {between},
@@ -109,7 +109,7 @@ regularExpressionBody = bind(
 /**
  * Lexer for regular expression literals.
  */
-regularExpressionLiteral = Parser@'Regular Expression Lexer' <|
+regularExpressionLiteral = label@'Regular Expression Lexer' <|
     binds(
         enumeration(
             between(character '`', character '`',

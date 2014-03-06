@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
     bind = parse["bind"],
@@ -80,7 +79,7 @@ var prevEnd = extract((function(__o) {
         return always(f.apply(undefined, stream.toArray(stream.cons(new(SourceLocation)(o, c), x))));
     }));
 }));
-(exports.precedence = precedence);
-(exports.node = node);
-(exports.nodea = nodea);
-(exports.positionParser = positionParser);
+(exports["precedence"] = precedence);
+(exports["node"] = node);
+(exports["nodea"] = nodea);
+(exports["positionParser"] = positionParser);

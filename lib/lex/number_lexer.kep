@@ -43,9 +43,9 @@ with
         many1
         next
         optional
-        Parser},
+        label},
     import 'bennu::lang' {then},
-    import 'bennu::text' {character characters match string},
+    import 'bennu::text' {character oneOf match string},
     import 'nu-stream::stream' {foldl}
 in {
 
@@ -62,7 +62,7 @@ negativeSign = character '-';
 
 positiveSign = character '+';
 
-exponentIndicator = characters 'eE';
+exponentIndicator = oneOf 'eE';
 
 hexIndicator =
     either(
@@ -71,28 +71,28 @@ hexIndicator =
 
 // Digits
 ////////////////////////////////////////
-decimalDigit = characters '0123456789';
+decimalDigit = oneOf '0123456789';
 
-nonZeroDigit = characters '123456789';
+nonZeroDigit = oneOf '123456789';
 
-hexDigit = characters '0123456789abcdefABCDEF';
+hexDigit = oneOf '0123456789abcdefABCDEF';
 
 // Strings
 ////////////////////////////////////////
-decimalDigits = Parser@'Decimal Digits Lexer' <|
+decimalDigits = label@'Decimal Digits Lexer' <|
     join <| many1 decimalDigit;
 
-hexDigits = Parser@'Hex Digits Lexer' <|
+hexDigits = label@'Hex Digits Lexer' <|
     join <| many1 hexDigit;
 
 // Integers
 ////////////////////////////////////////
-unsignedInteger = Parser@'Unsigned Integer Lexer' <|
+unsignedInteger = label@'Unsigned Integer Lexer' <|
     bind(
         decimalDigits,
         parseInt \> always);
 
-signedInteger = Parser@'Signed Integer Lexer' <|
+signedInteger = label@'Signed Integer Lexer' <|
     either(
         next(
             negativeSign,
@@ -103,26 +103,26 @@ signedInteger = Parser@'Signed Integer Lexer' <|
             optional(null, positiveSign),
             unsignedInteger));
 
-var hexIntegerLiteralDigits = Parser@'Hex Integer Literal Digits Lexer' <|
+var hexIntegerLiteralDigits = label@'Hex Integer Literal Digits Lexer' <|
     bind(
         hexDigits,
         \num -> always(parseInt(num, 16)));
 
 // Parts
 ////////////////////////////////////////
-exponentPart = Parser@'Exponent Part Lexer' <|
+exponentPart = label@'Exponent Part Lexer' <|
     next(
         exponentIndicator,
         signedInteger);
 
 // Literals
 ////////////////////////////////////////
-hexIntegerLiteral = Parser@'Hex Integer Literal Lexer' <|
+hexIntegerLiteral = label@'Hex Integer Literal Lexer' <|
     next(
         hexIndicator,
         hexIntegerLiteralDigits);
 
-decimalIntegerLiteral = Parser@'Decimal Integer Literal' <|
+decimalIntegerLiteral = label@'Decimal Integer Literal' <|
     bind(
         decimalDigits,
         parseInt \> always);
@@ -135,7 +135,7 @@ decimalIntegerLiteral = Parser@'Decimal Integer Literal' <|
  * 
  * @return Number value of the input.
  */
-decimalLiteral = Parser@'Decimal Literal Lexer' <|
+decimalLiteral = label@'Decimal Literal Lexer' <|
     binds(
         enumeration(
             binds(
@@ -156,7 +156,7 @@ decimalLiteral = Parser@'Decimal Literal Lexer' <|
  * 
  * @return Number value of the input.
  */
-numericLiteral = Parser@'Numeric Literal Lexer' <|
+numericLiteral = label@'Numeric Literal Lexer' <|
     either(
         next(
             attempt <| hexIndicator,

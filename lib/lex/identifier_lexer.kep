@@ -30,12 +30,12 @@ with
         many
         never
         next
-        Parser
+        label
         testStream
         token},
     import 'bennu::text' {
         character
-        characters
+        oneOf
         digit
         letter
         string},
@@ -88,7 +88,7 @@ unicodeDigit = digit;
  * 
  * Any character in the Unicode category Connector Punctuation (Pc).
  */
-unicodeConnectorPunctuation = characters [
+unicodeConnectorPunctuation = oneOf [
     '\u005F',
     '\u203F',
     '\u2040',
@@ -115,7 +115,7 @@ unicodeCombiningMark = never();
 ////////////////////////////////////////
 identifierStart = either(
     unicodeLetter,
-    characters '$_');
+    oneOf '$_');
 
 identifierPart = choice(
     attempt identifierStart,
@@ -141,7 +141,7 @@ identifierName = cons(identifierStart, identifierParts);
  * 
  * Checks to make sure returned identifier is not a keyword.
  */
-identifier = Parser@'Identifier Lexer' <|
+identifier = label@'Identifier Lexer' <|
     bind(identifierName, \name -> let n = join name in
         ?reservedWordList.indexOf(n) >= 0
             :fail()

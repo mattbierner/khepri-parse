@@ -22,7 +22,7 @@
         next = parse["next"],
         many = parse["many"],
         runState = parse["runState"],
-        Parser = parse["Parser"],
+        label = parse["label"],
         ParserState = parse["ParserState"],
         then = __o["then"],
         memoStream = __o0["memoStream"],

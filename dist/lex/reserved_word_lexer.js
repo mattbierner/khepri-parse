@@ -1,13 +1,12 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/reserved_word_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", "./null_lexer"], (function(require,
+*/define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", "./null_lexer"], (function(require,
     exports, __o, __o0, __o1, __o2) {
     "use strict";
     var attempt = __o["attempt"],
         choice = __o["choice"],
-        Parser = __o["Parser"],
+        label = __o["label"],
         string = __o0["string"],
         trie = __o0["trie"],
         booleanLiteral = __o1["booleanLiteral"],
@@ -79,52 +78,52 @@ define(["require", "exports", "bennu/parse", "bennu/text", "./boolean_lexer", ".
             implementsKeyword), attempt(letKeyword), attempt(privateKeyword), attempt(publicKeyword),
         attempt(interfaceKeyword), attempt(packageKeyword), attempt(protectedKeyword), attempt(
             staticKeyword), yieldKeyword));
-    (reservedWord = Parser("ReservedWordLexer", choice(trie(keywordList), nullLiteral, booleanLiteral)));
+    (reservedWord = label("ReservedWordLexer", choice(trie(keywordList), nullLiteral, booleanLiteral)));
     (reservedWordList = keywordList.concat("null", "true", "false"));
-    (exports.reservedWordList = reservedWordList);
-    (exports.reservedWord = reservedWord);
-    (exports.futureReservedWord = futureReservedWord);
-    (exports.breakKeyword = breakKeyword);
-    (exports.caseKeyword = caseKeyword);
-    (exports.catchKeyword = catchKeyword);
-    (exports.continueKeyword = continueKeyword);
-    (exports.debuggerKeyword = debuggerKeyword);
-    (exports.defaultKeyword = defaultKeyword);
-    (exports.deleteKeyword = deleteKeyword);
-    (exports.doKeyword = doKeyword);
-    (exports.elseKeyword = elseKeyword);
-    (exports.finallyKeyword = finallyKeyword);
-    (exports.forKeyword = forKeyword);
-    (exports.functionKeyword = functionKeyword);
-    (exports.ifKeyword = ifKeyword);
-    (exports.inKeyword = inKeyword);
-    (exports.instanceofKeyword = instanceofKeyword);
-    (exports.typeofKeyword = typeofKeyword);
-    (exports.newKeyword = newKeyword);
-    (exports.Keyword = Keyword);
-    (exports.returnKeyword = returnKeyword);
-    (exports.voidKeyword = voidKeyword);
-    (exports.switchKeyword = switchKeyword);
-    (exports.whileKeyword = whileKeyword);
-    (exports.thisKeyword = thisKeyword);
-    (exports.withKeyword = withKeyword);
-    (exports.throwKeyword = throwKeyword);
-    (exports.tryKeyword = tryKeyword);
-    (exports.keyword = keyword);
-    (exports.classKeyword = classKeyword);
-    (exports.enumKeyword = enumKeyword);
-    (exports.extendsKeyword = extendsKeyword);
-    (exports.superKeyword = superKeyword);
-    (exports.constKeyword = constKeyword);
-    (exports.exportKeyword = exportKeyword);
-    (exports.importKeyword = importKeyword);
-    (exports.implementsKeyword = implementsKeyword);
-    (exports.letKeyword = letKeyword);
-    (exports.privateKeyword = privateKeyword);
-    (exports.publicKeyword = publicKeyword);
-    (exports.interfaceKeyword = interfaceKeyword);
-    (exports.packageKeyword = packageKeyword);
-    (exports.protectedKeyword = protectedKeyword);
-    (exports.staticKeyword = staticKeyword);
-    (exports.yieldKeyword = yieldKeyword);
+    (exports["reservedWordList"] = reservedWordList);
+    (exports["reservedWord"] = reservedWord);
+    (exports["futureReservedWord"] = futureReservedWord);
+    (exports["breakKeyword"] = breakKeyword);
+    (exports["caseKeyword"] = caseKeyword);
+    (exports["catchKeyword"] = catchKeyword);
+    (exports["continueKeyword"] = continueKeyword);
+    (exports["debuggerKeyword"] = debuggerKeyword);
+    (exports["defaultKeyword"] = defaultKeyword);
+    (exports["deleteKeyword"] = deleteKeyword);
+    (exports["doKeyword"] = doKeyword);
+    (exports["elseKeyword"] = elseKeyword);
+    (exports["finallyKeyword"] = finallyKeyword);
+    (exports["forKeyword"] = forKeyword);
+    (exports["functionKeyword"] = functionKeyword);
+    (exports["ifKeyword"] = ifKeyword);
+    (exports["inKeyword"] = inKeyword);
+    (exports["instanceofKeyword"] = instanceofKeyword);
+    (exports["typeofKeyword"] = typeofKeyword);
+    (exports["newKeyword"] = newKeyword);
+    (exports["Keyword"] = Keyword);
+    (exports["returnKeyword"] = returnKeyword);
+    (exports["voidKeyword"] = voidKeyword);
+    (exports["switchKeyword"] = switchKeyword);
+    (exports["whileKeyword"] = whileKeyword);
+    (exports["thisKeyword"] = thisKeyword);
+    (exports["withKeyword"] = withKeyword);
+    (exports["throwKeyword"] = throwKeyword);
+    (exports["tryKeyword"] = tryKeyword);
+    (exports["keyword"] = keyword);
+    (exports["classKeyword"] = classKeyword);
+    (exports["enumKeyword"] = enumKeyword);
+    (exports["extendsKeyword"] = extendsKeyword);
+    (exports["superKeyword"] = superKeyword);
+    (exports["constKeyword"] = constKeyword);
+    (exports["exportKeyword"] = exportKeyword);
+    (exports["importKeyword"] = importKeyword);
+    (exports["implementsKeyword"] = implementsKeyword);
+    (exports["letKeyword"] = letKeyword);
+    (exports["privateKeyword"] = privateKeyword);
+    (exports["publicKeyword"] = publicKeyword);
+    (exports["interfaceKeyword"] = interfaceKeyword);
+    (exports["packageKeyword"] = packageKeyword);
+    (exports["protectedKeyword"] = protectedKeyword);
+    (exports["staticKeyword"] = staticKeyword);
+    (exports["yieldKeyword"] = yieldKeyword);
 }));

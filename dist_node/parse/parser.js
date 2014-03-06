@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
     ParserState = parse["ParserState"],
     __o = require("nu-stream")["stream"],
@@ -56,7 +55,7 @@ var parse = require("bennu")["parse"],
         return f(g(x));
     });
 })(parseStream, streamFrom));
-(exports.parserStream = parserStream);
-(exports.ParserPosition = ParserPosition);
-(exports.parseInput = parseInput);
-(exports.parseStream = parseStream);
+(exports["parserStream"] = parserStream);
+(exports["ParserPosition"] = ParserPosition);
+(exports["parseInput"] = parseInput);
+(exports["parseStream"] = parseStream);

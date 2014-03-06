@@ -6,21 +6,21 @@ package (
     falseLiteral
     booleanLiteral)
 with
-    import 'bennu::parse' {always either next Parser},
+    import 'bennu::parse' {always either next label},
     import 'bennu::text' {string}
 in {
 
-trueLiteral = Parser@'True Literal Lexer'<|
+trueLiteral = label@'True Literal Lexer'<|
     next(
         string 'true',
         always true);
 
-falseLiteral = Parser@'False Literal Lexer'<|
+falseLiteral = label@'False Literal Lexer'<|
     next(
         string 'false',
         always false);
 
-booleanLiteral = Parser@'Boolean Literal Lexer'<|
+booleanLiteral = label@'Boolean Literal Lexer'<|
     either(
         trueLiteral,
         falseLiteral);

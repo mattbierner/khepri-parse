@@ -57,7 +57,7 @@ with
    import 'bennu::parse' {
         attempt
         choice
-        Parser},
+        label},
    import 'bennu::text' {string trie},
    import './boolean_lexer' {booleanLiteral},
    import './null_lexer' {nullLiteral}
@@ -178,7 +178,7 @@ futureReservedWord = choice(
 
 //ReservedWord
 ////////////////////////////////////////
-reservedWord = Parser('ReservedWordLexer',
+reservedWord = label('ReservedWordLexer',
     choice(
        trie(keywordList),
        nullLiteral,

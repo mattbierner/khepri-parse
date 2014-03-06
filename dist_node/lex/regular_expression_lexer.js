@@ -1,4 +1,7 @@
-"use strict";
+/*
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
+ * DO NOT EDIT
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -10,7 +13,7 @@ var __o = require("bennu")["parse"],
     enumeration = __o["enumeration"],
     many = __o["many"],
     next = __o["next"],
-    Parser = __o["Parser"],
+    label = __o["label"],
     token = __o["token"],
     test = __o["test"],
     __o0 = require("bennu")["lang"],
@@ -64,18 +67,18 @@ var __o = require("bennu")["parse"],
         return f(g(x));
     });
 })(always, join)));
-(regularExpressionLiteral = Parser("Regular Expression Lexer", binds(enumeration(between(character("`"), character("`"),
+(regularExpressionLiteral = label("Regular Expression Lexer", binds(enumeration(between(character("`"), character("`"),
     regularExpressionBody), regularExpressionFlags), (function(body, flags) {
     return always(new(RegExp)(body, join(flags)));
 }))));
-(exports.regularExpressionNonTerminator = regularExpressionNonTerminator);
-(exports.regularExpressionBackslashSequence = regularExpressionBackslashSequence);
-(exports.regularExpressionClassChar = regularExpressionClassChar);
-(exports.regularExpressionClassChars = regularExpressionClassChars);
-(exports.regularExpressionClass = regularExpressionClass);
-(exports.regularExpressionChar = regularExpressionChar);
-(exports.regularExpressionChars = regularExpressionChars);
-(exports.regularExpressionFirstChar = regularExpressionFirstChar);
-(exports.regularExpressionFlags = regularExpressionFlags);
-(exports.regularExpressionBody = regularExpressionBody);
-(exports.regularExpressionLiteral = regularExpressionLiteral);
+(exports["regularExpressionNonTerminator"] = regularExpressionNonTerminator);
+(exports["regularExpressionBackslashSequence"] = regularExpressionBackslashSequence);
+(exports["regularExpressionClassChar"] = regularExpressionClassChar);
+(exports["regularExpressionClassChars"] = regularExpressionClassChars);
+(exports["regularExpressionClass"] = regularExpressionClass);
+(exports["regularExpressionChar"] = regularExpressionChar);
+(exports["regularExpressionChars"] = regularExpressionChars);
+(exports["regularExpressionFirstChar"] = regularExpressionFirstChar);
+(exports["regularExpressionFlags"] = regularExpressionFlags);
+(exports["regularExpressionBody"] = regularExpressionBody);
+(exports["regularExpressionLiteral"] = regularExpressionLiteral);

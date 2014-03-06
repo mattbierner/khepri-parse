@@ -1,7 +1,3 @@
-/*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
- * DO NOT EDIT
-*/
 define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
@@ -82,8 +78,8 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
                 c), x))));
         }));
     }));
-    (exports.precedence = precedence);
-    (exports.node = node);
-    (exports.nodea = nodea);
-    (exports.positionParser = positionParser);
+    (exports["precedence"] = precedence);
+    (exports["node"] = node);
+    (exports["nodea"] = nodea);
+    (exports["positionParser"] = positionParser);
 }));

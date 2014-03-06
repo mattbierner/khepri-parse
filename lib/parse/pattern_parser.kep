@@ -32,7 +32,8 @@ with
         enumeration
         next
         optional
-        Parser},
+        label
+        late},
     import 'bennu::lang' {between sepBy sepBy1 then},
     import 'khepri-ast::pattern' ast_pattern,
     
@@ -41,15 +42,15 @@ with
     import './value_parser' {identifier stringLiteral}
 in {
 
-/* Circular
+/* Forward
  ******************************************************************************/
-topLevelPattern = \args(...) -> topLevelPattern.apply(undefined, args);
+topLevelPattern = late\-> topLevelPattern;
 
-asPattern = \args(...) -> asPattern.apply(undefined, args);
+asPattern = late\-> asPattern;
 
-objectPattern = \args(...) -> objectPattern.apply(undefined, args);
+objectPattern = late\-> objectPattern;
 
-subPattern = \args(...) -> subPattern.apply(undefined, args);
+subPattern = late\-> subPattern;
 
 /* Parts
  ******************************************************************************/
@@ -59,21 +60,21 @@ var sep = optional(null, punctuator ',');
  ******************************************************************************/
 // Identifier Pattern
 ////////////////////////////////////////
-identifierPattern = Parser@'Identifier Pattern' <|
+identifierPattern = label@'Identifier Pattern' <|
     bind(
         identifier,
         \x -> always(ast_pattern.IdentifierPattern.create(x.loc, x)));
 
 // Sink Pattern
 ////////////////////////////////////////
-sinkPattern = Parser@'Sink Pattern' <|
+sinkPattern = label@'Sink Pattern' <|
     bind(
         keyword '_',
         \x -> always(ast_pattern.SinkPattern.create(x.loc)));
 
 // Ellipsis Pattern
 ////////////////////////////////////////
-ellipsisPattern = Parser@'Ellipsis Pattern' <|
+ellipsisPattern = label@'Ellipsis Pattern' <|
     bind(
         punctuator '...',
         \x -> always(ast_pattern.EllipsisPattern.create(x.loc)));
@@ -82,7 +83,7 @@ ellipsisPattern = Parser@'Ellipsis Pattern' <|
  ******************************************************************************/
 // Array Pattern
 ////////////////////////////////////////
-arrayPattern = Parser@'Array Pattern' <|
+arrayPattern = label@'Array Pattern' <|
     node(
         between(punctuator '[', punctuator ']',
             eager <| sepBy1(sep, topLevelPattern)
@@ -109,7 +110,7 @@ var objectPatternElement = either(
             identifierPattern),
         \loc, key -> ast_pattern.ObjectPatternElement.create(loc, key, null)));
 
-objectPattern = Parser@'Object Pattern' <|
+objectPattern = label@'Object Pattern' <|
     node(
         between(punctuator '{', punctuator '}',
             eager <| sepBy1(sep, objectPatternElement)
@@ -118,7 +119,7 @@ objectPattern = Parser@'Object Pattern' <|
 
 // As Pattern
 ////////////////////////////////////////
-asPattern = Parser@'As Pattern' <|
+asPattern = label@'As Pattern' <|
     nodea(
         enumeration(
             attempt <| then(
@@ -132,7 +133,7 @@ asPattern = Parser@'As Pattern' <|
 
 // Import Pattern
 ////////////////////////////////////////
-importPattern = Parser@'Import Pattern' <|
+importPattern = label@'Import Pattern' <|
     next(
         keyword 'import',
         nodea(
@@ -149,7 +150,7 @@ importPattern = Parser@'Import Pattern' <|
  ******************************************************************************/
 // Top Level Pattern
 ////////////////////////////////////////
-topLevelPattern = Parser@'Top Level Pattern' <|
+topLevelPattern = label@'Top Level Pattern' <|
     choice(
         ellipsisPattern,
         sinkPattern,
@@ -165,7 +166,7 @@ var subPatternElements = eager <| sepBy1(sep,
         topLevelPattern,
         subPattern));
 
-subPattern = Parser@'Sub Pattern' <|
+subPattern = label@'Sub Pattern' <|
     attempt <| nodea(
         enumeration(
             identifierPattern,
@@ -185,7 +186,7 @@ var selfPattern = next(
         asPattern,
         identifierPattern));
 
-argumentList = Parser@'Argument List' <|
+argumentList = label@'Argument List' <|
     nodea(
         enumeration(
             argumentElements,
@@ -193,7 +194,7 @@ argumentList = Parser@'Argument List' <|
         \loc, elements, self ->
             ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
 
-argumentsPattern = Parser@'Arguments Pattern' <|
+argumentsPattern = label@'Arguments Pattern' <|
     either(
         nodea(
             enumeration(
@@ -209,7 +210,7 @@ argumentsPattern = Parser@'Arguments Pattern' <|
 
 // Pattern
 ////////////////////////////////////////
-pattern = Parser@'Pattern' <|
+pattern = label@'Pattern' <|
     choice(
         importPattern,
         topLevelPattern);

@@ -12,8 +12,8 @@ package (
     
     whitespace)
 with
-    import 'bennu::parse' {always, bind many1 Parser},
-    import 'bennu::text' {character characters match},
+    import 'bennu::parse' {always, bind many1 label},
+    import 'bennu::text' {character oneOf match},
     import 'nu-stream::stream' {foldl}
 in {
 
@@ -71,7 +71,7 @@ usp = match `^\s$`;
 /**
  * Any whitespace character.
  */
-whitespace = Parser@'Whitespace Character Lexer' <|
-    characters [tabChar, vtChar, ffChar, spChar, nbspChar, bomChar];
+whitespace = label@'Whitespace Character Lexer' <|
+    oneOf [tabChar, vtChar, ffChar, spChar, nbspChar, bomChar];
 
 }

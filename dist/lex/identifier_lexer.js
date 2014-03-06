@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/identifier_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
+*/define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
     require, exports, __o, __o0, __o1, __o2) {
     "use strict";
     var always = __o["always"],
@@ -16,11 +15,11 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         many = __o["many"],
         never = __o["never"],
         next = __o["next"],
-        Parser = __o["Parser"],
+        label = __o["label"],
         testStream = __o["testStream"],
         token = __o["token"],
         character = __o0["character"],
-        characters = __o0["characters"],
+        oneOf = __o0["oneOf"],
         digit = __o0["digit"],
         letter = __o0["letter"],
         string = __o0["string"],
@@ -35,26 +34,26 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
     (zwj = character("‍"));
     (unicodeLetter = letter);
     (unicodeDigit = digit);
-    (unicodeConnectorPunctuation = characters(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
+    (unicodeConnectorPunctuation = oneOf(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
     (unicodeCombiningMark = never());
-    (identifierStart = either(unicodeLetter, characters("$_")));
+    (identifierStart = either(unicodeLetter, oneOf("$_")));
     (identifierPart = choice(attempt(identifierStart), unicodeCombiningMark, unicodeDigit,
         unicodeConnectorPunctuation, zwnj, zwj));
     (identifierParts = many(identifierPart));
     (identifierName = cons(identifierStart, identifierParts));
-    (identifier = Parser("Identifier Lexer", bind(identifierName, (function(name) {
+    (identifier = label("Identifier Lexer", bind(identifierName, (function(name) {
         var n = join(name);
         return ((reservedWordList.indexOf(n) >= 0) ? fail() : always(n));
     }))));
-    (exports.zwnj = zwnj);
-    (exports.zwj = zwj);
-    (exports.unicodeLetter = unicodeLetter);
-    (exports.unicodeDigit = unicodeDigit);
-    (exports.unicodeConnectorPunctuation = unicodeConnectorPunctuation);
-    (exports.unicodeCombiningMark = unicodeCombiningMark);
-    (exports.identifierStart = identifierStart);
-    (exports.identifierPart = identifierPart);
-    (exports.identifierParts = identifierParts);
-    (exports.identifierName = identifierName);
-    (exports.identifier = identifier);
+    (exports["zwnj"] = zwnj);
+    (exports["zwj"] = zwj);
+    (exports["unicodeLetter"] = unicodeLetter);
+    (exports["unicodeDigit"] = unicodeDigit);
+    (exports["unicodeConnectorPunctuation"] = unicodeConnectorPunctuation);
+    (exports["unicodeCombiningMark"] = unicodeCombiningMark);
+    (exports["identifierStart"] = identifierStart);
+    (exports["identifierPart"] = identifierPart);
+    (exports["identifierParts"] = identifierParts);
+    (exports["identifierName"] = identifierName);
+    (exports["identifier"] = identifier);
 }));

@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer",
+*/define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer",
     "./number_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -15,7 +14,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         many = __o["many"],
         next = __o["next"],
         sequence = __o["sequence"],
-        Parser = __o["Parser"],
+        label = __o["label"],
         test = __o["test"],
         token = __o["token"],
         character = __o0["character"],
@@ -58,12 +57,12 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
     })((function(x) {
         return (!x);
     }), test.bind(null, decimalDigit)))), always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
-    (singleStringCharacter = Parser("Single String Character", choice(attempt(lineContinuation), next(escape,
+    (singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape,
         escapeSequence), token((function(tok) {
         return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
     })))));
     (singleStringCharacters = many(singleStringCharacter));
-    (singleStringLiteral = Parser("Single String Literal", between(singleQuote, singleQuote, bind(
+    (singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, bind(
         singleStringCharacters, (function(f, g) {
             return (function(x) {
                 return f(g(x));
@@ -74,26 +73,26 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         return (!((test(doubleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
     }))));
     (doubleStringCharacters = many(doubleStringCharacter));
-    (doubleStringLiteral = Parser("Double String Literal", between(doubleQuote, doubleQuote, bind(
+    (doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, bind(
         doubleStringCharacters, (function(f, g) {
             return (function(x) {
                 return f(g(x));
             });
         })(always, join)))));
-    (stringLiteral = Parser("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
-    (exports.doubleQuote = doubleQuote);
-    (exports.escape = escape);
-    (exports.singleQuote = singleQuote);
-    (exports.lineContinuation = lineContinuation);
-    (exports.unicodeEscapeSequence = unicodeEscapeSequence);
-    (exports.hexEscapeSequence = hexEscapeSequence);
-    (exports.characterEscapeSequence = characterEscapeSequence);
-    (exports.escapeSequence = escapeSequence);
-    (exports.singleStringCharacter = singleStringCharacter);
-    (exports.singleStringCharacters = singleStringCharacters);
-    (exports.singleStringLiteral = singleStringLiteral);
-    (exports.doubleStringCharacter = doubleStringCharacter);
-    (exports.doubleStringCharacters = doubleStringCharacters);
-    (exports.doubleStringLiteral = doubleStringLiteral);
-    (exports.stringLiteral = stringLiteral);
+    (stringLiteral = label("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
+    (exports["doubleQuote"] = doubleQuote);
+    (exports["escape"] = escape);
+    (exports["singleQuote"] = singleQuote);
+    (exports["lineContinuation"] = lineContinuation);
+    (exports["unicodeEscapeSequence"] = unicodeEscapeSequence);
+    (exports["hexEscapeSequence"] = hexEscapeSequence);
+    (exports["characterEscapeSequence"] = characterEscapeSequence);
+    (exports["escapeSequence"] = escapeSequence);
+    (exports["singleStringCharacter"] = singleStringCharacter);
+    (exports["singleStringCharacters"] = singleStringCharacters);
+    (exports["singleStringLiteral"] = singleStringLiteral);
+    (exports["doubleStringCharacter"] = doubleStringCharacter);
+    (exports["doubleStringCharacters"] = doubleStringCharacters);
+    (exports["doubleStringLiteral"] = doubleStringLiteral);
+    (exports["stringLiteral"] = stringLiteral);
 }));

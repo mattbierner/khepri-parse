@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     anyToken = __o["anyToken"],
     always = __o["always"],
@@ -11,8 +10,8 @@ var __o = require("bennu")["parse"],
     either = __o["either"],
     many = __o["many"],
     next = __o["next"],
-    Parser = __o["Parser"],
-    RecParser = __o["RecParser"],
+    label = __o["label"],
+    rec = __o["rec"],
     test = __o["test"],
     token = __o["token"],
     __o0 = require("bennu")["text"],
@@ -43,21 +42,21 @@ var __o = require("bennu")["parse"],
     return (!x);
 }), test.bind(null, lineTerminator))));
 (singleLineCommentChars = many(singleLineCommentChar));
-(singleLineComment = Parser("Single Line Comment Lexer", next(singleLineCommentMarker, join(singleLineCommentChars))));
+(singleLineComment = label("Single Line Comment Lexer", next(singleLineCommentMarker, join(singleLineCommentChars))));
 (multiLineCommentStartMarker = string("/*"));
 (multiLineCommentEndMarker = string("*/"));
-(multiLineCommentChars = RecParser("Multi Line Comment Characters Lexer", (function(self) {
+(multiLineCommentChars = label("Multi Line Comment Characters Lexer", rec((function(self) {
     return either(next(character("*"), either(next(character("/"), always(NIL)), cons(always("*"), self))),
         cons(anyToken, self));
-})));
-(multiLineComment = Parser("Multi Line Comment Lexer", next(multiLineCommentStartMarker, join(multiLineCommentChars))));
-(comment = Parser("Comment Lexer", either(singleLineComment, multiLineComment)));
-(exports.singleLineCommentMarker = singleLineCommentMarker);
-(exports.singleLineCommentChar = singleLineCommentChar);
-(exports.singleLineCommentChars = singleLineCommentChars);
-(exports.singleLineComment = singleLineComment);
-(exports.multiLineCommentStartMarker = multiLineCommentStartMarker);
-(exports.multiLineCommentEndMarker = multiLineCommentEndMarker);
-(exports.multiLineCommentChars = multiLineCommentChars);
-(exports.multiLineComment = multiLineComment);
-(exports.comment = comment);
+}))));
+(multiLineComment = label("Multi Line Comment Lexer", next(multiLineCommentStartMarker, join(multiLineCommentChars))));
+(comment = label("Comment Lexer", either(singleLineComment, multiLineComment)));
+(exports["singleLineCommentMarker"] = singleLineCommentMarker);
+(exports["singleLineCommentChar"] = singleLineCommentChar);
+(exports["singleLineCommentChars"] = singleLineCommentChars);
+(exports["singleLineComment"] = singleLineComment);
+(exports["multiLineCommentStartMarker"] = multiLineCommentStartMarker);
+(exports["multiLineCommentEndMarker"] = multiLineCommentEndMarker);
+(exports["multiLineCommentChars"] = multiLineCommentChars);
+(exports["multiLineComment"] = multiLineComment);
+(exports["comment"] = comment);

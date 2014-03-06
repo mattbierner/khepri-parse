@@ -3,7 +3,7 @@
  * DO NOT EDIT
 */define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
-    var Parser = __o["Parser"],
+    var label = __o["label"],
         character = __o0["character"],
         string = __o0["string"],
         trie = __o0["trie"],
@@ -56,7 +56,7 @@
     (ellipsis = string("..."));
     (argumentList = character("\\"));
     (lambda = string("->"));
-    (punctuator = Parser("Punctuator Lexer", trie(punctuators)));
+    (punctuator = label("Punctuator Lexer", trie(punctuators)));
     (exports["openBrace"] = openBrace);
     (exports["closeBrace"] = closeBrace);
     (exports["openParenthesis"] = openParenthesis);

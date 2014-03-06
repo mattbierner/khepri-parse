@@ -4,7 +4,15 @@
 package (
     khepriPackage)
 with
-    import 'bennu::parse' {eager, either, enumeration, expected, next, optional, Parser},
+    import 'bennu::parse' {
+        eager
+        either
+        enumeration
+        expected
+        next
+        optional
+        label
+        late},
     import 'bennu::lang' {between, sepBy},
     import 'khepri-ast::package' ast_package,
     
@@ -16,25 +24,25 @@ in {
 
 /* Circular
  ******************************************************************************/
-var withStatement = \args(...) -> {
+var withStatement = late\-> {
     with
         import './statement_parser' {withStatement}
     in {
-        return withStatement.apply(undefined, args);
+        return withStatement;
     }
 };
 
-var blockStatement = \args(...) -> {
+var blockStatement = late\-> {
     with
         import './statement_parser' {blockStatement}
     in {
-        return blockStatement.apply(undefined, args);
+        return blockStatement;
     }
 };
 
-/* Parsers
+/* labels
  ******************************************************************************/
-var packageExport = Parser@'Package Export' <|
+var packageExport = label@'Package Export' <|
     either(
         node(
             identifier,
@@ -48,26 +56,26 @@ var packageExport = Parser@'Package Export' <|
             \loc alias id ->
                 ast_package.PackageExport.create(loc, id, alias)));
 
-var packageExportList = Parser@'Package Export List' <|
+var packageExportList = label@'Package Export List' <|
     node(
         between(punctuator '(', punctuator ')', 
             eager <| sepBy(optional(null, punctuator ','),
                 packageExport)),
         ast_package.PackageExports.create);
 
-var packageExports = Parser@'Package Exports' <|
+var packageExports = label@'Package Exports' <|
     either(
         packageExportList,
         node(
             identifier,
             ast_package.PackageExport.create));
 
-var packageBody = Parser@'Package Body' <|
+var packageBody = label@'Package Body' <|
     either(
         withStatement,
         blockStatement);
 
-khepriPackage = Parser@'Package' <|
+khepriPackage = label@'Package' <|
     nodea(
         next(
             keyword 'package',

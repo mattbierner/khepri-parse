@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -13,7 +12,7 @@ var __o = require("bennu")["parse"],
     many = __o["many"],
     next = __o["next"],
     sequence = __o["sequence"],
-    Parser = __o["Parser"],
+    label = __o["label"],
     test = __o["test"],
     token = __o["token"],
     __o0 = require("bennu")["text"],
@@ -61,12 +60,12 @@ var singleEscapeCharacter = choice(doubleQuote, singleQuote, escape, next(charac
 })((function(x) {
     return (!x);
 }), test.bind(null, decimalDigit)))), always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
-(singleStringCharacter = Parser("Single String Character", choice(attempt(lineContinuation), next(escape,
-    escapeSequence), token((function(tok) {
-    return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
-})))));
+(singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape, escapeSequence),
+    token((function(tok) {
+        return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
+    })))));
 (singleStringCharacters = many(singleStringCharacter));
-(singleStringLiteral = Parser("Single String Literal", between(singleQuote, singleQuote, bind(singleStringCharacters, (
+(singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, bind(singleStringCharacters, (
     function(f, g) {
         return (function(x) {
             return f(g(x));
@@ -76,25 +75,25 @@ var singleEscapeCharacter = choice(doubleQuote, singleQuote, escape, next(charac
     return (!((test(doubleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
 }))));
 (doubleStringCharacters = many(doubleStringCharacter));
-(doubleStringLiteral = Parser("Double String Literal", between(doubleQuote, doubleQuote, bind(doubleStringCharacters, (
+(doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, bind(doubleStringCharacters, (
     function(f, g) {
         return (function(x) {
             return f(g(x));
         });
     })(always, join)))));
-(stringLiteral = Parser("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
-(exports.doubleQuote = doubleQuote);
-(exports.escape = escape);
-(exports.singleQuote = singleQuote);
-(exports.lineContinuation = lineContinuation);
-(exports.unicodeEscapeSequence = unicodeEscapeSequence);
-(exports.hexEscapeSequence = hexEscapeSequence);
-(exports.characterEscapeSequence = characterEscapeSequence);
-(exports.escapeSequence = escapeSequence);
-(exports.singleStringCharacter = singleStringCharacter);
-(exports.singleStringCharacters = singleStringCharacters);
-(exports.singleStringLiteral = singleStringLiteral);
-(exports.doubleStringCharacter = doubleStringCharacter);
-(exports.doubleStringCharacters = doubleStringCharacters);
-(exports.doubleStringLiteral = doubleStringLiteral);
-(exports.stringLiteral = stringLiteral);
+(stringLiteral = label("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
+(exports["doubleQuote"] = doubleQuote);
+(exports["escape"] = escape);
+(exports["singleQuote"] = singleQuote);
+(exports["lineContinuation"] = lineContinuation);
+(exports["unicodeEscapeSequence"] = unicodeEscapeSequence);
+(exports["hexEscapeSequence"] = hexEscapeSequence);
+(exports["characterEscapeSequence"] = characterEscapeSequence);
+(exports["escapeSequence"] = escapeSequence);
+(exports["singleStringCharacter"] = singleStringCharacter);
+(exports["singleStringCharacters"] = singleStringCharacters);
+(exports["singleStringLiteral"] = singleStringLiteral);
+(exports["doubleStringCharacter"] = doubleStringCharacter);
+(exports["doubleStringCharacters"] = doubleStringCharacters);
+(exports["doubleStringLiteral"] = doubleStringLiteral);
+(exports["stringLiteral"] = stringLiteral);

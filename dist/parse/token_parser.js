@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
+*/define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     "use strict";
     var ExpectError = __o["ExpectError"],
         token = __o["token"],
@@ -36,13 +35,13 @@ define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     (numericLiteral = typeParser("Number", "numeric literal"));
     (stringLiteral = typeParser("String", "string literal"));
     (regularExpressionLiteral = typeParser("RegularExpression", "regular expression literal"));
-    (exports.punctuator = punctuator);
-    (exports.keyword = keyword);
-    (exports.identifier = identifier);
-    (exports.anyIdentifier = anyIdentifier);
-    (exports.nullLiteral = nullLiteral);
-    (exports.booleanLiteral = booleanLiteral);
-    (exports.numericLiteral = numericLiteral);
-    (exports.stringLiteral = stringLiteral);
-    (exports.regularExpressionLiteral = regularExpressionLiteral);
+    (exports["punctuator"] = punctuator);
+    (exports["keyword"] = keyword);
+    (exports["identifier"] = identifier);
+    (exports["anyIdentifier"] = anyIdentifier);
+    (exports["nullLiteral"] = nullLiteral);
+    (exports["booleanLiteral"] = booleanLiteral);
+    (exports["numericLiteral"] = numericLiteral);
+    (exports["stringLiteral"] = stringLiteral);
+    (exports["regularExpressionLiteral"] = regularExpressionLiteral);
 }));

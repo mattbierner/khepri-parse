@@ -1,8 +1,7 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
     attempt = parse["attempt"],
@@ -18,7 +17,7 @@ var parse = require("bennu")["parse"],
     next = parse["next"],
     many = parse["many"],
     runState = parse["runState"],
-    Parser = parse["Parser"],
+    label = parse["label"],
     ParserState = parse["ParserState"],
     __o = require("bennu")["lang"],
     then = __o["then"],
@@ -79,9 +78,9 @@ var parse = require("bennu")["parse"],
 (lex = (function(input) {
     return runState(lexer, new(ParserState)(streamFrom(input), SourcePosition.initial));
 }));
-(exports.literal = literal);
-(exports.token = token);
-(exports.inputElement = inputElement);
-(exports.lexer = lexer);
-(exports.lexManyState = lexManyState);
-(exports.lex = lex);
+(exports["literal"] = literal);
+(exports["token"] = token);
+(exports["inputElement"] = inputElement);
+(exports["lexer"] = lexer);
+(exports["lexManyState"] = lexManyState);
+(exports["lex"] = lex);
