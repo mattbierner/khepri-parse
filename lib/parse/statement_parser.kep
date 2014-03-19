@@ -176,7 +176,7 @@ in
                 bindings |> expected@"with bindings",
                 next(
                     keyword 'in',
-                    statement))),
+                    blockStatement))),
         ast_statement.WithStatement.create);
 
 // If Statement

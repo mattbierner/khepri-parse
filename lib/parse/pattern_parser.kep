@@ -24,6 +24,7 @@ with
         always
         attempt
         bind
+        binds
         choice
         eager
         either
@@ -82,16 +83,11 @@ ellipsisPattern = label@'Ellipsis Pattern' <|
  ******************************************************************************/
 // Array Pattern
 ////////////////////////////////////////
-arrayPattern = label@'Array Pattern' <| let
-    element = topLevelPattern,
-    
-    elements =
-        sepBy1(sep,
-            element |> expected@"array pattern element")
-in
+arrayPattern = label@'Array Pattern' <|
     node(
         between(punctuator '[', punctuator ']',
-            eager elements),
+            eager <| sepBy1(sep, topLevelPattern)
+                |> expected@"array pattern element"),
         ast_pattern.ArrayPattern.create);
 
 // Object Pattern
@@ -112,13 +108,13 @@ var objectPatternElement = either(
         either(
             asPattern,
             identifierPattern),
-        \loc, key ->
-            ast_pattern.ObjectPatternElement.create(loc, key, null)));
+        \loc, key -> ast_pattern.ObjectPatternElement.create(loc, key, null)));
 
 objectPattern = label@'Object Pattern' <|
     node(
         between(punctuator '{', punctuator '}',
-            eager <| sepBy1(sep, objectPatternElement |> expected@"object pattern element")),
+            eager <| sepBy1(sep, objectPatternElement)
+                |> expected@"object pattern element"),
         ast_pattern.ObjectPattern.create);
 
 // As Pattern
@@ -129,7 +125,7 @@ asPattern = label@'As Pattern' <|
             attempt <| then(
                 identifierPattern,
                 punctuator '#'),
-            either(
+            choice(
                 arrayPattern,
                 objectPattern)
                 |> expected@'object or array pattern'),

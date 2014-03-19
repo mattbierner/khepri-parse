@@ -71,7 +71,7 @@
             return ast_declaration.Binding.create(loc, pattern, value, (rec.value ===
                 ":="));
         })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(next(keyword("with"),
-            enumeration(expected("with bindings", bindings), next(keyword("in"), statement))),
+            enumeration(expected("with bindings", bindings), next(keyword("in"), blockStatement))),
         ast_statement.WithStatement.create))));
     (ifStatement = label("If Statement", nodea(next(keyword("if"), enumeration(between(punctuator("("),
         punctuator(")"), expected("if condition", expression)), statement, optional(null,

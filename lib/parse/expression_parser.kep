@@ -455,7 +455,7 @@ in
 ////////////////////////////////////////
 applicationExpression = label@'Call Expression' <|
     chainl1(
-        always <|\p c ->
+        always\p c ->
             ast_expression.CallExpression.create(
                 SourceLocation.merge(p.loc, c.loc),
                 p,
