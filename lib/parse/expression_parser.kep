@@ -119,6 +119,8 @@ expression = late\-> expression;
 
 memberExpression = late\-> memberExpression;
 
+curryExpression = late\-> memberExpression;
+
 /* labels
  ******************************************************************************/
 // Array Literal
@@ -295,6 +297,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
         either(
             keyword 'instanceof',
             punctuator(
+                '.',
                 '*',
                 '/',
                 '+',
@@ -316,8 +319,12 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                 '|',
                 '||',
                 '&&',
+                '|>',
                 '\\>',
-                '|>')),
+                '\\>>',
+                '<|',
+                '<\\',
+                '<<\\')),
         \{loc, value} -> always(ast_expression.BinaryOperatorExpression.create(loc, value)));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
@@ -400,7 +407,10 @@ newExpression = label@'New Expression' <|
             keyword 'new',
             enumeration(
                 memberExpression |> expected@"member expression",
-                args |> expected@"argument list")),
+                either(
+                    args,
+                    curryExpression)
+                    |> expected@"argument list")),
         ast_expression.NewExpression.create);
 
 // Member Expression

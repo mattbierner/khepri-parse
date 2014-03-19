@@ -48,7 +48,7 @@
         statementList = eager(many(statement));
     (blockStatement = label("Block Statement", node(between(punctuator("{"), punctuator("}"), statementList),
         ast_statement.BlockStatement.create)));
-    (emptyStatement = label("Empty Statement", node(punctuator(";"), ast_statement.EmptyStatement.create)));
+    (emptyStatement = label("Empty Statement", node(logicalSemiColon, ast_statement.EmptyStatement.create)));
     (debuggerStatement = label("Debugger Statement", node(next(keyword("debugger"), punctuator(";")),
         ast_statement.DebuggerStatement.create)));
     (expressionStatement = label("Expression Statement", node(then(topLevelExpression, logicalSemiColon),
@@ -71,8 +71,7 @@
             return ast_declaration.Binding.create(loc, pattern, value, (rec.value ===
                 ":="));
         })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(next(keyword("with"),
-            enumeration(bindings, next(keyword("in"), blockStatement))), ast_statement.WithStatement
-        .create))));
+        enumeration(bindings, next(keyword("in"), statement))), ast_statement.WithStatement.create))));
     (ifStatement = label("If Statement", nodea(next(keyword("if"), enumeration(between(punctuator("("),
         punctuator(")"), expected("if condition", expression)), statement, optional(null,
         next(keyword("else"), statement)))), ast_statement.IfStatement.create)));
@@ -84,7 +83,7 @@
             }))), (caseClauses = eager(many(caseClause))), (caseBlock = between(punctuator("{"),
         punctuator("}"), binds(enumeration(optional([], caseClauses), optional(null,
             defaultClause)), (function(first, defaultClause) {
-            return always((defaultClause ? first.concat([defaultClause]) : first));
+            return always((defaultClause ? first.concat(defaultClause) : first));
         })))), nodea(next(keyword("switch"), enumeration(between(punctuator("("), punctuator(")"),
             expected("switch discriminant", expression)), caseBlock)), ast_statement.SwitchStatement
         .create))));

@@ -2,14 +2,12 @@
  * @fileOverview Khepri program parsers.
  */
 package (
-    sourceElement,
-    sourceElements,
+    sourceElement
+    sourceElements
     program)
 with
-    import 'bennu::parse' {always, cons, eager, either, eof, many, next, label, rec late},
+    import 'bennu::parse' {eager either eof many label late},
     import 'bennu::lang' {then},
-    
-    import 'nu-stream::stream' {NIL},
     
     import 'khepri-ast::program' ast_program,
     
@@ -20,11 +18,10 @@ in {
 
 /* Circular
  ******************************************************************************/
-var statementParser = late\-> {
+var statement = late\-> {
     with
         import './statement_parser' {statement}
     in {
-
         return statement;
     }
 };
@@ -37,31 +34,19 @@ var khepriPackage = late\-> {
     }
 };
 
-/* labels
+/* Parsers
  ******************************************************************************/
-/**
- * label for an ECMAScript source element.
- * 
- * Source Elements are top level nodes that makes up a program.
- */
-sourceElement = statementParser;
+sourceElement = statement;
 
-/**
- * label for a enumeration of zero or more source elements.
- */
-sourceElements = eager <| many sourceElement;
+sourceElements = many sourceElement;
 
-/**
- * label for an ECMAScript 5.1 program.
- */
 program = label@'Program' <|
     node(
-        either(
-            then(khepriPackage, eof),
-            eager <| (rec\self ->
-                either(
-                    next(eof, always NIL),
-                    cons(sourceElement, self)))),
+        then(
+            either(
+                khepriPackage,
+                eager <| sourceElements),
+            eof),
         ast_program.Program.create);
 
 }

@@ -1,5 +1,10 @@
 # ChangeLog #
 
+## 0.7.0 - March 18, 2014
+* `.` `<|` `|>`, and composes as valid binary operator expressions.
+* new expressions can be used without parens: `new Parser\...->...`.
+* `with` statements behave more like `if` and can use any type of statement body.
+
 ## 0.6.2 - March 6, 2014
 * Update to Bennu 17.
 

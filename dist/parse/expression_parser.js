@@ -59,6 +59,9 @@
     (memberExpression = late((function() {
         return memberExpression;
     })));
+    (curryExpression = late((function() {
+        return memberExpression;
+    })));
     (arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = eager(sepBy(
         punctuator(","), arrayElement))), node(between(punctuator("["), punctuator("]"), expected(
         "array element", arrayElements)), ast_expression.ArrayExpression.create))));
@@ -106,8 +109,9 @@
         return always(ast_expression.UnaryOperatorExpression.create(loc, value));
     }))),
         binaryOperatorExpression = label("Binary Operator Expression", bind(either(keyword("instanceof"),
-            punctuator("*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=",
-                "===", "!==", "&", "^", "|", "||", "&&", "\\>", "|>")), (function(__o) {
+            punctuator(".", "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==",
+                "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\"
+            )), (function(__o) {
             var loc = __o["loc"],
                 value = __o["value"];
             return always(ast_expression.BinaryOperatorExpression.create(loc, value));
@@ -148,8 +152,8 @@
         });
     }))));
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected(
-            "member expression", memberExpression), expected("argument list", args))), ast_expression.NewExpression
-        .create)));
+        "member expression", memberExpression), expected("argument list", either(args,
+        curryExpression)))), ast_expression.NewExpression.create)));
     var accessorReducer = (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed);
     });

@@ -82,7 +82,7 @@ blockStatement = label@'Block Statement' <|
 ////////////////////////////////////////
 emptyStatement = label@'Empty Statement' <|
     node(
-        punctuator ';',
+        logicalSemiColon,
         ast_statement.EmptyStatement.create);
 
 // Debugger Statement
@@ -176,7 +176,7 @@ in
                 bindings,
                 next(
                     keyword 'in',
-                    blockStatement))),
+                    statement))),
         ast_statement.WithStatement.create);
 
 // If Statement
@@ -224,7 +224,7 @@ switchStatement = label@'Switch Statement' <| let
                 optional(null, defaultClause)),
             \first, defaultClause ->
                 always(?defaultClause
-                    :first.concat([defaultClause])
+                    :first.concat(defaultClause)
                     :first)))
 in
     nodea(
@@ -263,7 +263,7 @@ var doWhileStatement = label@'Do While Statement' <|
                     punctuator ';')),
             ast_statement.DoWhileStatement.create));
 
-var forStatement = label('For Statement', let
+var forStatement = label@'For Statement' <|let
     forInitExpression = optional(null, 
         either(
             node(
@@ -293,13 +293,13 @@ in
                 next(
                     punctuator ')',
                     statement))),
-        ast_statement.ForStatement.create));
+        ast_statement.ForStatement.create);
 
 iterationStatement = label@'Iteration Statement' <|
-    choice
-        (doWhileStatement
-        ,whileStatement
-        ,forStatement);
+    choice(
+        doWhileStatement,
+        whileStatement,
+        forStatement);
 
 // Continue Statement
 ////////////////////////////////////////
