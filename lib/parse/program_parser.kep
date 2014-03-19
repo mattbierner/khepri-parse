@@ -12,12 +12,20 @@ with
     import 'khepri-ast::program' ast_program,
     
     import './common' {node},
-    import './statement_parser' {statement},
+    import './statement_parser' _,
     import './package_parser' _
 in {
 
 /* Circular
  ******************************************************************************/
+var statement = late\-> {
+    with
+        import './statement_parser' {statement}
+    in {
+        return statement;
+    }
+};
+
 var khepriPackage = late\-> {
     with
         import './package_parser' {khepriPackage}

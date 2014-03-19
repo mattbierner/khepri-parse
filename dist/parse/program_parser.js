@@ -3,7 +3,7 @@
  * DO NOT EDIT
 */define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/program", "./common", "./statement_parser",
     "./package_parser"
-], (function(require, exports, __o, __o0, ast_program, __o1, __o2, _) {
+], (function(require, exports, __o, __o0, ast_program, __o1, _, _0) {
     "use strict";
     var eager = __o["eager"],
         either = __o["either"],
@@ -13,8 +13,12 @@
         late = __o["late"],
         then = __o0["then"],
         node = __o1["node"],
-        statement = __o2["statement"],
-        sourceElement, sourceElements, program, khepriPackage = late((function() {
+        sourceElement, sourceElements, program, statement = late((function() {
+            var __o = require("./statement_parser"),
+                statement = __o["statement"];
+            return statement;
+        })),
+        khepriPackage = late((function() {
             var __o = require("./package_parser"),
                 khepriPackage = __o["khepriPackage"];
             return khepriPackage;
