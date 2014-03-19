@@ -1,5 +1,5 @@
 /**
- * @fileOverview Khepri package parsers.
+ * @fileOverview Package parsers.
  */
 package (
     khepriPackage)

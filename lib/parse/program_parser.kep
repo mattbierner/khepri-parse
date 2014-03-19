@@ -1,5 +1,5 @@
 /**
- * @fileOverview Khepri program parsers.
+ * @fileOverview Program parsers.
  */
 package (
     sourceElement
@@ -38,14 +38,14 @@ var khepriPackage = late\-> {
  ******************************************************************************/
 sourceElement = statement;
 
-sourceElements = many sourceElement;
+sourceElements = eager <| many sourceElement;
 
 program = label@'Program' <|
     node(
         then(
             either(
                 khepriPackage,
-                eager <| sourceElements),
+                sourceElements),
             eof),
         ast_program.Program.create);
 

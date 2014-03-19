@@ -1,5 +1,5 @@
 /**
- * @fileOverview labels for literals and symbols.
+ * @fileOverview Literal and symbol parsers.
  */
 package (
     literal

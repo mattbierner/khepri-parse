@@ -24,9 +24,8 @@
             return khepriPackage;
         }));
     (sourceElement = statement);
-    (sourceElements = many(sourceElement));
-    (program = label("Program", node(then(either(khepriPackage, eager(sourceElements)), eof), ast_program.Program
-        .create)));
+    (sourceElements = eager(many(sourceElement)));
+    (program = label("Program", node(then(either(khepriPackage, sourceElements), eof), ast_program.Program.create)));
     (exports["sourceElement"] = sourceElement);
     (exports["sourceElements"] = sourceElements);
     (exports["program"] = program);

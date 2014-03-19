@@ -71,8 +71,8 @@ var __o = require("bennu")["parse"],
     return memberExpression;
 })));
 (arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = eager(sepBy(punctuator(","),
-    arrayElement))), node(between(punctuator("["), punctuator("]"), expected("array element", arrayElements)),
-    ast_expression.ArrayExpression.create))));
+    arrayElement))), node(between(punctuator("["), punctuator("]"), arrayElements), ast_expression.ArrayExpression
+    .create))));
 (propertyName = stringLiteral);
 (propertyInitializer = label("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
     ast_value.ObjectValue.create)));

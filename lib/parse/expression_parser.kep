@@ -133,7 +133,7 @@ arrayLiteral = label@'Array Literal' <| let
 in
     node(
         between(punctuator '[', punctuator ']',
-            arrayElements |> expected@"array element"),
+            arrayElements),
         ast_expression.ArrayExpression.create);
 
 // Object Literal
