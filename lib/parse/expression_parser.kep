@@ -3,39 +3,23 @@
  */
 package (
     arrayLiteral
-    
-// Object Literal
-    propertyName
-    propertyInitializer
-    objectProperties
     objectLiteral
     
-// Function
     functionExpression
-    
-// Operator
     operatorExpression
+    
+    letExpression
+    doExpression
     
     primaryExpression
     
-// Curry Expression
-    curryExpression
-    
-// Call Expression
-    args
-    
-// Application Expression
-    applicationExpression
-    
-// Member Expression
-    dotAccessor
-    bracketAccessor
     accessor
     memberExpression
     
-// New Expression
     newExpression
-    
+    curryExpression
+    applicationExpression
+
 // Unary Expression
     unaryOperator
     unaryExpression
@@ -46,15 +30,9 @@ package (
 // Conditional Expression
     conditionalExpression
 
-// Let Expression
-    letExpression
-
-// Do Expression
-    doExpression
     
 // Assignment
     leftHandReferenceExpression
-    assignmentOperator
     assignmentExpression
 
 // Expression
@@ -120,7 +98,23 @@ memberExpression = late\-> memberExpression;
 
 curryExpression = late\-> memberExpression;
 
-/* labels
+/* Components
+ ******************************************************************************/
+// args
+////////////////////////////////////////
+var args = label@'Arguments' <| let
+    arg = expression
+in
+    node(
+        between(punctuator '(', punctuator ')',
+            eager <| sepBy(punctuator ',',
+                arg |> expected@"argument")),
+        \loc x -> {
+            x.loc = loc;
+            return x;
+        });
+
+/* SubExpression
  ******************************************************************************/
 // Array Literal
 ////////////////////////////////////////
@@ -128,40 +122,45 @@ arrayLiteral = label@'Array Literal' <| let
     arrayElement = expression,
     
     arrayElements =
-        eager <| sepBy(punctuator ',',
-            arrayElement)
+        sepBy(punctuator ',',
+            arrayElement |> expected@"array element")
 in
     node(
         between(punctuator '[', punctuator ']',
-            arrayElements),
+            eager arrayElements),
         ast_expression.ArrayExpression.create);
 
 // Object Literal
 ////////////////////////////////////////
-propertyName = stringLiteral;
-
-propertyInitializer = label@'Property Initializer' <|
-    nodea(
-        enumeration(
-            then(
-                propertyName,
-                punctuator ':'),
-            expression),
-        ast_value.ObjectValue.create);
-
-objectProperties = label@'Object Properties' <|
-    eager <| sepBy(punctuator ',',
-        propertyInitializer);
-
-objectLiteral = label@'Object Literal' <|
+objectLiteral = label@'Object Literal' <| let
+    propertyName = stringLiteral,
+    
+    propertyInitializer = label@'Property Initializer' <|
+        nodea(
+            enumeration(
+                then(
+                    propertyName,
+                    punctuator ':'),
+                expression),
+            ast_value.ObjectValue.create),
+    
+    objectProperties =
+        sepBy(punctuator ',',
+            propertyInitializer |> expected@"object property")
+in
     node(
         between(punctuator '{', punctuator '}',
-            objectProperties),
+            eager objectProperties),
         ast_expression.ObjectExpression.create);
 
 // Function Expression
 ////////////////////////////////////////
 functionExpression = label@'Function Expression' <| let
+    functionName =
+        optional(null, next(
+            keyword 'function',
+            optional(null, identifier))),
+    
     functionBody =
         either(
             blockStatement,
@@ -169,9 +168,7 @@ functionExpression = label@'Function Expression' <| let
 in
     nodea(
         enumeration(
-            optional(null, next(
-                keyword 'function',
-                optional(null, identifier))),
+            functionName,
             next(
                 punctuator '\\',
                 pattern.argumentsPattern),
@@ -281,7 +278,8 @@ var unaryOperatorExpression = label@'Unary Operator Expression' <|
                 '!',
                 '++',
                 '--')),
-        \{loc, value} -> always(ast_expression.UnaryOperatorExpression.create(loc, value)));
+        \{loc, value} ->
+            always(ast_expression.UnaryOperatorExpression.create(loc, value)));
 
 var binaryOperatorExpression = label@'Binary Operator Expression' <|
     bind(
@@ -316,12 +314,14 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                 '<|',
                 '<\\',
                 '<<\\')),
-        \{loc, value} -> always(ast_expression.BinaryOperatorExpression.create(loc, value)));
+        \{loc, value} ->
+            always(ast_expression.BinaryOperatorExpression.create(loc, value)));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
     bind(
         punctuator '?',
-        \{loc, value} -> always(ast_expression.TernaryOperatorExpression.create(loc, value)));
+        \{loc, value} ->
+            always(ast_expression.TernaryOperatorExpression.create(loc, value)));
 
 operatorExpression = label@'Operator Expression' <| let
     op = choice(
@@ -358,19 +358,6 @@ primaryExpression = label@'Primary Expression' <|
         attempt <| operatorExpression,
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
-
-// args
-////////////////////////////////////////
-args = label@'Arguments' <| let
-    element = expression |> expected@"argument"
-in
-    node(
-        between(punctuator '(', punctuator ')',
-            eager <| sepBy(punctuator ',', element)),
-        \loc x -> {
-            x.loc = loc;
-            return x;
-        });
 
 // Accessor
 ////////////////////////////////////////
@@ -419,7 +406,7 @@ memberExpression = label@'Member Expression' <|
             either(
                 primaryExpression,
                 newExpression),
-            many accessor),
+            many(memo accessor)),
         foldl@accessorReducer \>> always);
 
 // Lefthand side Expression
@@ -576,36 +563,32 @@ expression = binaryExpression;
 leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
     binds(
         enumeration(
-            identifier |> memo,
-            many accessor |> memo),
+            identifier,
+            many(memo accessor)),
         foldl@accessorReducer \>> always);
 
 // Assignment Expression
 ////////////////////////////////////////
-assignmentOperator = punctuator '=';
-
-assignmentExpression = label@'Assignment Expression' <|
+assignmentExpression = label@'Assignment Expression' <| rec\self ->
     nodea(
         append(
             attempt <| enumeration(
                 leftHandReferenceExpression,
-                assignmentOperator),
+                punctuator '='),
             enumeration(
-                expression |> expected@'expression')),
-        \loc, left, op, right ->
-            ast_expression.AssignmentExpression.create(loc, op.value, left, right));
+                either(self, expression) |> expected@'expression')),
+        \loc left op right ->
+            ast_expression.AssignmentExpression.create(loc, '=', left, right));
 
 // Delete Expression
 ////////////////////////////////////////
-var deleteOperator = keyword 'delete';
-
 var deleteExpression = label@'Delete Expression' <|
-    nodea(
-        enumeration(
-            deleteOperator,
+    node(
+        next(
+            keyword 'delete',
             leftHandReferenceExpression |> expected@'reference expression'),
-        \loc op expression ->
-            ast_expression.UnaryExpression.create(loc, op.value, expression));
+        \loc expression ->
+            ast_expression.UnaryExpression.create(loc, 'delete', expression));
 
 // Top Level Expression
 ////////////////////////////////////////

@@ -4,6 +4,9 @@
 * `.` `<|` `|>`, and composes as valid binary operator expressions.
 * new expressions can be used without parens: `new Parser\...->...`.
 * `with` statements behave more like `if` and can use any type of statement body.
+* Allow left hand side of assignment expression to be chained: `x = y = 3` as
+  long as the lhs or each expressions is a reference expression.
+* Improved error messaging and performance.
 
 ## 0.6.2 - March 6, 2014
 * Update to Bennu 17.

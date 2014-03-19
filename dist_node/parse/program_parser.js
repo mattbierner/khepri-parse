@@ -14,12 +14,9 @@ var __o = require("bennu")["parse"],
     ast_program = require("khepri-ast")["program"],
     __o1 = require("./common"),
     node = __o1["node"],
-    sourceElement, sourceElements, program, statement = late((function() {
-        var __o = require("./statement_parser"),
-            statement = __o["statement"];
-        return statement;
-    })),
-    khepriPackage = late((function() {
+    __o2 = require("./statement_parser"),
+    statement = __o2["statement"],
+    sourceElement, sourceElements, program, khepriPackage = late((function() {
         var __o = require("./package_parser"),
             khepriPackage = __o["khepriPackage"];
         return khepriPackage;

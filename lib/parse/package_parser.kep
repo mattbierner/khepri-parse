@@ -80,8 +80,8 @@ khepriPackage = label@'Package' <|
         next(
             keyword 'package',
             enumeration(
-                packageExports |> expected@'package exports',
-                packageBody)),
+                packageExports |> expected@"package exports",
+                packageBody |> expected@"package body")),
             ast_package.Package.create);
 
 }

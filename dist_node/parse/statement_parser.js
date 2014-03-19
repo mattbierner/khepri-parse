@@ -74,7 +74,8 @@ var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", 
         function(loc, pattern, rec, value) {
             return ast_declaration.Binding.create(loc, pattern, value, (rec.value === ":="));
         })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(next(keyword("with"),
-    enumeration(bindings, next(keyword("in"), statement))), ast_statement.WithStatement.create))));
+        enumeration(expected("with bindings", bindings), next(keyword("in"), statement))), ast_statement.WithStatement
+    .create))));
 (ifStatement = label("If Statement", nodea(next(keyword("if"), enumeration(between(punctuator("("), punctuator(")"),
     expected("if condition", expression)), statement, optional(null, next(keyword("else"),
     statement)))), ast_statement.IfStatement.create)));

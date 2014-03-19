@@ -50,12 +50,12 @@ var __o = require("bennu")["parse"],
     literal = __o5["literal"],
     stringLiteral = __o5["stringLiteral"],
     pattern = require("./pattern_parser"),
-    arrayLiteral, propertyName, propertyInitializer, objectProperties, objectLiteral, functionExpression,
-        operatorExpression, primaryExpression, curryExpression, args, applicationExpression, dotAccessor,
-        bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression, binaryExpression,
-        conditionalExpression, letExpression, doExpression, leftHandReferenceExpression, assignmentOperator,
-        assignmentExpression, expression, topLevelExpression, arrayElement, arrayElements, functionBody, letBindings,
-        letBody, doBindings, doBody, op, element, reducer, reducer0, reducer1, blockStatement = late((function() {
+    arrayLiteral, objectLiteral, functionExpression, operatorExpression, letExpression, doExpression, primaryExpression,
+        accessor, memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
+        unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression, assignmentExpression,
+        expression, topLevelExpression, arg, arrayElement, arrayElements, propertyName, propertyInitializer,
+        objectProperties, functionName, functionBody, letBindings, letBody, doBindings, doBody, op, reducer, reducer0,
+        reducer1, blockStatement = late((function() {
             var __o = require("./statement_parser"),
                 blockStatement = __o["blockStatement"];
             return blockStatement;
@@ -69,19 +69,23 @@ var __o = require("bennu")["parse"],
 (curryExpression = late((function() {
     return memberExpression;
 })));
-(arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = eager(sepBy(punctuator(","),
-    arrayElement))), node(between(punctuator("["), punctuator("]"), arrayElements), ast_expression.ArrayExpression
-    .create))));
-(propertyName = stringLiteral);
-(propertyInitializer = label("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
-    ast_value.ObjectValue.create)));
-(objectProperties = label("Object Properties", eager(sepBy(punctuator(","), propertyInitializer))));
-(objectLiteral = label("Object Literal", node(between(punctuator("{"), punctuator("}"), objectProperties),
-    ast_expression.ObjectExpression.create)));
-(functionExpression = label("Function Expression", ((functionBody = either(blockStatement, expression)), nodea(
-    enumeration(optional(null, next(keyword("function"), optional(null, identifier))), next(punctuator("\\"),
-        pattern.argumentsPattern), next(punctuator("->"), expected("function body", functionBody))),
-    ast_expression.FunctionExpression.create))));
+var args = label("Arguments", ((arg = expression), node(between(punctuator("("), punctuator(")"), eager(sepBy(
+    punctuator(","), expected("argument", arg)))), (function(loc, x) {
+    (x.loc = loc);
+    return x;
+}))));
+(arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = sepBy(punctuator(","), expected(
+    "array element", arrayElement))), node(between(punctuator("["), punctuator("]"), eager(arrayElements)),
+    ast_expression.ArrayExpression.create))));
+(objectLiteral = label("Object Literal", ((propertyName = stringLiteral), (propertyInitializer = label(
+    "Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
+        ast_value.ObjectValue.create))), (objectProperties = sepBy(punctuator(","), expected(
+    "object property", propertyInitializer))), node(between(punctuator("{"), punctuator("}"), eager(
+    objectProperties)), ast_expression.ObjectExpression.create))));
+(functionExpression = label("Function Expression", ((functionName = optional(null, next(keyword("function"), optional(
+    null, identifier)))), (functionBody = either(blockStatement, expression)), nodea(enumeration(
+    functionName, next(punctuator("\\"), pattern.argumentsPattern), next(punctuator("->"), expected(
+        "function body", functionBody))), ast_expression.FunctionExpression.create))));
 var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern), punctuator("=",
     "=:", ":="), expected("bound value", expression)), (function(loc, pattern, rec, expr) {
     return ast_declaration.Binding.create(loc, pattern, expr, (rec.value === ":="));
@@ -128,11 +132,6 @@ var unaryOperatorExpression = label("Unary Operator Expression", bind(either(key
 (primaryExpression = label("Primary Expression", choice(letExpression, doExpression, conditionalExpression, identifier,
     literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(punctuator(
         "("), punctuator(")"), expected("expression", expression)))));
-(args = label("Arguments", ((element = expected("argument", expression)), node(between(punctuator("("), punctuator(")"),
-    eager(sepBy(punctuator(","), element))), (function(loc, x) {
-    (x.loc = loc);
-    return x;
-})))));
 (accessor = label("Accessor", node(next(punctuator("."), either(bind(identifier, (function(x) {
     return always([x, false]);
 })), bind(between(punctuator("("), punctuator(")"), expected("accessor expression", expression)), (
@@ -153,8 +152,8 @@ var unaryOperatorExpression = label("Unary Operator Expression", bind(either(key
 var accessorReducer = (function(p, c) {
     return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed);
 });
-(memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression), many(
-    accessor)), (function(f, g) {
+(memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression), many(memo(
+    accessor))), (function(f, g) {
     return (function() {
         return f(g.apply(null, arguments));
     });
@@ -249,47 +248,40 @@ var precedenceTable = [({
 })];
 (binaryExpression = label("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
 (expression = binaryExpression);
-(leftHandReferenceExpression = label("Left Hand Reference Expression", binds(enumeration(memo(identifier), memo(many(
-    accessor))), (function(f, g) {
-    return (function() {
-        return f(g.apply(null, arguments));
-    });
-})(always, foldl.bind(null, accessorReducer)))));
-(assignmentOperator = punctuator("="));
-(assignmentExpression = label("Assignment Expression", nodea(append(attempt(enumeration(leftHandReferenceExpression,
-    assignmentOperator)), enumeration(expected("expression", expression))), (function(loc, left, op, right) {
-    return ast_expression.AssignmentExpression.create(loc, op.value, left, right);
+(leftHandReferenceExpression = label("Left Hand Reference Expression", binds(enumeration(identifier, many(memo(accessor))), (
+    function(f, g) {
+        return (function() {
+            return f(g.apply(null, arguments));
+        });
+    })(always, foldl.bind(null, accessorReducer)))));
+(assignmentExpression = label("Assignment Expression", rec((function(self) {
+    return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("="))), enumeration(
+        expected("expression", either(self, expression)))), (function(loc, left, op, right) {
+        return ast_expression.AssignmentExpression.create(loc, "=", left, right);
+    }));
 }))));
-var deleteOperator = keyword("delete"),
-    deleteExpression = label("Delete Expression", nodea(enumeration(deleteOperator, expected("reference expression",
-        leftHandReferenceExpression)), (function(loc, op, expression) {
-        return ast_expression.UnaryExpression.create(loc, op.value, expression);
-    })));
+var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected("reference expression",
+    leftHandReferenceExpression)), (function(loc, expression) {
+    return ast_expression.UnaryExpression.create(loc, "delete", expression);
+})));
 (topLevelExpression = choice(deleteExpression, assignmentExpression, expression));
 (exports["arrayLiteral"] = arrayLiteral);
-(exports["propertyName"] = propertyName);
-(exports["propertyInitializer"] = propertyInitializer);
-(exports["objectProperties"] = objectProperties);
 (exports["objectLiteral"] = objectLiteral);
 (exports["functionExpression"] = functionExpression);
 (exports["operatorExpression"] = operatorExpression);
+(exports["letExpression"] = letExpression);
+(exports["doExpression"] = doExpression);
 (exports["primaryExpression"] = primaryExpression);
-(exports["curryExpression"] = curryExpression);
-(exports["args"] = args);
-(exports["applicationExpression"] = applicationExpression);
-(exports["dotAccessor"] = dotAccessor);
-(exports["bracketAccessor"] = bracketAccessor);
 (exports["accessor"] = accessor);
 (exports["memberExpression"] = memberExpression);
 (exports["newExpression"] = newExpression);
+(exports["curryExpression"] = curryExpression);
+(exports["applicationExpression"] = applicationExpression);
 (exports["unaryOperator"] = unaryOperator);
 (exports["unaryExpression"] = unaryExpression);
 (exports["binaryExpression"] = binaryExpression);
 (exports["conditionalExpression"] = conditionalExpression);
-(exports["letExpression"] = letExpression);
-(exports["doExpression"] = doExpression);
 (exports["leftHandReferenceExpression"] = leftHandReferenceExpression);
-(exports["assignmentOperator"] = assignmentOperator);
 (exports["assignmentExpression"] = assignmentExpression);
 (exports["expression"] = expression);
 (exports["topLevelExpression"] = topLevelExpression);

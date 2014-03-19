@@ -43,5 +43,5 @@ var __o = require("bennu")["parse"],
     packageExports = label("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport.create))),
     packageBody = label("Package Body", either(withStatement, blockStatement));
 (khepriPackage = label("Package", nodea(next(keyword("package"), enumeration(expected("package exports", packageExports),
-    packageBody)), ast_package.Package.create)));
+    expected("package body", packageBody))), ast_package.Package.create)));
 (exports["khepriPackage"] = khepriPackage);

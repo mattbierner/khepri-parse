@@ -41,6 +41,6 @@
             .create))),
         packageBody = label("Package Body", either(withStatement, blockStatement));
     (khepriPackage = label("Package", nodea(next(keyword("package"), enumeration(expected("package exports",
-        packageExports), packageBody)), ast_package.Package.create)));
+        packageExports), expected("package body", packageBody))), ast_package.Package.create)));
     (exports["khepriPackage"] = khepriPackage);
 }));

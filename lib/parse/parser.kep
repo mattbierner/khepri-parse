@@ -41,7 +41,7 @@ parserStream = filter @ \x -> {
 
 /* Position
  ******************************************************************************/
-ParserPosition = function \tokenPosition, sourcePosition, prevEnd =self-> {
+ParserPosition = function \tokenPosition sourcePosition prevEnd =self-> {
     self.tokenPosition = tokenPosition;
     self.sourcePosition = sourcePosition;
     self.prevEnd = prevEnd;

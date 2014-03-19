@@ -173,7 +173,7 @@ in
         next(
             keyword 'with',
             enumeration(
-                bindings,
+                bindings |> expected@"with bindings",
                 next(
                     keyword 'in',
                     statement))),
