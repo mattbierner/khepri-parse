@@ -387,7 +387,7 @@ newExpression = label@'New Expression' <|
                 memberExpression |> expected@"member expression",
                 either(
                     args,
-                    curryExpression)
+                    eager <| enumeration(curryExpression))
                     |> expected@"argument list")),
         ast_expression.NewExpression.create);
 

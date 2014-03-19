@@ -147,7 +147,7 @@
     }))));
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected(
         "member expression", memberExpression), expected("argument list", either(args,
-        curryExpression)))), ast_expression.NewExpression.create)));
+        eager(enumeration(curryExpression)))))), ast_expression.NewExpression.create)));
     var accessorReducer = (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed);
     });

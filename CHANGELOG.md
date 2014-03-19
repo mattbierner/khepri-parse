@@ -1,9 +1,11 @@
 # ChangeLog #
 
+## 0.7.1 - March 19, 2014
+* Fixed new applications not creating an array for single arg.
+
 ## 0.7.0 - March 18, 2014
 * `.` `<|` `|>`, and composes as valid binary operator expressions.
 * new expressions can be used without parens: `new Parser\...->...`.
-* `with` statements behave more like `if` and can use any type of statement body.
 * Allow left hand side of assignment expression to be chained: `x = y = 3` as
   long as the lhs or each expressions is a reference expression.
 * Improved error messaging and performance.
