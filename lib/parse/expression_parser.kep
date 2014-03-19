@@ -68,7 +68,6 @@ with
         bind
         binds
         choice
-        cons
         eager
         either
         enumeration
@@ -105,11 +104,11 @@ in {
 
 /* Circular Declarations 
  ******************************************************************************/
-var sourceElements = late\-> {
+var blockStatement = late\-> {
     with
-        import './program_parser' {sourceElements}
+        import './statement_parser' {blockStatement}
     in {
-        return sourceElements;
+        return blockStatement;
     }
 };
 
@@ -128,8 +127,9 @@ curryExpression = late\-> memberExpression;
 arrayLiteral = label@'Array Literal' <| let
     arrayElement = expression,
     
-    arrayElements = eager <| sepBy(punctuator ',',
-        arrayElement)
+    arrayElements =
+        eager <| sepBy(punctuator ',',
+            arrayElement)
 in
     node(
         between(punctuator '[', punctuator ']',
@@ -150,7 +150,8 @@ propertyInitializer = label@'Property Initializer' <|
         ast_value.ObjectValue.create);
 
 objectProperties = label@'Object Properties' <|
-    eager <| sepBy(punctuator ',', propertyInitializer);
+    eager <| sepBy(punctuator ',',
+        propertyInitializer);
 
 objectLiteral = label@'Object Literal' <|
     node(
@@ -160,32 +161,23 @@ objectLiteral = label@'Object Literal' <|
 
 // Function Expression
 ////////////////////////////////////////
-var formalParameterList = pattern.argumentsPattern;
-
-var statementBody = node(
-     between(punctuator '{', punctuator '}',
-         sourceElements),
-    ast_statement.BlockStatement.create);
-
-var lambdaBody = expression;
-
-var functionBody = either(
-    statementBody,
-    lambdaBody);
-
-functionExpression = label@'Function Expression' <|
+functionExpression = label@'Function Expression' <| let
+    functionBody =
+        either(
+            blockStatement,
+            expression)
+in
     nodea(
-        cons(
+        enumeration(
             optional(null, next(
                 keyword 'function',
                 optional(null, identifier))),
             next(
                 punctuator '\\',
-                enumeration(
-                    formalParameterList,
-                    next(
-                        punctuator '->',
-                        functionBody |> expected@"function body")))),
+                pattern.argumentsPattern),
+            next(
+                punctuator '->',
+                functionBody |> expected@"function body")),
         ast_expression.FunctionExpression.create);
 
 // Let Expression
@@ -203,21 +195,20 @@ var letBinding = label@'Let Binding' <|
                 (rec.value === ':=')));
 
 letExpression = label@'Let Expression' <| let
-    letBindings = sepBy1(punctuator ',',
-        letBinding)
-        |> expected@'let bindings',
+    letBindings =
+        sepBy1(punctuator ',',
+            letBinding),
     
     letBody = expression
-        |> expected@'let body expression'
 in
     nodea(
         next(
             keyword 'let',
             enumeration(
-                eager letBindings,
+                eager letBindings |> expected@'let bindings',
                 next(
                     keyword 'in',
-                    letBody))),
+                    letBody |> expected@'let body expression'))),
         ast_expression.LetExpression.create);
 
 // Do Expression

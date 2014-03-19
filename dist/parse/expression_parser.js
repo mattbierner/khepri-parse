@@ -13,7 +13,6 @@
         bind = __o["bind"],
         binds = __o["binds"],
         choice = __o["choice"],
-        cons = __o["cons"],
         eager = __o["eager"],
         either = __o["either"],
         enumeration = __o["enumeration"],
@@ -47,11 +46,11 @@
             bracketAccessor, accessor, memberExpression, newExpression, unaryOperator, unaryExpression,
             binaryExpression, conditionalExpression, letExpression, doExpression, leftHandReferenceExpression,
             assignmentOperator, assignmentExpression, expression, topLevelExpression, arrayElement,
-            arrayElements, letBindings, letBody, doBindings, doBody, op, element, reducer, reducer0, reducer1,
-            sourceElements = late((function() {
-                var __o = require("./program_parser"),
-                    sourceElements = __o["sourceElements"];
-                return sourceElements;
+            arrayElements, functionBody, letBindings, letBody, doBindings, doBody, op, element, reducer,
+            reducer0, reducer1, blockStatement = late((function() {
+                var __o = require("./statement_parser"),
+                    blockStatement = __o["blockStatement"];
+                return blockStatement;
             }));
     (expression = late((function() {
         return expression;
@@ -71,24 +70,19 @@
     (objectProperties = label("Object Properties", eager(sepBy(punctuator(","), propertyInitializer))));
     (objectLiteral = label("Object Literal", node(between(punctuator("{"), punctuator("}"), objectProperties),
         ast_expression.ObjectExpression.create)));
-    var formalParameterList = pattern.argumentsPattern,
-        statementBody = node(between(punctuator("{"), punctuator("}"), sourceElements), ast_statement.BlockStatement
-            .create),
-        lambdaBody = expression,
-        functionBody = either(statementBody, lambdaBody);
-    (functionExpression = label("Function Expression", nodea(cons(optional(null, next(keyword("function"),
-            optional(null, identifier))), next(punctuator("\\"), enumeration(formalParameterList,
-            next(punctuator("->"), expected("function body", functionBody))))), ast_expression.FunctionExpression
-        .create)));
+    (functionExpression = label("Function Expression", ((functionBody = either(blockStatement, expression)),
+        nodea(enumeration(optional(null, next(keyword("function"), optional(null, identifier))), next(
+            punctuator("\\"), pattern.argumentsPattern), next(punctuator("->"), expected(
+            "function body", functionBody))), ast_expression.FunctionExpression.create))));
     var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern),
         punctuator("=", "=:", ":="), expected("bound value", expression)), (function(loc, pattern, rec,
         expr) {
         return ast_declaration.Binding.create(loc, pattern, expr, (rec.value === ":="));
     })));
-    (letExpression = label("Let Expression", ((letBindings = expected("let bindings", sepBy1(punctuator(","),
-        letBinding))), (letBody = expected("let body expression", expression)), nodea(next(keyword(
-            "let"), enumeration(eager(letBindings), next(keyword("in"), letBody))), ast_expression.LetExpression
-        .create))));
+    (letExpression = label("Let Expression", ((letBindings = sepBy1(punctuator(","), letBinding)), (letBody =
+        expression), nodea(next(keyword("let"), enumeration(expected("let bindings", eager(
+            letBindings)), next(keyword("in"), expected("let body expression", letBody)))),
+        ast_expression.LetExpression.create))));
     var yieldExpression = label("Yield Expression", node(next(keyword("yield"), expression), ast_expression.YieldExpression
         .create)),
         doBinding = label("Do Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern), next(
