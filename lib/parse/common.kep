@@ -31,14 +31,14 @@ precedence = \p, table -> {
                     'node': entry.node,
                     'precedence': entry.precedence,
                     'right': entry.right
-                }, value))));
+                }))));
     
     return bind(
-        eager <| parse.rec(\self ->
+        eager <| parse.rec\self ->
             parse.cons(p,
                 optional(NIL,
                     parse.cons(sep,
-                        parse.expected("binary expression", self))))),
+                        parse.expected("binary expression", self)))),
         \list -> {
             var stack = [],
                 out = [];

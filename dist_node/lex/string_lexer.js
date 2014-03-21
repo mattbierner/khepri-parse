@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/string_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -11,6 +10,7 @@ var __o = require("bennu")["parse"],
     either = __o["either"],
     eof = __o["eof"],
     many = __o["many"],
+    map = __o["map"],
     next = __o["next"],
     sequence = __o["sequence"],
     label = __o["label"],
@@ -35,11 +35,9 @@ var __o = require("bennu")["parse"],
             function(x, y) {
                 return (x + y);
             }), ""),
-    fromCharCode = (function(p) {
-        return bind(p, (function(x) {
-            return always(String.fromCharCode(parseInt(join(x), 16)));
-        }));
-    });
+    fromCharCode = map.bind(null, (function(x) {
+        return String.fromCharCode(parseInt(join(x), 16));
+    }));
 (doubleQuote = character("\""));
 (singleQuote = character("'"));
 (escape = character("\\"));
@@ -66,22 +64,14 @@ var singleEscapeCharacter = choice(doubleQuote, singleQuote, escape, next(charac
         return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
     })))));
 (singleStringCharacters = many(singleStringCharacter));
-(singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, bind(singleStringCharacters, (
-    function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, join)))));
+(singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, map(join,
+    singleStringCharacters))));
 (doubleStringCharacter = choice(attempt(lineContinuation), next(escape, escapeSequence), token((function(tok) {
     return (!((test(doubleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
 }))));
 (doubleStringCharacters = many(doubleStringCharacter));
-(doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, bind(doubleStringCharacters, (
-    function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, join)))));
+(doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, map(join,
+    doubleStringCharacters))));
 (stringLiteral = label("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
 (exports["doubleQuote"] = doubleQuote);
 (exports["escape"] = escape);

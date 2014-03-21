@@ -35,6 +35,7 @@ with
         either
         eof
         many
+        map
         next
         sequence
         label
@@ -52,11 +53,10 @@ with
         hexDigit}
 in {
 
-var join = foldl@((+), '');
+var join = foldl @ (+) @ '';
 
-var fromCharCode = \p ->
-    bind(p, \x ->
-        always(String.fromCharCode(parseInt(join(x), 16))));
+var fromCharCode = map @ \x ->
+    String.fromCharCode(parseInt(join(x), 16));
 
 /* Lexers
  ******************************************************************************/
@@ -116,7 +116,7 @@ escapeSequence = choice(
         either(
             eof,
             token((!) <\ test@decimalDigit)),
-        always('\u0000')),
+        always '\u0000'),
     hexEscapeSequence,
     unicodeEscapeSequence);
 
@@ -127,7 +127,7 @@ escapeSequence = choice(
  */
 singleStringCharacter = label@'Single String Character' <|
     choice(
-        attempt <| lineContinuation,
+        attempt lineContinuation,
         next(escape, escapeSequence),
         token <|\ tok ->
             !(test(singleQuote, tok) ||
@@ -146,8 +146,7 @@ singleStringCharacters = many singleStringCharacter;
  */
 singleStringLiteral = label@'Single String Literal' <|
     between(singleQuote, singleQuote,
-        bind(singleStringCharacters,
-            join \> always));
+        map(join, singleStringCharacters));
 
 // Double String Literal
 ////////////////////////////////////////
@@ -155,7 +154,7 @@ singleStringLiteral = label@'Single String Literal' <|
  * Character in double quoted string.
  */
 doubleStringCharacter = choice(
-    attempt <| lineContinuation,
+    attempt lineContinuation,
     next(escape, escapeSequence),
     token <|\ tok ->
         !(test(doubleQuote, tok) ||
@@ -174,8 +173,7 @@ doubleStringCharacters = many doubleStringCharacter;
  */
 doubleStringLiteral = label@'Double String Literal' <|
     between(doubleQuote, doubleQuote,
-        bind(doubleStringCharacters,
-            join \> always));
+        map(join, doubleStringCharacters));
 
 // String Literal
 ////////////////////////////////////////

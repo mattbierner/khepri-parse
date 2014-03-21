@@ -23,7 +23,7 @@ with
     import 'nu-stream::stream' {NIL},
     
     import 'bennu::parse' {
-        always
+        append
         attempt
         binds
         choice
@@ -215,17 +215,12 @@ switchStatement = label@'Switch Statement' <| let
                 statementList)),
         \loc, consequent -> ast_clause.SwitchCase.create(loc, null, consequent)),
 
-    caseClauses = eager <| many(caseClause),
+    caseClauses = many caseClause,
 
-    caseBlock = between(punctuator '{', punctuator '}',
-        binds(
-            enumeration(
-                optional([], caseClauses),
-                optional(null, defaultClause)),
-            \first, defaultClause ->
-                always(?defaultClause
-                    :first.concat(defaultClause)
-                    :first)))
+    caseBlock = eager <| between(punctuator '{', punctuator '}',
+        append(
+            optional(NIL, caseClauses),
+            optional(NIL, enumeration defaultClause)))
 in
     nodea(
         next(

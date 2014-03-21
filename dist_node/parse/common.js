@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
     bind = parse["bind"],
@@ -25,7 +24,7 @@ var parse = require("bennu")["parse"],
                 "node": entry.node,
                 "precedence": entry.precedence,
                 "right": entry.right
-            }), value);
+            }));
         }));
     })));
     return bind(eager(parse.rec((function(self) {

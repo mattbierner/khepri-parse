@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/string_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer",
+*/define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer",
     "./number_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -13,6 +12,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         either = __o["either"],
         eof = __o["eof"],
         many = __o["many"],
+        map = __o["map"],
         next = __o["next"],
         sequence = __o["sequence"],
         label = __o["label"],
@@ -32,11 +32,9 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
             stringLiteral, join = foldl.bind(null, (function(x, y) {
                 return (x + y);
             }), ""),
-        fromCharCode = (function(p) {
-            return bind(p, (function(x) {
-                return always(String.fromCharCode(parseInt(join(x), 16)));
-            }));
-        });
+        fromCharCode = map.bind(null, (function(x) {
+            return String.fromCharCode(parseInt(join(x), 16));
+        }));
     (doubleQuote = character("\""));
     (singleQuote = character("'"));
     (escape = character("\\"));
@@ -63,23 +61,15 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
     })))));
     (singleStringCharacters = many(singleStringCharacter));
-    (singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, bind(
-        singleStringCharacters, (function(f, g) {
-            return (function(x) {
-                return f(g(x));
-            });
-        })(always, join)))));
+    (singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, map(join,
+        singleStringCharacters))));
     (doubleStringCharacter = choice(attempt(lineContinuation), next(escape, escapeSequence), token((function(
         tok) {
         return (!((test(doubleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));
     }))));
     (doubleStringCharacters = many(doubleStringCharacter));
-    (doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, bind(
-        doubleStringCharacters, (function(f, g) {
-            return (function(x) {
-                return f(g(x));
-            });
-        })(always, join)))));
+    (doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, map(join,
+        doubleStringCharacters))));
     (stringLiteral = label("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
     (exports["doubleQuote"] = doubleQuote);
     (exports["escape"] = escape);

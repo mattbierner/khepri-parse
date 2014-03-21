@@ -12,14 +12,14 @@ package (
     
     identifier)
 with
-    import 'bennu::parse' {always bind choice label},
+    import 'bennu::parse' {bind choice label},
     import 'khepri-ast::value' ast_value,
     import './token_parser' token
 in {
 
-var literalParser = \kind, p ->
-    bind(p, \x ->
-        always <| ast_value.Literal.create(x.loc, kind, x.value));
+var literalParser = \kind p ->
+    p.map\x ->
+        ast_value.Literal.create(x.loc, kind, x.value);
 
 /* Literals
  ******************************************************************************/
@@ -59,8 +59,7 @@ literal = label@'Literal' <|
 /* Symbols
  ******************************************************************************/
 identifier = label@'Identifier' <|
-    bind(
-        token.anyIdentifier,
-        \x -> always <| ast_value.Identifier.create(x.loc, x.value));
+    token.anyIdentifier
+        .map\x -> ast_value.Identifier.create(x.loc, x.value);
 
 }

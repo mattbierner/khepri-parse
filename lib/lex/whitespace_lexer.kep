@@ -1,5 +1,5 @@
 /**
- * @fileOverview Khepri whitespace lexers.
+ * @fileOverview Whitespace lexers.
  */
 package (
     tab
@@ -12,13 +12,9 @@ package (
     
     whitespace)
 with
-    import 'bennu::parse' {always, bind many1 label},
-    import 'bennu::text' {character oneOf match},
-    import 'nu-stream::stream' {foldl}
+    import 'bennu::parse' {map label},
+    import 'bennu::text' {character oneOf match}
 in {
-
-var join = \p ->
-    bind(p, foldl@((+), '') \> always);
 
 var tabChar = '\u0009',
     vtChar = '\u000B',

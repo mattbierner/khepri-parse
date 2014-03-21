@@ -21,7 +21,6 @@ package (
     subPattern)
 with
     import 'bennu::parse' {
-        always
         attempt
         bind
         binds
@@ -61,23 +60,20 @@ var sep = optional(null, punctuator ',');
 // Identifier Pattern
 ////////////////////////////////////////
 identifierPattern = label@'Identifier Pattern' <|
-    bind(
-        identifier,
-        \x -> always(ast_pattern.IdentifierPattern.create(x.loc, x)));
+    identifier
+        .map\x -> ast_pattern.IdentifierPattern.create(x.loc, x);
 
 // Sink Pattern
 ////////////////////////////////////////
 sinkPattern = label@'Sink Pattern' <|
-    bind(
-        keyword '_',
-        \x -> always(ast_pattern.SinkPattern.create(x.loc)));
+    keyword('_')
+        .map\x -> ast_pattern.SinkPattern.create(x.loc);
 
 // Ellipsis Pattern
 ////////////////////////////////////////
 ellipsisPattern = label@'Ellipsis Pattern' <|
-    bind(
-        punctuator '...',
-        \x -> always(ast_pattern.EllipsisPattern.create(x.loc)));
+    punctuator('...')
+        .map\x -> ast_pattern.EllipsisPattern.create(x.loc);
 
 /* Unpacks
  ******************************************************************************/

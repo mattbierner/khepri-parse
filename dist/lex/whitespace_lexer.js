@@ -1,28 +1,14 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/whitespace_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/whitespace_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
-    __o1) {
+*/define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
-    var always = __o["always"],
-        bind = __o["bind"],
-        many1 = __o["many1"],
+    var map = __o["map"],
         label = __o["label"],
         character = __o0["character"],
         oneOf = __o0["oneOf"],
         match = __o0["match"],
-        foldl = __o1["foldl"],
-        tab, vt, ff, sp, nbsp, bom, usp, whitespace, join = (function(p) {
-            return bind(p, (function(f, g) {
-                return (function(x) {
-                    return f(g(x));
-                });
-            })(always, foldl.bind(null, (function(x, y) {
-                return (x + y);
-            }), "")));
-        }),
-        tabChar = "\t",
+        tab, vt, ff, sp, nbsp, bom, usp, whitespace, tabChar = "\t",
         vtChar = "\u000b",
         ffChar = "\f",
         spChar = " ",

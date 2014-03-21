@@ -21,6 +21,7 @@ with
         cons
         either
         many
+        map
         next
         label
         rec
@@ -36,8 +37,7 @@ with
     import './line_terminator_lexer' {lineTerminator}
 in {
 
-var join = \p ->
-    bind(p, foldl@((+), '') \> always);
+var join = map @ (foldl @ ((+), ''));
 
 /* Lexers
  ******************************************************************************/

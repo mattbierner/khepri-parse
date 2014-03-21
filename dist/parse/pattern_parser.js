@@ -1,13 +1,11 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/pattern_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/pattern_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/pattern", "./common", "./token_parser",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/pattern", "./common", "./token_parser",
     "./value_parser"
 ], (function(require, exports, __o, __o0, ast_pattern, __o1, __o2, __o3) {
     "use strict";
-    var always = __o["always"],
-        attempt = __o["attempt"],
+    var attempt = __o["attempt"],
         bind = __o["bind"],
         binds = __o["binds"],
         choice = __o["choice"],
@@ -44,15 +42,17 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/pattern",
         return subPattern;
     })));
     var sep = optional(null, punctuator(","));
-    (identifierPattern = label("Identifier Pattern", bind(identifier, (function(x) {
-        return always(ast_pattern.IdentifierPattern.create(x.loc, x));
+    (identifierPattern = label("Identifier Pattern", identifier.map((function(x) {
+        return ast_pattern.IdentifierPattern.create(x.loc, x);
     }))));
-    (sinkPattern = label("Sink Pattern", bind(keyword("_"), (function(x) {
-        return always(ast_pattern.SinkPattern.create(x.loc));
-    }))));
-    (ellipsisPattern = label("Ellipsis Pattern", bind(punctuator("..."), (function(x) {
-        return always(ast_pattern.EllipsisPattern.create(x.loc));
-    }))));
+    (sinkPattern = label("Sink Pattern", keyword("_")
+        .map((function(x) {
+            return ast_pattern.SinkPattern.create(x.loc);
+        }))));
+    (ellipsisPattern = label("Ellipsis Pattern", punctuator("...")
+        .map((function(x) {
+            return ast_pattern.EllipsisPattern.create(x.loc);
+        }))));
     (arrayPattern = label("Array Pattern", node(between(punctuator("["), punctuator("]"), expected(
         "array pattern element", eager(sepBy1(sep, topLevelPattern)))), ast_pattern.ArrayPattern.create)));
     var objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), choice(

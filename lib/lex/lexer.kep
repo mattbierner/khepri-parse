@@ -46,7 +46,7 @@ with
 in {
 
 var makeToken = \type, p ->
-    bind(p, \value -> always([type, value]));
+    p.map \ value -> [type, value];
 
 var buildToken = \p ->
     binds(

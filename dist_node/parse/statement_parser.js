@@ -5,7 +5,7 @@
 var __o = require("nu-stream")["stream"],
     NIL = __o["NIL"],
     __o0 = require("bennu")["parse"],
-    always = __o0["always"],
+    append = __o0["append"],
     attempt = __o0["attempt"],
     binds = __o0["binds"],
     choice = __o0["choice"],
@@ -83,12 +83,10 @@ var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", 
     punctuator(":")), statementList)), ast_clause.SwitchCase.create)), (defaultClause = node(next(keyword(
     "default"), next(punctuator(":"), statementList)), (function(loc, consequent) {
     return ast_clause.SwitchCase.create(loc, null, consequent);
-}))), (caseClauses = eager(many(caseClause))), (caseBlock = between(punctuator("{"), punctuator("}"), binds(
-    enumeration(optional([], caseClauses), optional(null, defaultClause)), (function(first,
-        defaultClause) {
-        return always((defaultClause ? first.concat(defaultClause) : first));
-    })))), nodea(next(keyword("switch"), enumeration(between(punctuator("("), punctuator(")"), expected(
-    "switch discriminant", expression)), caseBlock)), ast_statement.SwitchStatement.create))));
+}))), (caseClauses = many(caseClause)), (caseBlock = eager(between(punctuator("{"), punctuator("}"), append(
+    optional(NIL, caseClauses), optional(NIL, enumeration(defaultClause)))))), nodea(next(keyword("switch"),
+    enumeration(between(punctuator("("), punctuator(")"), expected("switch discriminant", expression)),
+        caseBlock)), ast_statement.SwitchStatement.create))));
 var whileStatement = label("While Statement", nodea(next(keyword("while"), enumeration(between(punctuator("("),
     punctuator(")"), expression), statement)), ast_statement.WhileStatement.create)),
     doWhileStatement = label("Do While Statement", ((condition = between(punctuator("("), punctuator(")"), expression)),

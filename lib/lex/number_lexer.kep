@@ -41,6 +41,7 @@ with
         expected
         many
         many1
+        map
         next
         optional
         label},
@@ -49,8 +50,7 @@ with
     import 'nu-stream::stream' {foldl}
 in {
 
-var join = \p ->
-    bind(p, foldl@((+), '') \> always);
+var join = map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/
@@ -88,25 +88,25 @@ hexDigits = label@'Hex Digits Lexer' <|
 // Integers
 ////////////////////////////////////////
 unsignedInteger = label@'Unsigned Integer Lexer' <|
-    bind(
-        decimalDigits,
-        parseInt \> always);
+    map(
+        parseInt,
+        decimalDigits);
 
 signedInteger = label@'Signed Integer Lexer' <|
     either(
         next(
             negativeSign,
-            bind(
-                unsignedInteger,
-                (--) \> always)),
+            map(
+                (--),
+                unsignedInteger)),
         next(
             optional(null, positiveSign),
             unsignedInteger));
 
 var hexIntegerLiteralDigits = label@'Hex Integer Literal Digits Lexer' <|
-    bind(
-        hexDigits,
-        \num -> always(parseInt(num, 16)));
+    map(
+        \num -> parseInt(num, 16),
+        hexDigits);
 
 // Parts
 ////////////////////////////////////////
@@ -123,9 +123,9 @@ hexIntegerLiteral = label@'Hex Integer Literal Lexer' <|
         hexIntegerLiteralDigits);
 
 decimalIntegerLiteral = label@'Decimal Integer Literal' <|
-    bind(
-        decimalDigits,
-        parseInt \> always);
+    map(
+        parseInt,
+        decimalDigits);
 
 /**
  * A decimal number literal.

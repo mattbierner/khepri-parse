@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token",
     "khepri-ast/position", "./boolean_lexer", "./comment_lexer", "./identifier_lexer", "./line_terminator_lexer",
     "./null_lexer", "./number_lexer", "./punctuator_lexer", "./reserved_word_lexer", "./string_lexer",
     "./whitespace_lexer", "./regular_expression_lexer"
@@ -44,8 +43,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         whitespace = __o11["whitespace"],
         regularExpressionLiteral = __o12["regularExpressionLiteral"],
         literal, token, inputElement, lexer, lexManyState, lex, makeToken = (function(type, p) {
-            return bind(p, (function(value) {
-                return always([type, value]);
+            return p.map((function(value) {
+                return [type, value];
             }));
         }),
         buildToken = (function(p) {

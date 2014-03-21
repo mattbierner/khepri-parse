@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
     exports, __o, __o0, __o1, __o2) {
     "use strict";
     var always = __o["always"],
@@ -15,6 +14,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         expected = __o["expected"],
         many = __o["many"],
         many1 = __o["many1"],
+        map = __o["map"],
         next = __o["next"],
         optional = __o["optional"],
         label = __o["label"],
@@ -26,15 +26,10 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         foldl = __o2["foldl"],
         decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit,
             hexDigit, decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
-            decimalIntegerLiteral, decimalLiteral, numericLiteral, join = (function(p) {
-                return bind(p, (function(f, g) {
-                    return (function(x) {
-                        return f(g(x));
-                    });
-                })(always, foldl.bind(null, (function(x, y) {
+            decimalIntegerLiteral, decimalLiteral, numericLiteral, join = map.bind(null, foldl.bind(null, (
+                function(x, y) {
                     return (x + y);
-                }), "")));
-            });
+                }), ""));
     (decimal = character("."));
     (negativeSign = character("-"));
     (positiveSign = character("+"));
@@ -45,29 +40,16 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
     (hexDigit = oneOf("0123456789abcdefABCDEF"));
     (decimalDigits = label("Decimal Digits Lexer", join(many1(decimalDigit))));
     (hexDigits = label("Hex Digits Lexer", join(many1(hexDigit))));
-    (unsignedInteger = label("Unsigned Integer Lexer", bind(decimalDigits, (function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, parseInt))));
-    (signedInteger = label("Signed Integer Lexer", either(next(negativeSign, bind(unsignedInteger, (function(f,
-        g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, (function(x) {
+    (unsignedInteger = label("Unsigned Integer Lexer", map(parseInt, decimalDigits)));
+    (signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map((function(x) {
         return (-x);
-    })))), next(optional(null, positiveSign), unsignedInteger))));
-    var hexIntegerLiteralDigits = label("Hex Integer Literal Digits Lexer", bind(hexDigits, (function(num) {
-        return always(parseInt(num, 16));
-    })));
+    }), unsignedInteger)), next(optional(null, positiveSign), unsignedInteger))));
+    var hexIntegerLiteralDigits = label("Hex Integer Literal Digits Lexer", map((function(num) {
+        return parseInt(num, 16);
+    }), hexDigits));
     (exponentPart = label("Exponent Part Lexer", next(exponentIndicator, signedInteger)));
     (hexIntegerLiteral = label("Hex Integer Literal Lexer", next(hexIndicator, hexIntegerLiteralDigits)));
-    (decimalIntegerLiteral = label("Decimal Integer Literal", bind(decimalDigits, (function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, parseInt))));
+    (decimalIntegerLiteral = label("Decimal Integer Literal", map(parseInt, decimalDigits)));
     (decimalLiteral = label("Decimal Literal Lexer", binds(enumeration(binds(enumeration(decimalDigits,
         optional(0, attempt(next(decimal, decimalDigits)))), (function(whole, fractional) {
         return always(parseFloat(((whole + ".") + fractional)));

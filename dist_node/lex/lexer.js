@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
     attempt = parse["attempt"],
@@ -54,8 +53,8 @@ var parse = require("bennu")["parse"],
     __o12 = require("./regular_expression_lexer"),
     regularExpressionLiteral = __o12["regularExpressionLiteral"],
     literal, token, inputElement, lexer, lexManyState, lex, makeToken = (function(type, p) {
-        return bind(p, (function(value) {
-            return always([type, value]);
+        return p.map((function(value) {
+            return [type, value];
         }));
     }),
     buildToken = (function(p) {

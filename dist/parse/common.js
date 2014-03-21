@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
+*/define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
     var always = parse["always"],
@@ -24,7 +23,7 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
                     "node": entry.node,
                     "precedence": entry.precedence,
                     "right": entry.right
-                }), value);
+                }));
             }));
         })));
         return bind(eager(parse.rec((function(self) {

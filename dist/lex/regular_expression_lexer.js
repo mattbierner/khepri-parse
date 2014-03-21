@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/regular_expression_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
     "./line_terminator_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -15,6 +14,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         either = __o["either"],
         enumeration = __o["enumeration"],
         many = __o["many"],
+        map = __o["map"],
         next = __o["next"],
         label = __o["label"],
         token = __o["token"],
@@ -37,22 +37,16 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
     })((function(x) {
         return (!x);
     }), test.bind(null, lineTerminator))));
-    (regularExpressionBackslashSequence = next(character("\\"), bind(regularExpressionNonTerminator, (function(
-        f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, ((x = "\\"), (function(y) {
+    (regularExpressionBackslashSequence = next(character("\\"), map(((x = "\\"), (function(y) {
         return (x + y);
-    }))))));
+    })), regularExpressionNonTerminator)));
     (regularExpressionClassChar = either(attempt(token((function(tok) {
         return (((!test(lineTerminator, tok)) && (tok !== "]")) && (tok !== "\\"));
     }))), regularExpressionBackslashSequence));
     (regularExpressionClassChars = many(regularExpressionClassChar));
-    (regularExpressionClass = between(character("["), character("]"), bind(regularExpressionClassChars, (
-        function(body) {
-            return always((("[" + join(body)) + "]"));
-        }))));
+    (regularExpressionClass = between(character("["), character("]"), map((function(body) {
+        return (("[" + join(body)) + "]");
+    }), regularExpressionClassChars)));
     (regularExpressionFirstChar = choice(token((function(tok) {
         return (((((!test(lineTerminator, tok)) && (tok !== "*")) && (tok !== "\\")) && (tok !==
             "`")) && (tok !== "["));
@@ -63,11 +57,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
     })), regularExpressionBackslashSequence, regularExpressionClass));
     (regularExpressionChars = many(regularExpressionChar));
     (regularExpressionFlags = many(identifierPart));
-    (regularExpressionBody = bind(cons(regularExpressionFirstChar, regularExpressionChars), (function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })(always, join)));
+    (regularExpressionBody = map(join, cons(regularExpressionFirstChar, regularExpressionChars)));
     (regularExpressionLiteral = label("Regular Expression Lexer", binds(enumeration(between(character("`"),
         character("`"), regularExpressionBody), regularExpressionFlags), (function(body, flags) {
         return always(new(RegExp)(body, join(flags)));
