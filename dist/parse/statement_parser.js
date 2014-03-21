@@ -39,7 +39,7 @@
             withStatement, iterationStatement, continueStatement, breakStatement, returnStatement,
             switchStatement, throwStatement, tryStatement, debuggerStatement, statement, staticDeclaration,
             staticDeclarationList, initialiser, variableDeclaration, withIdentifier, withBinding, bindings,
-            caseClause, defaultClause, caseClauses, caseBlock, forInitExpression, forTestExpression,
+            caseClause, defaultClause, caseClauses, caseBlock, condition, forInitExpression, forTestExpression,
             forUpdateExpression, catchBlock, finallyBlock;
     (statement = late((function() {
         return statement;
@@ -90,10 +90,9 @@
         .create))));
     var whileStatement = label("While Statement", nodea(next(keyword("while"), enumeration(between(punctuator(
         "("), punctuator(")"), expression), statement)), ast_statement.WhileStatement.create)),
-        doWhileStatement = label("Do While Statement", next(attempt(lookahead(next(keyword("do"), punctuator(
-            "{")))), nodea(next(keyword("do"), enumeration(blockStatement, next(keyword("while"),
-                between(punctuator("("), punctuator(")"), expression)), punctuator(";"))),
-            ast_statement.DoWhileStatement.create))),
+        doWhileStatement = label("Do While Statement", ((condition = between(punctuator("("), punctuator(")"),
+            expression)), nodea(next(keyword("do"), enumeration(blockStatement, between(keyword("while"),
+            logicalSemiColon, condition))), ast_statement.DoWhileStatement.create))),
         forStatement = label("For Statement", ((forInitExpression = optional(null, either(node(next(keyword(
                 "var"), variableDeclarationList), ast_declaration.VariableDeclaration.create),
             topLevelExpression))), (forTestExpression = optional(null, expression)), (

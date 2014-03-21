@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/comment_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     anyToken = __o["anyToken"],
     always = __o["always"],

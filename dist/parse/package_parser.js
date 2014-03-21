@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/package_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
     "./value_parser", "./statement_parser"
 ], (function(require, exports, __o, __o0, ast_package, __o1, __o2, __o3, _) {
     "use strict";

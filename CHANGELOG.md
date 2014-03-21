@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 0.8.0 - March 20, 2014
+* Changed composed associativity to match the order the functions are evaluated in.
+* Fixed forms `f (+)` and `f @ (+)`.
+
 ## 0.7.1 - March 19, 2014
 * Fixed new applications not creating an array for single arg.
 

@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     label = __o["label"],
     __o0 = require("bennu")["text"],

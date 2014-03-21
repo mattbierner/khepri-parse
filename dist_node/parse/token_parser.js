@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     ExpectError = __o["ExpectError"],
     token = __o["token"],

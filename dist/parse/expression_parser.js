@@ -41,13 +41,12 @@
         identifier = __o5["identifier"],
         literal = __o5["literal"],
         stringLiteral = __o5["stringLiteral"],
-        arrayLiteral, objectLiteral, functionExpression, operatorExpression, letExpression, doExpression,
-            primaryExpression, accessor, memberExpression, newExpression, curryExpression,
-            applicationExpression, unaryOperator, unaryExpression, binaryExpression, conditionalExpression,
-            leftHandReferenceExpression, assignmentExpression, expression, topLevelExpression, arg,
-            arrayElement, arrayElements, propertyName, propertyInitializer, objectProperties, functionName,
-            functionBody, letBindings, letBody, doBindings, doBody, op, reducer, reducer0, reducer1,
-            blockStatement = late((function() {
+        arrayLiteral, objectLiteral, functionExpression, operatorExpression, letExpression, primaryExpression,
+            accessor, memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
+            unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression,
+            assignmentExpression, expression, topLevelExpression, arg, arrayElement, arrayElements,
+            propertyName, propertyInitializer, objectProperties, functionName, functionBody, letBindings,
+            letBody, op, reducer, reducer0, reducer1, blockStatement = late((function() {
                 var __o = require("./statement_parser"),
                     blockStatement = __o["blockStatement"];
                 return blockStatement;
@@ -88,15 +87,6 @@
         expression), nodea(next(keyword("let"), enumeration(expected("let bindings", eager(
             letBindings)), next(keyword("in"), expected("let body expression", letBody)))),
         ast_expression.LetExpression.create))));
-    var yieldExpression = label("Yield Expression", node(next(keyword("yield"), expression), ast_expression.YieldExpression
-        .create)),
-        doBinding = label("Do Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern), next(
-            punctuator("<-"), expected("bound value", expression))), ast_declaration.Binding.create));
-    (doExpression = label("Do Expression", ((doBindings = expected("do bindings", sepBy(punctuator(","),
-        doBinding))), (doBody = either(yieldExpression, next(keyword("in"), expected("do body",
-        expression)))), nodea(next(keyword("do"), enumeration(between(punctuator("("), punctuator(
-            ")"), optional(null, expression)), eager(doBindings), doBody)), ast_expression.DoExpression
-        .create))));
     (conditionalExpression = label("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression,
             next(punctuator(":"), expected("conditional consequent expression", expression)), next(
                 punctuator(":"), expected("conditional alternate expression", expression)))),
@@ -127,10 +117,14 @@
         args) {
         return (args ? ast_expression.CurryExpression.create(loc, target, args) : target);
     })))));
-    (primaryExpression = label("Primary Expression", choice(letExpression, doExpression, conditionalExpression,
-        identifier, literal, arrayLiteral, objectLiteral, functionExpression, attempt(
-            operatorExpression), between(punctuator("("), punctuator(")"), expected("expression",
-            expression)))));
+    (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier,
+        literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(
+            punctuator("("), punctuator(")"), expected("expression", expression)))));
+    var argumentList = label("Argument List", either(attempt(node(operatorExpression, (function(loc, x) {
+        var a = [x];
+        (a.loc = loc);
+        return a;
+    }))), args));
     (accessor = label("Accessor", node(next(punctuator("."), either(bind(identifier, (function(x) {
         return always([x, false]);
     })), bind(between(punctuator("("), punctuator(")"), expected("accessor expression",
@@ -161,7 +155,7 @@
         return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(
                 SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed) : ast_expression
             .CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
-    })), binds(enumeration(memberExpression, many(either(args, accessor))), (function(f, g) {
+    })), binds(enumeration(memberExpression, many(either(argumentList, accessor))), (function(f, g) {
         return (function() {
             return f(g.apply(null, arguments));
         });
@@ -170,7 +164,7 @@
         return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args.loc),
             f, [].concat(args));
     })), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected(
-        "curry argument", either(args, leftHandSideExpression))))), (function(f, g) {
+        "curry argument", either(argumentList, leftHandSideExpression))))), (function(f, g) {
         return (function() {
             return f(g.apply(null, arguments));
         });
@@ -223,11 +217,11 @@
     }), ({
         "sep": punctuator("\\>", "\\>>"),
         "precedence": 9,
+        "right": true,
         "node": ast_expression.BinaryExpression
     }), ({
         "sep": punctuator("<\\", "<<\\"),
         "precedence": 9,
-        "right": true,
         "node": ast_expression.BinaryExpression
     }), ({
         "sep": punctuator("|>"),
@@ -272,7 +266,6 @@
     (exports["functionExpression"] = functionExpression);
     (exports["operatorExpression"] = operatorExpression);
     (exports["letExpression"] = letExpression);
-    (exports["doExpression"] = doExpression);
     (exports["primaryExpression"] = primaryExpression);
     (exports["accessor"] = accessor);
     (exports["memberExpression"] = memberExpression);

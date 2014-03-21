@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var parse = require("bennu")["parse"],
     ParserState = parse["ParserState"],
     __o = require("nu-stream")["stream"],

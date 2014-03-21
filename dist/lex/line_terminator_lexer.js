@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/line_terminator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/line_terminator_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
+*/
+define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
     var always = __o["always"],
         choice = __o["choice"],

@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
+*/
+define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     "use strict";
     var ExpectError = __o["ExpectError"],
         token = __o["token"],

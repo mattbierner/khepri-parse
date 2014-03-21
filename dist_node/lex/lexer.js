@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var parse = require("bennu")["parse"],
     always = parse["always"],
     attempt = parse["attempt"],

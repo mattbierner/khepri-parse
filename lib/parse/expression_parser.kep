@@ -1,3 +1,4 @@
+
 /**
  * @fileOverview Khepri expression parsers.
  */
@@ -9,7 +10,6 @@ package (
     operatorExpression
     
     letExpression
-    doExpression
     
     primaryExpression
     
@@ -208,46 +208,6 @@ in
                     letBody |> expected@'let body expression'))),
         ast_expression.LetExpression.create);
 
-// Do Expression
-////////////////////////////////////////
-var yieldExpression = label@'Yield Expression' <|
-    node(
-        next(
-            keyword 'yield',
-            expression),
-        ast_expression.YieldExpression.create);
-
-var doBinding = label@'Do Binding' <|
-    nodea(
-        enumeration(
-            pattern.topLevelPattern |> expected@'pattern',
-            next(
-                punctuator '<-',
-                expression |> expected@'bound value')),
-        ast_declaration.Binding.create);
-
-doExpression = label@'Do Expression' <| let
-    doBindings = sepBy(punctuator ',',
-        doBinding)
-        |> expected@'do bindings',
-    
-    doBody = either(
-        yieldExpression,
-        next(
-            keyword 'in',
-            expression
-                |> expected@'do body'))
-in
-    nodea(
-        next(
-            keyword 'do',
-            enumeration(
-                between(punctuator '(', punctuator')',
-                    optional(null, expression)),
-                eager doBindings,
-                doBody)),
-        ast_expression.DoExpression.create);
-
 // Conditional Expression
 ////////////////////////////////////////
 conditionalExpression = label@'Conditional Expression' <|
@@ -348,16 +308,28 @@ in
 primaryExpression = label@'Primary Expression' <|
     choice(
         letExpression,
-        doExpression,
         conditionalExpression,
         identifier,
         literal,
         arrayLiteral,
         objectLiteral,
         functionExpression,
-        attempt <| operatorExpression,
+        attempt operatorExpression,
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
+
+// ArgumentList
+////////////////////////////////////////
+var argumentList = label@'Argument List' <|
+    either(
+        attempt <| node(
+            operatorExpression,
+            \loc x -> {
+                var a = [x];
+                a.loc = loc;
+                return a;
+            }),
+        args);
 
 // Accessor
 ////////////////////////////////////////
@@ -393,7 +365,7 @@ newExpression = label@'New Expression' <|
 
 // Member Expression
 ////////////////////////////////////////
-var accessorReducer = \p, c -> 
+var accessorReducer = \p c -> 
     ast_expression.MemberExpression.create(
         SourceLocation.merge(p.loc, c.loc),
         p,
@@ -406,7 +378,7 @@ memberExpression = label@'Member Expression' <|
             either(
                 primaryExpression,
                 newExpression),
-            many(memo accessor)),
+            many <| memo accessor),
         foldl@accessorReducer \>> always);
 
 // Lefthand side Expression
@@ -427,7 +399,7 @@ in
     binds(
         enumeration(
             memberExpression,
-            many <| either(args, accessor)),
+            many <| either(argumentList, accessor)),
         foldl@reducer \>> always);
 
 // Curry Expression
@@ -446,7 +418,7 @@ in
                 next(
                     punctuator '@',
                     either(
-                        args,
+                        argumentList,
                         leftHandSideExpression)
                     |> expected@'curry argument'))),
         foldl@reducer \>> always);
@@ -523,11 +495,11 @@ var precedenceTable = [
     }, {
         'sep': punctuator('\\>', '\\>>'),
         'precedence': 9,
+        'right': true,
         'node': ast_expression.BinaryExpression
     }, {
         'sep': punctuator('<\\', '<<\\'),
         'precedence': 9,
-        'right': true,
         'node': ast_expression.BinaryExpression
     }, {
         'sep': punctuator '|>',
@@ -551,7 +523,7 @@ var precedenceTable = [
 
 binaryExpression = label@'Binary Expression' <|
     precedence(
-        unaryExpression |> memo,
+        memo unaryExpression,
         precedenceTable);
 
 // Expression
@@ -564,7 +536,7 @@ leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
     binds(
         enumeration(
             identifier,
-            many(memo accessor)),
+            many <| memo accessor),
         foldl@accessorReducer \>> always);
 
 // Assignment Expression
@@ -572,7 +544,7 @@ leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
 assignmentExpression = label@'Assignment Expression' <| rec\self ->
     nodea(
         append(
-            attempt <| enumeration(
+            attempt enumeration(
                 leftHandReferenceExpression,
                 punctuator '='),
             enumeration(

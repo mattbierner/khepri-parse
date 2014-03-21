@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/package_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     eager = __o["eager"],
     either = __o["either"],

@@ -1,3 +1,7 @@
+/*
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
+ * DO NOT EDIT
+*/
 define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";

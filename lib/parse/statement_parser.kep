@@ -248,22 +248,20 @@ var whileStatement = label@'While Statement' <|
                 statement)),
         ast_statement.WhileStatement.create);
 
-var doWhileStatement = label@'Do While Statement' <|
-    next(
-        attempt <| lookahead <| next(keyword 'do', punctuator '{'),
-        nodea(
-            next(
-                keyword 'do',
-                enumeration(
-                    blockStatement,
-                    next(
-                        keyword 'while',
-                        between(punctuator '(', punctuator ')',
-                            expression)),
-                    punctuator ';')),
-            ast_statement.DoWhileStatement.create));
+var doWhileStatement = label@'Do While Statement' <| let
+    condition = between(punctuator '(', punctuator ')',
+        expression)
+in
+    nodea(
+        next(
+            keyword 'do',
+            enumeration(
+                blockStatement,
+                between(keyword 'while', logicalSemiColon,
+                    condition))),
+        ast_statement.DoWhileStatement.create);
 
-var forStatement = label@'For Statement' <|let
+var forStatement = label@'For Statement' <| let
     forInitExpression = optional(null, 
         either(
             node(
