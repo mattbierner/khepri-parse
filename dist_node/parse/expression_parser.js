@@ -103,12 +103,11 @@ var unaryOperatorExpression = label("Unary Operator Expression", bind(either(key
         value = __o["value"];
     return always(ast_expression.UnaryOperatorExpression.create(loc, value));
 }))),
-    binaryOperatorExpression = label("Binary Operator Expression", bind(either(keyword("instanceof"), punctuator(".",
-        "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=", "===", "!==", "&",
-        "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\")), (function(__o) {
-        var loc = __o["loc"],
-            value = __o["value"];
-        return always(ast_expression.BinaryOperatorExpression.create(loc, value));
+    binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false, keyword("_")),
+        either(keyword("instanceof", "new"), punctuator(".", "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<",
+            ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
+            "<\\", "<<\\", "@"))), (function(loc, flipped, value) {
+        return ast_expression.BinaryOperatorExpression.create(loc, value, (!(!flipped)));
     }))),
     ternayOperatorExpression = label("Ternary Operator Expression", bind(punctuator("?"), (function(__o) {
         var loc = __o["loc"],

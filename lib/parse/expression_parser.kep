@@ -242,40 +242,43 @@ var unaryOperatorExpression = label@'Unary Operator Expression' <|
             always(ast_expression.UnaryOperatorExpression.create(loc, value)));
 
 var binaryOperatorExpression = label@'Binary Operator Expression' <|
-    bind(
-        either(
-            keyword 'instanceof',
-            punctuator(
-                '.',
-                '*',
-                '/',
-                '+',
-                '-',
-                '%',
-                '<<',
-                '>>',
-                '>>>',
-                '<',
-                '>',
-                '<=',
-                '>=',
-                '==',
-                '!=',
-                '===',
-                '!==',
-                '&',
-                '^',
-                '|',
-                '||',
-                '&&',
-                '|>',
-                '\\>',
-                '\\>>',
-                '<|',
-                '<\\',
-                '<<\\')),
-        \{loc, value} ->
-            always(ast_expression.BinaryOperatorExpression.create(loc, value)));
+    nodea(
+        enumeration(
+            optional(false, keyword '_'),
+            either(
+                keyword ('instanceof', 'new'),
+                punctuator(
+                    '.',
+                    '*',
+                    '/',
+                    '+',
+                    '-',
+                    '%',
+                    '<<',
+                    '>>',
+                    '>>>',
+                    '<',
+                    '>',
+                    '<=',
+                    '>=',
+                    '==',
+                    '!=',
+                    '===',
+                    '!==',
+                    '&',
+                    '^',
+                    '|',
+                    '||',
+                    '&&',
+                    '|>',
+                    '\\>',
+                    '\\>>',
+                    '<|',
+                    '<\\',
+                    '<<\\',
+                    '@'))),
+        \loc flipped value ->
+            ast_expression.BinaryOperatorExpression.create(loc, value, !!flipped));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
     bind(

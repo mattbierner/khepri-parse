@@ -35,7 +35,7 @@
     "dependencies": {
         "nu-stream": ">=3.1.0",
         "bennu": "17.0.x",
-        "khepri-ast": "3.6.x",
+        "khepri-ast": "3.7.x",
         
         "require-directory": "1.2.x"
     },
