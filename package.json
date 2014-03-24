@@ -1,6 +1,6 @@
 {
     "name": "khepri-parse",
-    "version": "0.9.0",
+    "version": "0.9.1",
     "description": "Khepri language lexer and parser",
     "author": "Matt Bierner",
     "license": "MIT",

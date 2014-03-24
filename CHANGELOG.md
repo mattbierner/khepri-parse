@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 0.9.1 - March 24, 2014
+* Fixed `BinaryOperatorExpression` creating nodes with tokens as `op` instead of
+  actual op as string.
+
 ## 0.9.0 - March 24, 2014
 * Allow operator to function of binary `new` and `@` operators.
 * Added flipped binary operator to function syntax. `(_/, 10)`

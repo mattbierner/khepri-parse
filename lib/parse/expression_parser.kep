@@ -276,8 +276,8 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                     '<\\',
                     '<<\\',
                     '@'))),
-        \loc flipped value ->
-            ast_expression.BinaryOperatorExpression.create(loc, value, !!flipped));
+        \loc flipped op ->
+            ast_expression.BinaryOperatorExpression.create(loc, op.value, !!flipped));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
     bind(

@@ -100,8 +100,8 @@
             keyword("_")), either(keyword("instanceof", "new"), punctuator(".", "*", "/", "+", "-",
             "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^",
             "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\", "@"))), (function(loc, flipped,
-            value) {
-            return ast_expression.BinaryOperatorExpression.create(loc, value, (!(!flipped)));
+            op) {
+            return ast_expression.BinaryOperatorExpression.create(loc, op.value, (!(!flipped)));
         }))),
         ternayOperatorExpression = label("Ternary Operator Expression", bind(punctuator("?"), (function(__o) {
             var loc = __o["loc"],

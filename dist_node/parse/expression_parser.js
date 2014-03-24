@@ -105,8 +105,8 @@ var unaryOperatorExpression = label("Unary Operator Expression", bind(either(key
     binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false, keyword("_")),
         either(keyword("instanceof", "new"), punctuator(".", "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<",
             ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
-            "<\\", "<<\\", "@"))), (function(loc, flipped, value) {
-        return ast_expression.BinaryOperatorExpression.create(loc, value, (!(!flipped)));
+            "<\\", "<<\\", "@"))), (function(loc, flipped, op) {
+        return ast_expression.BinaryOperatorExpression.create(loc, op.value, (!(!flipped)));
     }))),
     ternayOperatorExpression = label("Ternary Operator Expression", bind(punctuator("?"), (function(__o) {
         var loc = __o["loc"],
