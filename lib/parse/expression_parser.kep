@@ -60,7 +60,6 @@ with
     import 'bennu::lang' {
         between
         chainl1
-        chainr1
         sepBy
         sepBy1
         then},
@@ -325,7 +324,7 @@ primaryExpression = label@'Primary Expression' <|
 ////////////////////////////////////////
 var argumentList = label@'Argument List' <|
     either(
-        attempt <| node(
+        attempt node(
             operatorExpression,
             \loc x -> {
                 var a = [x];
@@ -341,11 +340,9 @@ accessor = label@'Accessor' <|
         next(
             punctuator '.',
             either(
-                bind(identifier, \x -> always([x, false])),
-                bind(
-                    between(punctuator '(', punctuator ')',
-                        expression |> expected@"accessor expression"),
-                    \x -> always([x, true])))),
+                identifier.map \ x -> [x, false],
+                between(punctuator '(', punctuator ')',
+                    expression |> expected@"accessor expression").map \x -> [x, true])),
         \loc [x computed] -> ({
             'loc': loc,
             'property': x,

@@ -26,7 +26,6 @@
         label = __o["label"],
         between = __o0["between"],
         chainl1 = __o0["chainl1"],
-        chainr1 = __o0["chainr1"],
         sepBy = __o0["sepBy"],
         sepBy1 = __o0["sepBy1"],
         then = __o0["then"],
@@ -124,12 +123,13 @@
         (a.loc = loc);
         return a;
     }))), args));
-    (accessor = label("Accessor", node(next(punctuator("."), either(bind(identifier, (function(x) {
-        return always([x, false]);
-    })), bind(between(punctuator("("), punctuator(")"), expected("accessor expression",
-        expression)), (function(x) {
-        return always([x, true]);
-    })))), (function(loc, __o) {
+    (accessor = label("Accessor", node(next(punctuator("."), either(identifier.map((function(x) {
+            return [x, false];
+        })), between(punctuator("("), punctuator(")"), expected("accessor expression",
+            expression))
+        .map((function(x) {
+            return [x, true];
+        })))), (function(loc, __o) {
         var x = __o[0],
             computed = __o[1];
         return ({
