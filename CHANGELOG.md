@@ -6,7 +6,7 @@
 
 ## 0.9.0 - March 24, 2014
 * Allow operator to function of binary `new` and `@` operators.
-* Added flipped binary operator to function syntax. `(_/, 10)`
+* Added flipped binary operator to function syntax. `(_/, 10)`.
 
 ## 0.8.0 - March 20, 2014
 * Changed composed associativity to match the order the functions are evaluated in.
