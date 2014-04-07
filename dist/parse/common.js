@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
+*/
+define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
     var always = parse["always"],
@@ -16,8 +17,8 @@
         precedence, node, nodea, positionParser;
     (precedence = (function(p, table) {
         var sep = parse.choicea(table.map((function(entry) {
-            return bind(entry.sep, (function(__o) {
-                var value = __o["value"];
+            return bind(entry.sep, (function(__o0) {
+                var value = __o0["value"];
                 return always(({
                     "value": value,
                     "node": entry.node,
@@ -62,12 +63,12 @@
             return always(out.pop());
         }));
     }));
-    (positionParser = extract((function(__o) {
-        var position = __o["position"];
+    (positionParser = extract((function(__o0) {
+        var position = __o0["position"];
         return position.sourcePosition;
     })));
-    var prevEnd = extract((function(__o) {
-        var position = __o["position"];
+    var prevEnd = extract((function(__o0) {
+        var position = __o0["position"];
         return position.prevEnd;
     }));
     (node = (function(p, f) {

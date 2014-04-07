@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
     "./line_terminator_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -27,19 +28,18 @@
         regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
             regularExpressionClassChars, regularExpressionClass, regularExpressionChar, regularExpressionChars,
             regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral,
-            x, join = foldl.bind(null, (function(x, y) {
+            __add = (function(x, y) {
                 return (x + y);
-            }), "");
-    (regularExpressionNonTerminator = token((function(f, g) {
-        return (function(x) {
-            return f(g(x));
-        });
-    })((function(x) {
-        return (!x);
-    }), test.bind(null, lineTerminator))));
-    (regularExpressionBackslashSequence = next(character("\\"), map(((x = "\\"), (function(y) {
-        return (x + y);
-    })), regularExpressionNonTerminator)));
+            }),
+        join = foldl.bind(null, __add, ""),
+        y;
+    (regularExpressionNonTerminator = token(((y = test.bind(null, lineTerminator)), (function(x) {
+        var x0 = y(x);
+        return (!x0);
+    }))));
+    (regularExpressionBackslashSequence = next(character("\\"), map((function(y0) {
+        return ("\\" + y0);
+    }), regularExpressionNonTerminator)));
     (regularExpressionClassChar = either(attempt(token((function(tok) {
         return (((!test(lineTerminator, tok)) && (tok !== "]")) && (tok !== "\\"));
     }))), regularExpressionBackslashSequence));

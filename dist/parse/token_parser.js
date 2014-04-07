@@ -13,29 +13,56 @@ define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
             return (function(pos, tok) {
                 return new(ExpectError)(pos, msg, ((tok === null) ? "end of input" : tok.value));
             });
-        }),
-        typeParser = (function(type, msg) {
-            return token((function(tok) {
-                return (tok.type === type);
-            }), expectError(msg));
-        }),
-        selectAny = (function(type) {
-            return (function() {
-                var options = arguments;
-                return token((function(tok) {
-                    return ((tok.type === type) && (indexOf(options, tok.value) >= 0));
-                }), expectError(join(options, ", ")));
-            });
         });
-    (punctuator = selectAny("Punctuator"));
-    (keyword = selectAny("Keyword"));
-    (anyIdentifier = typeParser("Identifier", "any identifier"));
-    (identifier = selectAny("Identifier"));
-    (nullLiteral = typeParser("Null", "Null literal"));
-    (booleanLiteral = typeParser("Boolean", "boolean literal"));
-    (numericLiteral = typeParser("Number", "numeric literal"));
-    (stringLiteral = typeParser("String", "string literal"));
-    (regularExpressionLiteral = typeParser("RegularExpression", "regular expression literal"));
+    (punctuator = (function() {
+        var options = arguments;
+        return token((function(tok) {
+            return ((tok.type === "Punctuator") && (indexOf(options, tok.value) >= 0));
+        }), expectError(join(options, ", ")));
+    }));
+    (keyword = (function() {
+        var options = arguments;
+        return token((function(tok) {
+            return ((tok.type === "Keyword") && (indexOf(options, tok.value) >= 0));
+        }), expectError(join(options, ", ")));
+    }));
+    (anyIdentifier = token((function(tok) {
+        return (tok.type === "Identifier");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "any identifier", ((tok === null) ? "end of input" : tok.value));
+    })));
+    (identifier = (function() {
+        var options = arguments;
+        return token((function(tok) {
+            return ((tok.type === "Identifier") && (indexOf(options, tok.value) >= 0));
+        }), expectError(join(options, ", ")));
+    }));
+    (nullLiteral = token((function(tok) {
+        return (tok.type === "Null");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "Null literal", ((tok === null) ? "end of input" : tok.value));
+    })));
+    (booleanLiteral = token((function(tok) {
+        return (tok.type === "Boolean");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "boolean literal", ((tok === null) ? "end of input" : tok.value));
+    })));
+    (numericLiteral = token((function(tok) {
+        return (tok.type === "Number");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "numeric literal", ((tok === null) ? "end of input" : tok.value));
+    })));
+    (stringLiteral = token((function(tok) {
+        return (tok.type === "String");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "string literal", ((tok === null) ? "end of input" : tok.value));
+    })));
+    (regularExpressionLiteral = token((function(tok) {
+        return (tok.type === "RegularExpression");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "regular expression literal", ((tok === null) ? "end of input" :
+            tok.value));
+    })));
     (exports["punctuator"] = punctuator);
     (exports["keyword"] = keyword);
     (exports["identifier"] = identifier);

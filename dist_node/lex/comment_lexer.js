@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/comment_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     anyToken = __o["anyToken"],
     always = __o["always"],
@@ -24,18 +25,17 @@ var __o = require("bennu")["parse"],
     __o2 = require("./line_terminator_lexer"),
     lineTerminator = __o2["lineTerminator"],
     singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,
-        multiLineCommentStartMarker, multiLineCommentEndMarker, multiLineCommentChars, multiLineComment, comment, join =
-        map.bind(null, foldl.bind(null, (function(x, y) {
-            return (x + y);
-        }), ""));
+        multiLineCommentStartMarker, multiLineCommentEndMarker, multiLineCommentChars, multiLineComment, comment, __add =
+        (function(x, y) {
+        return (x + y);
+    }),
+    join = map.bind(null, foldl.bind(null, __add, ""));
 (singleLineCommentMarker = string("//"));
-(singleLineCommentChar = token((function(f, g) {
-    return (function(x) {
-        return f(g(x));
-    });
-})((function(x) {
-    return (!x);
-}), test.bind(null, lineTerminator))));
+var y;
+(singleLineCommentChar = token(((y = test.bind(null, lineTerminator)), (function(x) {
+    var x0 = y(x);
+    return (!x0);
+}))));
 (singleLineCommentChars = many(singleLineCommentChar));
 (singleLineComment = label("Single Line Comment Lexer", next(singleLineCommentMarker, join(singleLineCommentChars))));
 (multiLineCommentStartMarker = string("/*"));

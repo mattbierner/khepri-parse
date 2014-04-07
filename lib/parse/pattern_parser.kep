@@ -60,11 +60,11 @@ var sepEndWith = \sep end p ->
 
 /* Forward
  ******************************************************************************/
-topLevelPattern = late\-> topLevelPattern;
+topLevelPattern = late\-> { return topLevelPattern; };
 
-asPattern = late\-> asPattern;
+asPattern = late\-> { return asPattern; };
 
-objectPattern = late\-> objectPattern;
+objectPattern = late\-> { return objectPattern; };
 
 /* Parts
  ******************************************************************************/

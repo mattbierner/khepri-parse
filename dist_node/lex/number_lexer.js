@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -28,9 +29,13 @@ var __o = require("bennu")["parse"],
     foldl = __o2["foldl"],
     decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit, hexDigit,
         decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
-        decimalIntegerLiteral, decimalLiteral, numericLiteral, join = map.bind(null, foldl.bind(null, (function(x, y) {
-            return (x + y);
-        }), ""));
+        decimalIntegerLiteral, decimalLiteral, numericLiteral, __minus = (function(x) {
+            return (-x);
+        }),
+    __add = (function(x, y) {
+        return (x + y);
+    }),
+    join = map.bind(null, foldl.bind(null, __add, ""));
 (decimal = character("."));
 (negativeSign = character("-"));
 (positiveSign = character("+"));
@@ -42,9 +47,8 @@ var __o = require("bennu")["parse"],
 (decimalDigits = label("Decimal Digits Lexer", join(many1(decimalDigit))));
 (hexDigits = label("Hex Digits Lexer", join(many1(hexDigit))));
 (unsignedInteger = label("Unsigned Integer Lexer", map(parseInt, decimalDigits)));
-(signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map((function(x) {
-    return (-x);
-}), unsignedInteger)), next(optional(null, positiveSign), unsignedInteger))));
+(signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map(__minus, unsignedInteger)), next(optional(
+    null, positiveSign), unsignedInteger))));
 var hexIntegerLiteralDigits = label("Hex Integer Literal Digits Lexer", map((function(num) {
     return parseInt(num, 16);
 }), hexDigits));

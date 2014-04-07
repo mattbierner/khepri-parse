@@ -74,7 +74,6 @@ with
     
     import './common' {node nodea precedence},
     import './token_parser' {keyword punctuator},
-    import './program_parser' program_parser,
     import './value_parser' {identifier literal stringLiteral},
     import './pattern_parser' pattern
 in {
@@ -91,11 +90,11 @@ var blockStatement = late\-> {
 
 /* Forward Declarations
  ******************************************************************************/
-expression = late\-> expression;
+expression = late\-> { return expression; };
 
-memberExpression = late\-> memberExpression;
+memberExpression = late\-> { return memberExpression; };
 
-curryExpression = late\-> memberExpression;
+curryExpression = late\-> { return memberExpression; };
 
 /* Components
  ******************************************************************************/

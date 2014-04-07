@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/token",
     "khepri-ast/position", "./boolean_lexer", "./comment_lexer", "./identifier_lexer", "./line_terminator_lexer",
     "./null_lexer", "./number_lexer", "./punctuator_lexer", "./reserved_word_lexer", "./string_lexer",
     "./whitespace_lexer", "./regular_expression_lexer"
@@ -42,28 +43,54 @@
         stringLiteral = __o10["stringLiteral"],
         whitespace = __o11["whitespace"],
         regularExpressionLiteral = __o12["regularExpressionLiteral"],
-        literal, token, inputElement, lexer, lexManyState, lex, makeToken = (function(type, p) {
-            return p.map((function(value) {
+        literal, token, inputElement, lexer, lexManyState, lex, type, p, type0, p0, type1, p1, type2, p2, type3,
+            p3, type4, p4, type5, p5, type6, p6, type7, p7, type8, p8, type9, p9, literalImpl = choice(((type =
+                lexToken.StringToken), (p = stringLiteral), p.map((function(value) {
                 return [type, value];
-            }));
-        }),
-        buildToken = (function(p) {
-            return binds(enumeration(getPosition, p, getPosition), (function(start, __o, end) {
-                var type = __o[0],
-                    value = __o[1];
-                return always(new(type)(new(SourceLocation)(start, end), value));
-            }));
-        }),
-        literalImpl = choice(makeToken(lexToken.StringToken, stringLiteral), makeToken(lexToken.RegularExpressionToken,
-            regularExpressionLiteral), makeToken(lexToken.BooleanToken, booleanLiteral), makeToken(lexToken
-            .NullToken, nullLiteral), makeToken(lexToken.NumberToken, numericLiteral)),
-        tokenImpl = choice(attempt(makeToken(lexToken.IdentifierToken, identifier)), attempt(literalImpl),
-            makeToken(lexToken.KeywordToken, reservedWord), makeToken(lexToken.PunctuatorToken, punctuator)),
-        inputElementImpl = choice(makeToken(lexToken.CommentToken, comment), makeToken(lexToken.WhitespaceToken,
-            whitespace), makeToken(lexToken.LineTerminatorToken, lineTerminator), tokenImpl);
-    (literal = buildToken(literalImpl));
-    (token = buildToken(tokenImpl));
-    (inputElement = buildToken(inputElementImpl));
+            }))), ((type0 = lexToken.RegularExpressionToken), (p0 = regularExpressionLiteral), p0.map((
+                function(value) {
+                    return [type0, value];
+                }))), ((type1 = lexToken.BooleanToken), (p1 = booleanLiteral), p1.map((function(value) {
+                return [type1, value];
+            }))), ((type2 = lexToken.NullToken), (p2 = nullLiteral), p2.map((function(value) {
+                return [type2, value];
+            }))), ((type3 = lexToken.NumberToken), (p3 = numericLiteral), p3.map((function(value) {
+                return [type3, value];
+            })))),
+        tokenImpl = choice(attempt(((type4 = lexToken.IdentifierToken), (p4 = identifier), p4.map((function(
+            value) {
+            return [type4, value];
+        })))), attempt(literalImpl), ((type5 = lexToken.KeywordToken), (p5 = reservedWord), p5.map((
+            function(value) {
+                return [type5, value];
+            }))), ((type6 = lexToken.PunctuatorToken), (p6 = punctuator), p6.map((function(value) {
+            return [type6, value];
+        })))),
+        inputElementImpl = choice(((type7 = lexToken.CommentToken), (p7 = comment), p7.map((function(value) {
+            return [type7, value];
+        }))), ((type8 = lexToken.WhitespaceToken), (p8 = whitespace), p8.map((function(value) {
+            return [type8, value];
+        }))), ((type9 = lexToken.LineTerminatorToken), (p9 = lineTerminator), p9.map((function(value) {
+            return [type9, value];
+        }))), tokenImpl),
+        p10 = literalImpl;
+    (literal = binds(enumeration(getPosition, p10, getPosition), (function(start, __o13, end) {
+        var type10 = __o13["0"],
+            value = __o13["1"];
+        return always(new(type10)(new(SourceLocation)(start, end), value));
+    })));
+    var p11 = tokenImpl;
+    (token = binds(enumeration(getPosition, p11, getPosition), (function(start, __o13, end) {
+        var type10 = __o13["0"],
+            value = __o13["1"];
+        return always(new(type10)(new(SourceLocation)(start, end), value));
+    })));
+    var p12 = inputElementImpl;
+    (inputElement = binds(enumeration(getPosition, p12, getPosition), (function(start, __o13, end) {
+        var type10 = __o13["0"],
+            value = __o13["1"];
+        return always(new(type10)(new(SourceLocation)(start, end), value));
+    })));
     (lexer = then(many(inputElement), eof));
     (lex = (function(input) {
         return runState(lexer, new(ParserState)(streamFrom(input), SourcePosition.initial));

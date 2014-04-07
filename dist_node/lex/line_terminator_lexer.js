@@ -13,17 +13,14 @@ var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     character = __o0["character"],
     oneOf = __o0["oneOf"],
-    lf, cr, ls, ps, lineTerminator, lineTerminatorSequence, lfChar = "\n",
-    crChar = "\r",
-    lsChar = "\u2028",
-    psChar = "\u2029";
-(lf = label("Line Feed Lexer", character(lfChar)));
-(cr = label("Carriage Return Lexer", character(crChar)));
-(ls = label("Line Separator Lexer", character(lsChar)));
-(ps = label("Paragraph Separator Lexer", character(psChar)));
-(lineTerminator = label("Line Terminator Lexer", oneOf([lfChar, crChar, lsChar, psChar])));
-(lineTerminatorSequence = label("Line Terminator Sequence Lexer", choice(lf, ls, ps, next(cr, optional(crChar, next(lf,
-    always((crChar + lfChar))))))));
+    lf, cr, ls, ps, lineTerminator, lineTerminatorSequence;
+(lf = label("Line Feed Lexer", character("\n")));
+(cr = label("Carriage Return Lexer", character("\r")));
+(ls = label("Line Separator Lexer", character("\u2028")));
+(ps = label("Paragraph Separator Lexer", character("\u2029")));
+(lineTerminator = label("Line Terminator Lexer", oneOf(["\n", "\r", "\u2028", "\u2029"])));
+(lineTerminatorSequence = label("Line Terminator Sequence Lexer", choice(lf, ls, ps, next(cr, optional("\r", next(lf,
+    always("\r\n")))))));
 (exports["lf"] = lf);
 (exports["cr"] = cr);
 (exports["ls"] = ls);

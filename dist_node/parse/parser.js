@@ -51,11 +51,11 @@ var parse = require("bennu")["parse"],
 (parseStream = (function(s) {
     return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
 }));
-(parseInput = (function(f, g) {
-    return (function(x) {
-        return f(g(x));
-    });
-})(parseStream, streamFrom));
+var x = streamFrom,
+    y = parseStream;
+(parseInput = (function(x0) {
+    return y(x(x0));
+}));
 (exports["parserStream"] = parserStream);
 (exports["ParserPosition"] = ParserPosition);
 (exports["parseInput"] = parseInput);

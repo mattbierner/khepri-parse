@@ -1,23 +1,35 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/value_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/value_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "khepri-ast/value", "./token_parser"], (function(require, exports, __o,
+*/
+define(["require", "exports", "bennu/parse", "khepri-ast/value", "./token_parser"], (function(require, exports, __o,
     ast_value, token) {
     "use strict";
     var bind = __o["bind"],
         choice = __o["choice"],
         label = __o["label"],
         literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
-            identifier, literalParser = (function(kind, p) {
-                return p.map((function(x) {
-                    return ast_value.Literal.create(x.loc, kind, x.value);
-                }));
-            });
-    (nullLiteral = label("Null Literal", literalParser("null", token.nullLiteral)));
-    (booleanLiteral = label("Boolean Literal", literalParser("boolean", token.booleanLiteral)));
-    (numericLiteral = label("Numeric Literal", literalParser("number", token.numericLiteral)));
-    (stringLiteral = label("String Literal", literalParser("string", token.stringLiteral)));
-    (regularExpressionLiteral = label("Regular Expression Literal", literalParser("regexp", token.regularExpressionLiteral)));
+            identifier, p;
+    (nullLiteral = label("Null Literal", ((p = token.nullLiteral), p.map((function(x) {
+        return ast_value.Literal.create(x.loc, "null", x.value);
+    })))));
+    var p0;
+    (booleanLiteral = label("Boolean Literal", ((p0 = token.booleanLiteral), p0.map((function(x) {
+        return ast_value.Literal.create(x.loc, "boolean", x.value);
+    })))));
+    var p1;
+    (numericLiteral = label("Numeric Literal", ((p1 = token.numericLiteral), p1.map((function(x) {
+        return ast_value.Literal.create(x.loc, "number", x.value);
+    })))));
+    var p2;
+    (stringLiteral = label("String Literal", ((p2 = token.stringLiteral), p2.map((function(x) {
+        return ast_value.Literal.create(x.loc, "string", x.value);
+    })))));
+    var p3;
+    (regularExpressionLiteral = label("Regular Expression Literal", ((p3 = token.regularExpressionLiteral), p3.map(
+        (function(x) {
+            return ast_value.Literal.create(x.loc, "regexp", x.value);
+        })))));
     (literal = label("Literal", choice(nullLiteral, booleanLiteral, numericLiteral, stringLiteral,
         regularExpressionLiteral)));
     (identifier = label("Identifier", token.anyIdentifier.map((function(x) {

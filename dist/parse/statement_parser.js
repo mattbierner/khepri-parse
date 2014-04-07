@@ -37,10 +37,8 @@
         identifier = __o6["identifier"],
         blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement,
             withStatement, iterationStatement, continueStatement, breakStatement, returnStatement,
-            switchStatement, throwStatement, tryStatement, debuggerStatement, statement, staticDeclaration,
-            staticDeclarationList, initialiser, variableDeclaration, withIdentifier, withBinding, bindings,
-            caseClause, defaultClause, caseClauses, caseBlock, condition, forInitExpression, forTestExpression,
-            forUpdateExpression, catchBlock, finallyBlock;
+            switchStatement, throwStatement, tryStatement, debuggerStatement, statement, initialiser,
+            variableDeclaration, condition, forInitExpression, forTestExpression, forUpdateExpression;
     (statement = late((function() {
         return statement;
     })));
@@ -53,6 +51,7 @@
         ast_statement.DebuggerStatement.create)));
     (expressionStatement = label("Expression Statement", node(then(topLevelExpression, logicalSemiColon),
         ast_statement.ExpressionStatement.create)));
+    var staticDeclaration, staticDeclarationList;
     (staticStatement = label("Static Statement", ((staticDeclaration = node(identifier, ast_declaration.StaticDeclarator
             .create)), (staticDeclarationList = eager(sepBy1(punctuator(","), staticDeclaration))),
         node(between(keyword("static"), logicalSemiColon, staticDeclarationList), ast_declaration.StaticDeclaration
@@ -65,10 +64,11 @@
     }))), eager(sepBy1(punctuator(","), variableDeclaration)));
     (variableStatement = label("Variable Statement", node(between(keyword("var"), logicalSemiColon,
         variableDeclarationList), ast_declaration.VariableDeclaration.create)));
+    var withIdentifier, withBinding, bindings;
     (withStatement = label("With Statement", ((withIdentifier = expected("pattern", pattern)), (withBinding =
         either(importPattern, nodea(enumeration(withIdentifier, punctuator("=", "=:", ":="),
-            expression), (function(loc, pattern, rec, value) {
-            return ast_declaration.Binding.create(loc, pattern, value, (rec.value ===
+            expression), (function(loc, pattern0, rec, value) {
+            return ast_declaration.Binding.create(loc, pattern0, value, (rec.value ===
                 ":="));
         })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(next(keyword("with"),
             enumeration(expected("with bindings", bindings), next(keyword("in"), blockStatement))),
@@ -76,6 +76,7 @@
     (ifStatement = label("If Statement", nodea(next(keyword("if"), enumeration(between(punctuator("("),
         punctuator(")"), expected("if condition", expression)), statement, optional(null,
         next(keyword("else"), statement)))), ast_statement.IfStatement.create)));
+    var caseClause, defaultClause, caseClauses, caseBlock;
     (switchStatement = label("Switch Statement", ((caseClause = nodea(next(keyword("case"), enumeration(then(
         expression, punctuator(":")), statementList)), ast_clause.SwitchCase.create)), (
         defaultClause = node(next(keyword("default"), next(punctuator(":"), statementList)), (
@@ -107,6 +108,7 @@
         null, expression)), ast_statement.ReturnStatement.create)));
     (throwStatement = label("Throw Statement", node(between(keyword("throw"), logicalSemiColon, expression),
         ast_statement.ThrowStatement.create)));
+    var catchBlock, finallyBlock;
     (tryStatement = label("Try Statement", ((catchBlock = nodea(next(keyword("catch"), enumeration(between(
             punctuator("("), punctuator(")"), identifier), blockStatement)), ast_clause.CatchClause
         .create)), (finallyBlock = next(keyword("finally"), blockStatement)), nodea(next(keyword(

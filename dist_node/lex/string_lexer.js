@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],
@@ -31,10 +32,10 @@ var __o = require("bennu")["parse"],
     hexDigit = __o4["hexDigit"],
     doubleQuote, escape, singleQuote, lineContinuation, unicodeEscapeSequence, hexEscapeSequence,
         characterEscapeSequence, escapeSequence, singleStringCharacter, singleStringCharacters, singleStringLiteral,
-        doubleStringCharacter, doubleStringCharacters, doubleStringLiteral, stringLiteral, join = foldl.bind(null, (
-            function(x, y) {
-                return (x + y);
-            }), ""),
+        doubleStringCharacter, doubleStringCharacters, doubleStringLiteral, stringLiteral, __add = (function(x, y) {
+            return (x + y);
+        }),
+    join = foldl.bind(null, __add, ""),
     fromCharCode = map.bind(null, (function(x) {
         return String.fromCharCode(parseInt(join(x), 16));
     }));
@@ -52,13 +53,12 @@ var singleEscapeCharacter = choice(doubleQuote, singleQuote, escape, next(charac
 (hexEscapeSequence = next(character("x"), fromCharCode(times(2, hexDigit))));
 (unicodeEscapeSequence = next(character("u"), fromCharCode(times(4, hexDigit))));
 (characterEscapeSequence = either(singleEscapeCharacter, nonEscapeCharacter));
-(escapeSequence = choice(characterEscapeSequence, sequence(character("0"), either(eof, token((function(f, g) {
-    return (function(x) {
-        return f(g(x));
-    });
-})((function(x) {
-    return (!x);
-}), test.bind(null, decimalDigit)))), always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
+var y;
+(escapeSequence = choice(characterEscapeSequence, sequence(character("0"), either(eof, token(((y = test.bind(null,
+    decimalDigit)), (function(x) {
+    var x0 = y(x);
+    return (!x0);
+})))), always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
 (singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape, escapeSequence),
     token((function(tok) {
         return (!((test(singleQuote, tok) || test(escape, tok)) || test(lineTerminator, tok)));

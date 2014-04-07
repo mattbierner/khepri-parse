@@ -27,10 +27,11 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         foldl = __o1["foldl"],
         reservedWordList = __o2["reservedWordList"],
         zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, unicodeCombiningMark,
-            identifierStart, identifierPart, identifierParts, identifierName, identifier, join = foldl.bind(
-                null, (function(x, y) {
-                    return (x + y);
-                }), "");
+            identifierStart, identifierPart, identifierParts, identifierName, identifier, __add = (function(x,
+                y) {
+                return (x + y);
+            }),
+        join = foldl.bind(null, __add, "");
     (zwnj = character("‌"));
     (zwj = character("‍"));
     (unicodeLetter = letter);

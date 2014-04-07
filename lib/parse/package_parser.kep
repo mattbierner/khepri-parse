@@ -17,28 +17,10 @@ with
     import 'khepri-ast::package' ast_package,
     
     import './common' {node, nodea},
-    import './token_parser' {keyword, punctuator},
+    import './token_parser' {keyword punctuator},
     import './value_parser' {identifier stringLiteral},
-    import './statement_parser' _
+    import './statement_parser' {withStatement blockStatement}
 in {
-
-/* Circular
- ******************************************************************************/
-var withStatement = late\-> {
-    with
-        import './statement_parser' {withStatement}
-    in {
-        return withStatement;
-    }
-};
-
-var blockStatement = late\-> {
-    with
-        import './statement_parser' {blockStatement}
-    in {
-        return blockStatement;
-    }
-};
 
 /* labels
  ******************************************************************************/

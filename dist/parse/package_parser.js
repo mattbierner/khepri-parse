@@ -1,10 +1,9 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/package_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
     "./value_parser", "./statement_parser"
-], (function(require, exports, __o, __o0, ast_package, __o1, __o2, __o3, _) {
+], (function(require, exports, __o, __o0, ast_package, __o1, __o2, __o3, __o4) {
     "use strict";
     var eager = __o["eager"],
         either = __o["either"],
@@ -22,20 +21,13 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
         punctuator = __o2["punctuator"],
         identifier = __o3["identifier"],
         stringLiteral = __o3["stringLiteral"],
-        khepriPackage, withStatement = late((function() {
-            var __o = require("./statement_parser"),
-                withStatement = __o["withStatement"];
-            return withStatement;
-        })),
-        blockStatement = late((function() {
-            var __o = require("./statement_parser"),
-                blockStatement = __o["blockStatement"];
-            return blockStatement;
-        })),
-        packageExport = label("Package Export", either(node(identifier, ast_package.PackageExport.create),
-            nodea(enumeration(stringLiteral, next(punctuator(":"), identifier)), (function(loc, alias, id) {
-                return ast_package.PackageExport.create(loc, id, alias);
-            })))),
+        withStatement = __o4["withStatement"],
+        blockStatement = __o4["blockStatement"],
+        khepriPackage, packageExport = label("Package Export", either(node(identifier, ast_package.PackageExport
+            .create), nodea(enumeration(stringLiteral, next(punctuator(":"), identifier)), (function(
+            loc, alias, id) {
+            return ast_package.PackageExport.create(loc, id, alias);
+        })))),
         packageExportList = label("Package Export List", node(between(punctuator("("), punctuator(")"), eager(
             sepBy(optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
         packageExports = label("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport

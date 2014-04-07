@@ -37,15 +37,7 @@ var __o = require("bennu")["parse"],
     identifier = __o4["identifier"],
     stringLiteral = __o4["stringLiteral"],
     pattern, topLevelPattern, identifierPattern, sinkPattern, ellipsisPattern, importPattern, arrayPattern,
-        objectPattern, argumentList, argumentsPattern, asPattern, element, pre, post, sepEndWith1 = (function(sep, end,
-            p) {
-            return rec((function(self) {
-                return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
-            }));
-        }),
-    sepEndWith = (function(sep, end, p) {
-        return either(enumeration(end), sepEndWith1(sep, end, p));
-    });
+        objectPattern, argumentList, argumentsPattern, asPattern;
 (topLevelPattern = late((function() {
     return topLevelPattern;
 })));
@@ -65,10 +57,12 @@ var sep = optional(null, punctuator(","));
     }))));
 (ellipsisPattern = label("Ellipsis Pattern", node(next(punctuator("..."), identifierPattern), ast_pattern.EllipsisPattern
     .create)));
-(arrayPattern = label("Array Pattern", ((element = topLevelPattern), (pre = sepEndWith(sep, ellipsisPattern, expected(
-    "array pattern element", element))), (post = sepBy(sep, expected("non-ellipsis array pattern element",
-    element))), node(between(punctuator("["), punctuator("]"), eager(append(pre, next(sep, post)))),
-    ast_pattern.ArrayPattern.create))));
+var element, sep0, end, p, pre, post;
+(arrayPattern = label("Array Pattern", ((element = topLevelPattern), (sep0 = sep), (end = ellipsisPattern), (p =
+    expected("array pattern element", element)), (pre = either(enumeration(end), rec((function(self) {
+    return cons(p, optional(NIL, next(sep0, either(enumeration(end), self))));
+})))), (post = sepBy(sep, expected("non-ellipsis array pattern element", element))), node(between(
+    punctuator("["), punctuator("]"), eager(append(pre, next(sep, post)))), ast_pattern.ArrayPattern.create))));
 var objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), choice(arrayPattern,
     objectPattern, asPattern, identifierPattern))), ast_pattern.ObjectPatternElement.create), node(either(asPattern,
     identifierPattern), (function(loc, key) {

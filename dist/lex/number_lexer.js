@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
     exports, __o, __o0, __o1, __o2) {
     "use strict";
     var always = __o["always"],
@@ -26,10 +27,13 @@
         foldl = __o2["foldl"],
         decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit,
             hexDigit, decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
-            decimalIntegerLiteral, decimalLiteral, numericLiteral, join = map.bind(null, foldl.bind(null, (
-                function(x, y) {
-                    return (x + y);
-                }), ""));
+            decimalIntegerLiteral, decimalLiteral, numericLiteral, __minus = (function(x) {
+                return (-x);
+            }),
+        __add = (function(x, y) {
+            return (x + y);
+        }),
+        join = map.bind(null, foldl.bind(null, __add, ""));
     (decimal = character("."));
     (negativeSign = character("-"));
     (positiveSign = character("+"));
@@ -41,9 +45,8 @@
     (decimalDigits = label("Decimal Digits Lexer", join(many1(decimalDigit))));
     (hexDigits = label("Hex Digits Lexer", join(many1(hexDigit))));
     (unsignedInteger = label("Unsigned Integer Lexer", map(parseInt, decimalDigits)));
-    (signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map((function(x) {
-        return (-x);
-    }), unsignedInteger)), next(optional(null, positiveSign), unsignedInteger))));
+    (signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map(__minus, unsignedInteger)),
+        next(optional(null, positiveSign), unsignedInteger))));
     var hexIntegerLiteralDigits = label("Hex Integer Literal Digits Lexer", map((function(num) {
         return parseInt(num, 16);
     }), hexDigits));
