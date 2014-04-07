@@ -16,30 +16,47 @@ package (
     argumentList
     argumentsPattern
     
-    asPattern
-    
-    subPattern)
+    asPattern)
 with
     import 'bennu::parse' {
         attempt
+        append
         bind
         binds
         choice
+        cons
         eager
         either
         expected
         enumeration
         next
         optional
+        rec
         label
         late},
-    import 'bennu::lang' {between sepBy sepBy1 then},
+    import 'bennu::lang' {between sepBy sepBy1 sepEndBy then},
+    
+    import 'nu-stream::stream' {NIL},
+    
     import 'khepri-ast::pattern' ast_pattern,
     
     import './common' {node nodea},
     import './token_parser' {keyword punctuator},
     import './value_parser' {identifier stringLiteral}
 in {
+
+var sepEndWith1 = \sep end p ->
+    rec\self ->
+        cons(
+            p,
+            optional(NIL,
+                next(sep,
+                    either(enumeration(end), self))));
+
+var sepEndWith = \sep end p ->
+    either(
+        enumeration(end),
+        sepEndWith1(sep, end, p));
 
 /* Forward
  ******************************************************************************/
@@ -48,8 +65,6 @@ topLevelPattern = late\-> topLevelPattern;
 asPattern = late\-> asPattern;
 
 objectPattern = late\-> objectPattern;
-
-subPattern = late\-> subPattern;
 
 /* Parts
  ******************************************************************************/
@@ -69,21 +84,32 @@ sinkPattern = label@'Sink Pattern' <|
     keyword('_')
         .map\x -> ast_pattern.SinkPattern.create(x.loc);
 
+/* Unpacks
+ ******************************************************************************/
 // Ellipsis Pattern
 ////////////////////////////////////////
 ellipsisPattern = label@'Ellipsis Pattern' <|
-    punctuator('...')
-        .map\x -> ast_pattern.EllipsisPattern.create(x.loc);
+    node(
+        next(
+            punctuator('...'),
+            identifierPattern),
+        ast_pattern.EllipsisPattern.create);
 
-/* Unpacks
- ******************************************************************************/
 // Array Pattern
 ////////////////////////////////////////
-arrayPattern = label@'Array Pattern' <|
+arrayPattern = label@'Array Pattern' <| let
+    element = topLevelPattern,
+    
+    pre = sepEndWith(sep,
+        ellipsisPattern,
+        element |> expected@"array pattern element"),
+    
+    post = sepBy(sep,
+        element |> expected@"non-ellipsis array pattern element")
+in
     node(
         between(punctuator '[', punctuator ']',
-            eager <| sepBy1(sep, topLevelPattern)
-                |> expected@"array pattern element"),
+            eager <| append(pre, next(sep, post))),
         ast_pattern.ArrayPattern.create);
 
 // Object Pattern
@@ -109,8 +135,8 @@ var objectPatternElement = either(
 objectPattern = label@'Object Pattern' <|
     node(
         between(punctuator '{', punctuator '}',
-            eager <| sepBy1(sep, objectPatternElement)
-                |> expected@"object pattern element"),
+            eager <| sepBy1(sep,
+                objectPatternElement |> expected@"object pattern element")),
         ast_pattern.ObjectPattern.create);
 
 // As Pattern
@@ -135,11 +161,7 @@ importPattern = label@'Import Pattern' <|
         nodea(
             enumeration(
                 stringLiteral,
-                choice(
-                    sinkPattern,
-                    objectPattern,
-                    asPattern,
-                    identifierPattern)),
+                topLevelPattern),
             ast_pattern.ImportPattern.create));
 
 /* Patterns
@@ -148,27 +170,11 @@ importPattern = label@'Import Pattern' <|
 ////////////////////////////////////////
 topLevelPattern = label@'Top Level Pattern' <|
     choice(
-        ellipsisPattern,
         sinkPattern,
         arrayPattern,
         objectPattern,
         asPattern,
         identifierPattern);
-
-// Sub Pattern
-////////////////////////////////////////
-var subPatternElements = eager <| sepBy1(sep,
-    either(
-        topLevelPattern,
-        subPattern));
-
-subPattern = label@'Sub Pattern' <|
-    attempt <| nodea(
-        enumeration(
-            identifierPattern,
-            between(punctuator '(', punctuator ')',
-                subPatternElements)),
-        ast_pattern.ArgumentsPattern.create);
 
 // Arguments Pattern
 ////////////////////////////////////////
