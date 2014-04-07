@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 0.11.0 - April 7, 2014
+* Allow let expressions and lambdas to limit their capture using `§`.
+* Added support for parsing array and argument unpacks with ellipsis unpacks.
+
 ## 0.9.1 - March 24, 2014
 * Fixed `BinaryOperatorExpression` creating nodes with tokens as `op` instead of
   actual op as string.

@@ -23,7 +23,7 @@ package (
     doubleStringCharacter
     doubleStringCharacters
     doubleStringLiteral
-
+    
 // Literal
     stringLiteral)
 with

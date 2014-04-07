@@ -75,10 +75,10 @@
         punctuator("}"), eager(objectProperties)), ast_expression.ObjectExpression.create))));
     var functionName, functionBody;
     (functionExpression = label("Function Expression", ((functionName = optional(null, next(keyword("function"),
-        optional(null, identifier)))), (functionBody = either(blockStatement, expression)), nodea(
-        enumeration(functionName, next(punctuator("\\"), pattern.argumentsPattern), next(punctuator(
-            "->"), expected("function body", functionBody))), ast_expression.FunctionExpression.create
-    ))));
+        optional(null, identifier)))), (functionBody = either(blockStatement, then(expression,
+        optional(null, punctuator("§"))))), nodea(enumeration(functionName, next(punctuator("\\"),
+        pattern.argumentsPattern), next(punctuator("->"), expected("function body",
+        functionBody))), ast_expression.FunctionExpression.create))));
     var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", pattern.topLevelPattern),
         punctuator("=", "=:", ":="), expected("bound value", expression)), (function(loc, pattern0,
         rec0, expr) {
@@ -87,8 +87,8 @@
         letBindings, letBody;
     (letExpression = label("Let Expression", ((letBindings = sepBy1(punctuator(","), letBinding)), (letBody =
         expression), nodea(next(keyword("let"), enumeration(expected("let bindings", eager(
-            letBindings)), next(keyword("in"), expected("let body expression", letBody)))),
-        ast_expression.LetExpression.create))));
+        letBindings)), between(keyword("in"), optional(null, punctuator("§")), expected(
+        "let body expression", letBody)))), ast_expression.LetExpression.create))));
     (conditionalExpression = label("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression,
             next(punctuator(":"), expected("conditional consequent expression", expression)), next(
                 punctuator(":"), expected("conditional alternate expression", expression)))),

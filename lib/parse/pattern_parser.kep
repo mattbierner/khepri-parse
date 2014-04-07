@@ -58,6 +58,9 @@ var sepEndWith = \sep end p ->
         enumeration(end),
         sepEndWith1(sep, end, p));
 
+var sepEndWith0 = \sep end p ->
+    optional(NIL, sepEndWith(sep, end, p));
+
 /* Forward
  ******************************************************************************/
 topLevelPattern = late\-> { return topLevelPattern; };
@@ -177,8 +180,20 @@ topLevelPattern = label@'Top Level Pattern' <|
         identifierPattern);
 
 // Arguments Pattern
+//
+// TODO: should probably be in file with function
 ////////////////////////////////////////
-var argumentElements = eager <| sepBy(sep, topLevelPattern);
+var argumentElements = let
+    element = topLevelPattern,
+    
+    pre = sepEndWith0(sep,
+        ellipsisPattern,
+        element |> expected@"pattern"),
+    
+    post = sepBy(sep,
+        element |> expected@"non-ellipsis pattern")
+in
+    eager <| append(pre, post);
 
 var selfPattern = next(
     punctuator '=',

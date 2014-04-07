@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/string_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     attempt = __o["attempt"],

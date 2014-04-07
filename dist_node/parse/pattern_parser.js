@@ -37,7 +37,7 @@ var __o = require("bennu")["parse"],
     identifier = __o4["identifier"],
     stringLiteral = __o4["stringLiteral"],
     pattern, topLevelPattern, identifierPattern, sinkPattern, ellipsisPattern, importPattern, arrayPattern,
-        objectPattern, argumentList, argumentsPattern, asPattern;
+        objectPattern, argumentList, argumentsPattern, asPattern, element0, sep1, end0, p0, pre0, post0;
 (topLevelPattern = late((function() {
     return topLevelPattern;
 })));
@@ -76,7 +76,10 @@ var objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuat
     ast_pattern.ImportPattern.create))));
 (topLevelPattern = label("Top Level Pattern", choice(sinkPattern, arrayPattern, objectPattern, asPattern,
     identifierPattern)));
-var argumentElements = eager(sepBy(sep, topLevelPattern)),
+var argumentElements = ((element0 = topLevelPattern), (sep1 = sep), (end0 = ellipsisPattern), (p0 = expected("pattern",
+    element0)), (pre0 = optional(NIL, either(enumeration(end0), rec((function(self) {
+    return cons(p0, optional(NIL, next(sep1, either(enumeration(end0), self))));
+}))))), (post0 = sepBy(sep, expected("non-ellipsis pattern", element0))), eager(append(pre0, post0))),
     selfPattern = next(punctuator("="), choice(arrayPattern, objectPattern, asPattern, identifierPattern));
 (argumentList = label("Argument List", nodea(enumeration(argumentElements, optional(null, selfPattern)), (function(loc,
     elements, self) {

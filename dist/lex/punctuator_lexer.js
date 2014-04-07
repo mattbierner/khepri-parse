@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
+*/define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
     var label = __o["label"],
         character = __o0["character"],
@@ -16,7 +15,7 @@ define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, e
             reversePipe, ellipsis, as, argumentList, lambda, punctuator, punctuators = ["{", "}", "(", ")", "[",
                 "]", ",", ".", ";", ":", "?", "&&", "||", "<<", ">>", ">>>", "<=", "<", ">=", ">", "===", "!==",
                 "==", "!=", "=", ":=", "=:", "!", "~", "++", "--", "&", "|", "^", "+", "-", "*", "/", "%", "@",
-                "\\>", "\\>>", "<\\", "<<\\", "|>", "<|", "...", "#", "\\", "->", "<-"
+                "\\>", "\\>>", "<\\", "<<\\", "|>", "<|", "...", "#", "\\", "->", "<-", "§"
         ];
     (openBrace = character("{"));
     (closeBrace = character("}"));

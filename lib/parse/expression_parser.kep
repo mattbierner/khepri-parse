@@ -162,7 +162,9 @@ functionExpression = label@'Function Expression' <| let
     functionBody =
         either(
             blockStatement,
-            expression)
+            then(
+                expression,
+                optional(null, punctuator '§')))
 in
     nodea(
         enumeration(
@@ -201,8 +203,7 @@ in
             keyword 'let',
             enumeration(
                 eager letBindings |> expected@'let bindings',
-                next(
-                    keyword 'in',
+                between(keyword 'in', optional(null, punctuator '§'),
                     letBody |> expected@'let body expression'))),
         ast_expression.LetExpression.create);
 
