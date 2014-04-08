@@ -1,7 +1,10 @@
 # ChangeLog #
 
+## 0.11.2 - April 8, 2014
+* Restored ability to have ellipsis without an identifier.
+
 ## 0.11.0 - April 7, 2014
-* Allow let expressions and lambdas to limit their capture using `§`.
+* Allow lambdas to limit their capture using `§`.
 * Added support for parsing array and argument unpacks with ellipsis unpacks.
 
 ## 0.9.1 - March 24, 2014

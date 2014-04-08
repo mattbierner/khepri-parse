@@ -203,7 +203,8 @@ in
             keyword 'let',
             enumeration(
                 eager letBindings |> expected@'let bindings',
-                between(keyword 'in', optional(null, punctuator '§'),
+                next(
+                    keyword 'in',
                     letBody |> expected@'let body expression'))),
         ast_expression.LetExpression.create);
 

@@ -92,11 +92,16 @@ sinkPattern = label@'Sink Pattern' <|
 // Ellipsis Pattern
 ////////////////////////////////////////
 ellipsisPattern = label@'Ellipsis Pattern' <|
-    node(
-        next(
-            punctuator('...'),
-            identifierPattern),
-        ast_pattern.EllipsisPattern.create);
+    either(
+        between(punctuator '(', punctuator ')',
+            punctuator '...')
+            .map\x -> ast_pattern.EllipsisPattern.create(x.loc, null),
+        
+        node(
+            next(
+                punctuator '...',
+                optional(null, identifierPattern)),
+            ast_pattern.EllipsisPattern.create));
 
 // Array Pattern
 ////////////////////////////////////////

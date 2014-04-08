@@ -87,8 +87,8 @@
         letBindings, letBody;
     (letExpression = label("Let Expression", ((letBindings = sepBy1(punctuator(","), letBinding)), (letBody =
         expression), nodea(next(keyword("let"), enumeration(expected("let bindings", eager(
-        letBindings)), between(keyword("in"), optional(null, punctuator("§")), expected(
-        "let body expression", letBody)))), ast_expression.LetExpression.create))));
+            letBindings)), next(keyword("in"), expected("let body expression", letBody)))),
+        ast_expression.LetExpression.create))));
     (conditionalExpression = label("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression,
             next(punctuator(":"), expected("conditional consequent expression", expression)), next(
                 punctuator(":"), expected("conditional alternate expression", expression)))),
@@ -134,8 +134,8 @@
         .map((function(x) {
             return [x, true];
         })))), (function(loc, __o6) {
-        var x = __o6["0"],
-            computed = __o6["1"];
+        var x = __o6[0],
+            computed = __o6[1];
         return ({
             "loc": loc,
             "property": x,

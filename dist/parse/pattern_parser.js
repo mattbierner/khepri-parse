@@ -51,8 +51,12 @@
         .map((function(x) {
             return ast_pattern.SinkPattern.create(x.loc);
         }))));
-    (ellipsisPattern = label("Ellipsis Pattern", node(next(punctuator("..."), identifierPattern), ast_pattern.EllipsisPattern
-        .create)));
+    (ellipsisPattern = label("Ellipsis Pattern", either(between(punctuator("("), punctuator(")"), punctuator(
+            "..."))
+        .map((function(x) {
+            return ast_pattern.EllipsisPattern.create(x.loc, null);
+        })), node(next(punctuator("..."), optional(null, identifierPattern)), ast_pattern.EllipsisPattern
+            .create))));
     var element, sep0, end, p, pre, post;
     (arrayPattern = label("Array Pattern", ((element = topLevelPattern), (sep0 = sep), (end = ellipsisPattern), (
         p = expected("array pattern element", element)), (pre = either(enumeration(end), rec((
