@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     append = __o["append"],
@@ -252,7 +251,7 @@ var x2, y2;
     return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=", ":="))),
         enumeration(expected("expression", either(self, expression)))), (function(loc, left, op0,
         right) {
-        return ast_expression.AssignmentExpression.create(loc, op0, left, right);
+        return ast_expression.AssignmentExpression.create(loc, op0.value, left, right);
     }));
 }))));
 var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected("reference expression",

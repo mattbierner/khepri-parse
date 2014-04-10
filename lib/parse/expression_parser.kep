@@ -520,7 +520,7 @@ assignmentExpression = label@'Assignment Expression' <| rec\self ->
             enumeration(
                 either(self, expression) |> expected@'expression')),
         \loc left op right ->
-            ast_expression.AssignmentExpression.create(loc, op, left, right));
+            ast_expression.AssignmentExpression.create(loc, op.value, left, right));
 
 // Delete Expression
 ////////////////////////////////////////

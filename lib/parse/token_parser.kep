@@ -24,7 +24,7 @@ var join = Function.prototype.call.bind(Array.prototype.join);
 
 var expectError = \msg ->
     \pos, tok ->
-        new ExpectError(pos, msg, ?tok === null :"end of input" :tok.value);
+        new ExpectError(pos, msg, ?tok : tok.value : "end of input");
 
 var typeParser = \type, msg ->
     token(
@@ -37,15 +37,15 @@ var selectAny = \type ->
             \tok -> (tok.type === type && indexOf(options, tok.value) >= 0),
             expectError(join(options, ', ')));
 
-/* Parser
+/* Parsers
  ******************************************************************************/
-punctuator = selectAny('Punctuator');
+punctuator = selectAny 'Punctuator' ;
 
-keyword = selectAny('Keyword');
+keyword = selectAny 'Keyword';
 
 anyIdentifier = typeParser('Identifier', 'any identifier');
 
-identifier = selectAny('Identifier');
+identifier = selectAny 'Identifier';
 
 nullLiteral = typeParser('Null', 'Null literal');
 

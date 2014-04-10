@@ -251,7 +251,8 @@
         return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=",
             ":="))), enumeration(expected("expression", either(self, expression)))), (
             function(loc, left, op0, right) {
-                return ast_expression.AssignmentExpression.create(loc, op0, left, right);
+                return ast_expression.AssignmentExpression.create(loc, op0.value, left,
+                    right);
             }));
     }))));
     var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected(

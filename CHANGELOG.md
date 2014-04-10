@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.11.4 - April 9, 2014
+* Fixed assignment pattern not setting op correctly.
+
 ## 0.11.3 - April 9, 2014
 * Fixed failing of ellipsis followed by comma in args pattern.
 

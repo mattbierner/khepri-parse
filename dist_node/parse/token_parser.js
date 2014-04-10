@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     ExpectError = __o["ExpectError"],
     token = __o["token"],
@@ -11,7 +10,7 @@ var __o = require("bennu")["parse"],
     join = Function.prototype.call.bind(Array.prototype.join),
     expectError = (function(msg) {
         return (function(pos, tok) {
-            return new(ExpectError)(pos, msg, ((tok === null) ? "end of input" : tok.value));
+            return new(ExpectError)(pos, msg, (tok ? tok.value : "end of input"));
         });
     });
 (punctuator = (function() {
@@ -29,7 +28,7 @@ var __o = require("bennu")["parse"],
 (anyIdentifier = token((function(tok) {
     return (tok.type === "Identifier");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "any identifier", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "any identifier", (tok ? tok.value : "end of input"));
 })));
 (identifier = (function() {
     var options = arguments;
@@ -40,27 +39,27 @@ var __o = require("bennu")["parse"],
 (nullLiteral = token((function(tok) {
     return (tok.type === "Null");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "Null literal", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "Null literal", (tok ? tok.value : "end of input"));
 })));
 (booleanLiteral = token((function(tok) {
     return (tok.type === "Boolean");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "boolean literal", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "boolean literal", (tok ? tok.value : "end of input"));
 })));
 (numericLiteral = token((function(tok) {
     return (tok.type === "Number");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "numeric literal", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "numeric literal", (tok ? tok.value : "end of input"));
 })));
 (stringLiteral = token((function(tok) {
     return (tok.type === "String");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "string literal", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "string literal", (tok ? tok.value : "end of input"));
 })));
 (regularExpressionLiteral = token((function(tok) {
     return (tok.type === "RegularExpression");
 }), (function(pos, tok) {
-    return new(ExpectError)(pos, "regular expression literal", ((tok === null) ? "end of input" : tok.value));
+    return new(ExpectError)(pos, "regular expression literal", (tok ? tok.value : "end of input"));
 })));
 (exports["punctuator"] = punctuator);
 (exports["keyword"] = keyword);
