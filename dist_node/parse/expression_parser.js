@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     always = __o["always"],
     append = __o["append"],

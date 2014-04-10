@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("nu-stream")["stream"],
     NIL = __o["NIL"],
     __o0 = require("bennu")["parse"],
