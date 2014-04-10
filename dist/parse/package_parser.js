@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/package_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/package_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package", "./common", "./token_parser",
     "./value_parser", "./statement_parser"
 ], (function(require, exports, __o, __o0, ast_package, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -30,7 +29,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
             return ast_package.PackageExport.create(loc, id, alias);
         })))),
         packageExportList = label("Package Export List", node(between(punctuator("("), punctuator(")"), eager(
-            sepBy(optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+            sepBy(optional(punctuator(",")), packageExport))), ast_package.PackageExports.create)),
         packageExports = label("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport
             .create))),
         packageBody = label("Package Body", either(withStatement, blockStatement));

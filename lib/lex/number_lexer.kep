@@ -100,7 +100,7 @@ signedInteger = label@'Signed Integer Lexer' <|
                 (--),
                 unsignedInteger)),
         next(
-            optional(null, positiveSign),
+            optional positiveSign,
             unsignedInteger));
 
 var hexIntegerLiteralDigits = label@'Hex Integer Literal Digits Lexer' <|

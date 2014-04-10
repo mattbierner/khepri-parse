@@ -1,0 +1,120 @@
+package (
+    argumentList
+    namedArgumentList
+    argumentsPattern
+    functionExpression)
+with
+    import 'bennu::parse' {
+        attempt
+        bind
+        binds
+        choice
+        eager
+        either
+        enumeration
+        expected
+        next
+        optional
+        late
+        label},
+    import 'bennu::lang' {
+        sepBy
+        sepBy1
+        then},
+    
+    import 'khepri-ast::expression' ast_expression,
+    import 'khepri-ast::statement' ast_statement,
+    import 'khepri-ast::pattern' ast_pattern,
+    
+    import './common' {node nodea},
+    import './token_parser' {keyword punctuator},
+    import './value_parser' {identifier},
+    import './pattern_parser' {topLevelPattern listPattern0 ellipsisPattern unpack identifierPattern},
+    
+    import './expression_parser' _
+in {
+
+/* Circular Declarations 
+ ******************************************************************************/
+var blockStatement = late\-> {
+    with import './statement_parser' {blockStatement} in {
+        return blockStatement;
+    }
+};
+
+var expression = late\-> {
+    with import './expression_parser' {expression} in {
+        return expression;
+    }
+};
+
+/* Parser
+ ******************************************************************************/
+
+// Arguments Pattern
+////////////////////////////////////////
+var argumentElements = let
+    element = topLevelPattern
+in
+    eager listPattern0(
+        element |> expected@"pattern",
+        ellipsisPattern,
+        element |> expected@"non-ellipsis pattern");
+
+var selfPattern = next(
+    punctuator '=',
+    unpack);
+
+argumentList = label@'Argument List' <|
+    nodea(
+        enumeration(
+            argumentElements,
+            optional selfPattern),
+        \loc elements self ->
+            ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
+
+namedArgumentList = label@'Named Argument List' <|
+    nodea(
+        enumeration(
+            attempt then(
+                optional identifierPattern,
+                punctuator '('),
+            then(
+                argumentElements,
+                punctuator ')'),
+            optional selfPattern),
+        ast_pattern.ArgumentsPattern.create);
+
+argumentsPattern = label@'Arguments Pattern' <|
+    either(
+        namedArgumentList,
+        argumentList);
+
+// Function Expression
+////////////////////////////////////////
+functionExpression = label@'Function Expression' <| let
+    functionName =
+        optional next(
+            keyword 'function',
+            optional identifier),
+    
+    functionBody =
+        either(
+            blockStatement,
+            then(
+                expression,
+                optional (punctuator '§')))
+in
+    nodea(
+        enumeration(
+            functionName,
+            next(
+                punctuator '\\',
+                argumentsPattern),
+            next(
+                punctuator '->',
+                functionBody |> expected@"function body")),
+        ast_expression.FunctionExpression.create);
+
+    
+}

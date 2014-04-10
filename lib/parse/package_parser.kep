@@ -41,7 +41,7 @@ var packageExport = label@'Package Export' <|
 var packageExportList = label@'Package Export List' <|
     node(
         between(punctuator '(', punctuator ')', 
-            eager <| sepBy(optional(null, punctuator ','),
+            eager <| sepBy(optional (punctuator ','),
                 packageExport)),
         ast_package.PackageExports.create);
 

@@ -82,20 +82,20 @@ var parse = require("bennu")["parse"],
     }))), tokenImpl),
     p10 = literalImpl;
 (literal = binds(enumeration(getPosition, p10, getPosition), (function(start, __o13, end) {
-    var type10 = __o13["0"],
-        value = __o13["1"];
+    var type10 = __o13[0],
+        value = __o13[1];
     return always(new(type10)(new(SourceLocation)(start, end), value));
 })));
 var p11 = tokenImpl;
 (token = binds(enumeration(getPosition, p11, getPosition), (function(start, __o13, end) {
-    var type10 = __o13["0"],
-        value = __o13["1"];
+    var type10 = __o13[0],
+        value = __o13[1];
     return always(new(type10)(new(SourceLocation)(start, end), value));
 })));
 var p12 = inputElementImpl;
 (inputElement = binds(enumeration(getPosition, p12, getPosition), (function(start, __o13, end) {
-    var type10 = __o13["0"],
-        value = __o13["1"];
+    var type10 = __o13[0],
+        value = __o13[1];
     return always(new(type10)(new(SourceLocation)(start, end), value));
 })));
 (lexer = then(many(inputElement), eof));

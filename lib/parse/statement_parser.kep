@@ -56,7 +56,7 @@ with
         topLevelExpression},
     import './pattern_parser' {
         importPattern
-        pattern},
+        topLevelPattern},
     import './value_parser' {identifier}
 in {
 
@@ -150,7 +150,7 @@ variableStatement = label@'Variable Statement' <|
 // With Statement
 ////////////////////////////////////////
 withStatement = label@'With Statement' <| let
-    withIdentifier = pattern |> expected@"pattern",
+    withIdentifier = topLevelPattern |> expected@"pattern",
 
     withBinding = either(
         importPattern,
@@ -181,17 +181,22 @@ in
 
 // If Statement
 ////////////////////////////////////////
-ifStatement = label@'If Statement' <|
+ifStatement = label@'If Statement' <| let
+    test =
+        between(punctuator '(', punctuator ')',
+            expression |> expected@"if condition"),
+    
+    consequent = statement,
+    
+    alternate = next(keyword 'else', statement)
+in
     nodea(
         next(
             keyword 'if',
             enumeration(
-                between(punctuator '(', punctuator ')',
-                    expression |> expected@"if condition"),
+                test,
                 statement,
-                optional(null, next(
-                    keyword 'else',
-                    statement)))),
+                optional alternate)),
         ast_statement.IfStatement.create);
 
 // Switch Statement
@@ -233,19 +238,23 @@ in
 
 // Iteration Statement
 ////////////////////////////////////////
-var whileStatement = label@'While Statement' <|
+var whileStatement = label@'While Statement' <| let
+    condition =
+        between(punctuator '(', punctuator ')',
+            expression)
+in
     nodea(
         next(
             keyword 'while',
             enumeration(
-                between(punctuator '(', punctuator ')',
-                    expression),
+                condition,
                 statement)),
         ast_statement.WhileStatement.create);
 
 var doWhileStatement = label@'Do While Statement' <| let
-    condition = between(punctuator '(', punctuator ')',
-        expression)
+    condition =
+        between(punctuator '(', punctuator ')',
+                expression)
 in
     nodea(
         next(
@@ -257,18 +266,17 @@ in
         ast_statement.DoWhileStatement.create);
 
 var forStatement = label@'For Statement' <| let
-    forInitExpression = optional(null, 
-        either(
-            node(
-                next(
-                    keyword 'var',
-                    variableDeclarationList),
-                ast_declaration.VariableDeclaration.create),
-            topLevelExpression)),
+    forInitExpression = either(
+        node(
+            next(
+                keyword 'var',
+                variableDeclarationList),
+            ast_declaration.VariableDeclaration.create),
+        topLevelExpression),
     
-    forTestExpression = optional(null, expression),
+    forTestExpression = expression,
     
-    forUpdateExpression = optional(null, topLevelExpression)
+    forUpdateExpression = topLevelExpression
 in
     nodea(
         next(
@@ -276,13 +284,13 @@ in
             enumeration(
                 next(
                     punctuator '(',
-                    forInitExpression),
+                    optional forInitExpression),
                 next(
                     punctuator ';',
-                    forTestExpression),
+                    optional forTestExpression),
                 next(
                     punctuator ';',
-                    forUpdateExpression),
+                    optional forUpdateExpression),
                 next(
                     punctuator ')',
                     statement))),
@@ -317,7 +325,7 @@ breakStatement = label@'Break Statement' <|
 returnStatement = label@'Return Statement' <|
     node(
         between(keyword 'return', logicalSemiColon,
-            optional(null, expression)),
+            optional expression),
         ast_statement.ReturnStatement.create);
 
 // Throw Statement
@@ -349,8 +357,8 @@ in
             keyword 'try',
             enumeration(
                 blockStatement,
-                optional(null, catchBlock),
-                optional(null, finallyBlock))),
+                optional catchBlock,
+                optional finallyBlock)),
         ast_statement.TryStatement.create);
 
 // Statement

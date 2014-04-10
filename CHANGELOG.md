@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 0.11.3 - April 9, 2014
+* Fixed failing of ellipsis followed by comma in args pattern.
+
 ## 0.11.2 - April 8, 2014
 * Restored ability to have ellipsis without an identifier.
 

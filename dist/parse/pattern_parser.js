@@ -32,18 +32,32 @@
         punctuator = __o3["punctuator"],
         identifier = __o4["identifier"],
         stringLiteral = __o4["stringLiteral"],
-        pattern, topLevelPattern, identifierPattern, sinkPattern, ellipsisPattern, importPattern, arrayPattern,
-            objectPattern, argumentList, argumentsPattern, asPattern, element0, sep1, end0, p0, pre0, post0;
+        listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, sinkPattern,
+            ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern, asPattern,
+            sepEndWith1 = (function(sep, end, p) {
+                return rec((function(self) {
+                    return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
+                }));
+            }),
+        sepEndWith = (function(sep, end, p) {
+            return either(enumeration(end), sepEndWith1(sep, end, p));
+        }),
+        sepEndWith0 = (function(sep, end, p) {
+            return optional(NIL, sepEndWith(sep, end, p));
+        });
     (topLevelPattern = late((function() {
         return topLevelPattern;
     })));
-    (asPattern = late((function() {
-        return asPattern;
+    (unpack = late((function() {
+        return unpack;
     })));
-    (objectPattern = late((function() {
-        return objectPattern;
-    })));
-    var sep = optional(null, punctuator(","));
+    var sep = optional(punctuator(","));
+    (listPattern = (function(pre, mid, post) {
+        return append(sepEndWith(sep, mid, pre), next(sep, sepBy(sep, post)));
+    }));
+    (listPattern0 = (function(pre, mid, post) {
+        return append(sepEndWith0(sep, mid, pre), next(sep, sepBy(sep, post)));
+    }));
     (identifierPattern = label("Identifier Pattern", identifier.map((function(x) {
         return ast_pattern.IdentifierPattern.create(x.loc, x);
     }))));
@@ -55,21 +69,17 @@
             "..."))
         .map((function(x) {
             return ast_pattern.EllipsisPattern.create(x.loc, null);
-        })), node(next(punctuator("..."), optional(null, identifierPattern)), ast_pattern.EllipsisPattern
-            .create))));
-    var element, sep0, end, p, pre, post;
-    (arrayPattern = label("Array Pattern", ((element = topLevelPattern), (sep0 = sep), (end = ellipsisPattern), (
-        p = expected("array pattern element", element)), (pre = either(enumeration(end), rec((
-        function(self) {
-            return cons(p, optional(NIL, next(sep0, either(enumeration(end), self))));
-        })))), (post = sepBy(sep, expected("non-ellipsis array pattern element", element))), node(
-        between(punctuator("["), punctuator("]"), eager(append(pre, next(sep, post)))), ast_pattern
-        .ArrayPattern.create))));
-    var objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), choice(
-            arrayPattern, objectPattern, asPattern, identifierPattern))), ast_pattern.ObjectPatternElement.create),
-        node(either(asPattern, identifierPattern), (function(loc, key) {
-            return ast_pattern.ObjectPatternElement.create(loc, key, null);
-        })));
+        })), node(next(punctuator("..."), optional(identifierPattern)), ast_pattern.EllipsisPattern.create)
+    )));
+    var element;
+    (arrayPattern = label("Array Pattern", ((element = topLevelPattern), node(between(punctuator("["),
+            punctuator("]"), eager(listPattern(expected("array pattern element", element),
+                ellipsisPattern, expected("non-ellipsis array pattern element", element)))),
+        ast_pattern.ArrayPattern.create))));
+    (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), unpack)), ast_pattern
+        .ObjectPatternElement.create), node(either(asPattern, identifierPattern), (function(loc, key) {
+        return ast_pattern.ObjectPatternElement.create(loc, key, null);
+    }))));
     (objectPattern = label("Object Pattern", node(between(punctuator("{"), punctuator("}"), eager(sepBy1(sep,
         expected("object pattern element", objectPatternElement)))), ast_pattern.ObjectPattern.create)));
     (asPattern = label("As Pattern", nodea(enumeration(attempt(then(identifierPattern, punctuator("#"))),
@@ -77,30 +87,19 @@
         .create)));
     (importPattern = label("Import Pattern", next(keyword("import"), nodea(enumeration(stringLiteral,
         topLevelPattern), ast_pattern.ImportPattern.create))));
-    (topLevelPattern = label("Top Level Pattern", choice(sinkPattern, arrayPattern, objectPattern, asPattern,
-        identifierPattern)));
-    var argumentElements = ((element0 = topLevelPattern), (sep1 = sep), (end0 = ellipsisPattern), (p0 =
-        expected("pattern", element0)), (pre0 = optional(NIL, either(enumeration(end0), rec((function(self) {
-        return cons(p0, optional(NIL, next(sep1, either(enumeration(end0), self))));
-    }))))), (post0 = sepBy(sep, expected("non-ellipsis pattern", element0))), eager(append(pre0, post0))),
-        selfPattern = next(punctuator("="), choice(arrayPattern, objectPattern, asPattern, identifierPattern));
-    (argumentList = label("Argument List", nodea(enumeration(argumentElements, optional(null, selfPattern)), (
-        function(loc, elements, self) {
-            return ast_pattern.ArgumentsPattern.create(loc, null, elements, self);
-        }))));
-    (argumentsPattern = label("Arguments Pattern", either(nodea(enumeration(attempt(then(optional(null,
-            identifierPattern), punctuator("("))), then(argumentElements, punctuator(")")),
-        optional(null, selfPattern)), ast_pattern.ArgumentsPattern.create), argumentList)));
-    (pattern = label("Pattern", choice(importPattern, topLevelPattern)));
+    (unpack = label("Unpack", choice(arrayPattern, objectPattern, asPattern, identifierPattern)));
+    (topLevelPattern = label("Top Level Pattern", choice(sinkPattern, unpack)));
+    (exports["listPattern"] = listPattern);
+    (exports["listPattern0"] = listPattern0);
     (exports["pattern"] = pattern);
+    (exports["unpack"] = unpack);
     (exports["topLevelPattern"] = topLevelPattern);
     (exports["identifierPattern"] = identifierPattern);
     (exports["sinkPattern"] = sinkPattern);
     (exports["ellipsisPattern"] = ellipsisPattern);
     (exports["importPattern"] = importPattern);
     (exports["arrayPattern"] = arrayPattern);
+    (exports["objectPatternElement"] = objectPatternElement);
     (exports["objectPattern"] = objectPattern);
-    (exports["argumentList"] = argumentList);
-    (exports["argumentsPattern"] = argumentsPattern);
     (exports["asPattern"] = asPattern);
 }));

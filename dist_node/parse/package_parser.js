@@ -32,7 +32,7 @@ var __o = require("bennu")["parse"],
             return ast_package.PackageExport.create(loc, id, alias);
         })))),
     packageExportList = label("Package Export List", node(between(punctuator("("), punctuator(")"), eager(sepBy(
-        optional(null, punctuator(",")), packageExport))), ast_package.PackageExports.create)),
+        optional(punctuator(",")), packageExport))), ast_package.PackageExports.create)),
     packageExports = label("Package Exports", either(packageExportList, node(identifier, ast_package.PackageExport.create))),
     packageBody = label("Package Body", either(withStatement, blockStatement));
 (khepriPackage = label("Package", nodea(next(keyword("package"), enumeration(expected("package exports", packageExports),

@@ -2,7 +2,11 @@
  * @fileOverview Khepri patterns parsers.
  */
 package (
+    listPattern
+    listPattern0
+    
     pattern
+    unpack
     topLevelPattern
     
     identifierPattern
@@ -11,10 +15,9 @@ package (
     
     importPattern
     arrayPattern
-    objectPattern
     
-    argumentList
-    argumentsPattern
+    objectPatternElement
+    objectPattern
     
     asPattern)
 with
@@ -34,7 +37,12 @@ with
         rec
         label
         late},
-    import 'bennu::lang' {between sepBy sepBy1 sepEndBy then},
+    import 'bennu::lang' {
+        between
+        sepBy
+        sepBy1
+        sepEndBy
+        then},
     
     import 'nu-stream::stream' {NIL},
     
@@ -65,13 +73,23 @@ var sepEndWith0 = \sep end p ->
  ******************************************************************************/
 topLevelPattern = late\-> { return topLevelPattern; };
 
-asPattern = late\-> { return asPattern; };
-
-objectPattern = late\-> { return objectPattern; };
+unpack = late\-> { return unpack; };
 
 /* Parts
  ******************************************************************************/
-var sep = optional(null, punctuator ',');
+var sep = optional (punctuator ',');
+
+/* Parts
+ ******************************************************************************/
+listPattern = \pre mid post  ->
+    append(
+        sepEndWith(sep, mid, pre),
+        next(sep, sepBy(sep, post)));
+
+listPattern0 = \pre mid post  ->
+    append(
+        sepEndWith0(sep, mid, pre),
+        next(sep, sepBy(sep, post)));
 
 /* Base Patterns
  ******************************************************************************/
@@ -100,50 +118,42 @@ ellipsisPattern = label@'Ellipsis Pattern' <|
         node(
             next(
                 punctuator '...',
-                optional(null, identifierPattern)),
+                optional identifierPattern),
             ast_pattern.EllipsisPattern.create));
 
 // Array Pattern
 ////////////////////////////////////////
 arrayPattern = label@'Array Pattern' <| let
-    element = topLevelPattern,
-    
-    pre = sepEndWith(sep,
-        ellipsisPattern,
-        element |> expected@"array pattern element"),
-    
-    post = sepBy(sep,
-        element |> expected@"non-ellipsis array pattern element")
+    element = topLevelPattern
 in
     node(
         between(punctuator '[', punctuator ']',
-            eager <| append(pre, next(sep, post))),
-        ast_pattern.ArrayPattern.create);
+            eager listPattern(
+                element |> expected@"array pattern element",
+                ellipsisPattern,
+                element |> expected@"non-ellipsis array pattern element")),
+            ast_pattern.ArrayPattern.create);
 
 // Object Pattern
 ////////////////////////////////////////
-var objectPatternElement = either(
+objectPatternElement = either(
     nodea(
         enumeration(
             stringLiteral,
             next(
                 punctuator ':',
-                choice(
-                    arrayPattern,
-                    objectPattern,
-                    asPattern,
-                    identifierPattern))),
+                unpack)),
         ast_pattern.ObjectPatternElement.create),
     node(
         either(
             asPattern,
             identifierPattern),
-        \loc, key -> ast_pattern.ObjectPatternElement.create(loc, key, null)));
+        \loc key -> ast_pattern.ObjectPatternElement.create(loc, key, null)));
 
 objectPattern = label@'Object Pattern' <|
     node(
         between(punctuator '{', punctuator '}',
-            eager <| sepBy1(sep,
+            eager sepBy1(sep,
                 objectPatternElement |> expected@"object pattern element")),
         ast_pattern.ObjectPattern.create);
 
@@ -152,7 +162,7 @@ objectPattern = label@'Object Pattern' <|
 asPattern = label@'As Pattern' <|
     nodea(
         enumeration(
-            attempt <| then(
+            attempt then(
                 identifierPattern,
                 punctuator '#'),
             choice(
@@ -174,67 +184,20 @@ importPattern = label@'Import Pattern' <|
 
 /* Patterns
  ******************************************************************************/
-// Top Level Pattern
+// Unpack
 ////////////////////////////////////////
-topLevelPattern = label@'Top Level Pattern' <|
+unpack = label@'Unpack' <|
     choice(
-        sinkPattern,
         arrayPattern,
         objectPattern,
         asPattern,
         identifierPattern);
 
-// Arguments Pattern
-//
-// TODO: should probably be in file with function
+// Top Level Pattern
 ////////////////////////////////////////
-var argumentElements = let
-    element = topLevelPattern,
-    
-    pre = sepEndWith0(sep,
-        ellipsisPattern,
-        element |> expected@"pattern"),
-    
-    post = sepBy(sep,
-        element |> expected@"non-ellipsis pattern")
-in
-    eager <| append(pre, post);
-
-var selfPattern = next(
-    punctuator '=',
+topLevelPattern = label@'Top Level Pattern' <|
     choice(
-        arrayPattern,
-        objectPattern,
-        asPattern,
-        identifierPattern));
-
-argumentList = label@'Argument List' <|
-    nodea(
-        enumeration(
-            argumentElements,
-            optional(null, selfPattern)),
-        \loc, elements, self ->
-            ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
-
-argumentsPattern = label@'Arguments Pattern' <|
-    either(
-        nodea(
-            enumeration(
-                attempt <| then(
-                    optional(null, identifierPattern),
-                    punctuator '('),
-                then(
-                    argumentElements,
-                    punctuator ')'),
-                optional(null, selfPattern)),
-            ast_pattern.ArgumentsPattern.create),
-        argumentList);
-
-// Pattern
-////////////////////////////////////////
-pattern = label@'Pattern' <|
-    choice(
-        importPattern,
-        topLevelPattern);
+        sinkPattern,
+        unpack);
 
 }

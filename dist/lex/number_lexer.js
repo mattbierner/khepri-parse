@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
     exports, __o, __o0, __o1, __o2) {
     "use strict";
     var always = __o["always"],
@@ -46,7 +45,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
     (hexDigits = label("Hex Digits Lexer", join(many1(hexDigit))));
     (unsignedInteger = label("Unsigned Integer Lexer", map(parseInt, decimalDigits)));
     (signedInteger = label("Signed Integer Lexer", either(next(negativeSign, map(__minus, unsignedInteger)),
-        next(optional(null, positiveSign), unsignedInteger))));
+        next(optional(positiveSign), unsignedInteger))));
     var hexIntegerLiteralDigits = label("Hex Integer Literal Digits Lexer", map((function(num) {
         return parseInt(num, 16);
     }), hexDigits));

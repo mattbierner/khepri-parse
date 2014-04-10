@@ -6,7 +6,6 @@ package (
     arrayLiteral
     objectLiteral
     
-    functionExpression
     operatorExpression
     
     letExpression
@@ -29,7 +28,6 @@ package (
     
 // Conditional Expression
     conditionalExpression
-
     
 // Assignment
     leftHandReferenceExpression
@@ -67,24 +65,21 @@ with
     
     import 'khepri-ast::declaration' ast_declaration,
     import 'khepri-ast::expression' ast_expression,
-    import 'khepri-ast::statement' ast_statement,
-    import 'khepri-ast::pattern' ast_pattern,
     import 'khepri-ast::value' ast_value,
     import 'khepri-ast::position' {SourceLocation},
     
     import './common' {node nodea precedence},
     import './token_parser' {keyword punctuator},
     import './value_parser' {identifier literal stringLiteral},
-    import './pattern_parser' pattern
+    import './pattern_parser' {topLevelPattern},
+    import './function_parser' _
 in {
 
 /* Circular Declarations 
  ******************************************************************************/
-var blockStatement = late\-> {
-    with
-        import './statement_parser' {blockStatement}
-    in {
-        return blockStatement;
+var functionExpression = late\-> {
+    with import './function_parser' {functionExpression} in {
+        return functionExpression;
     }
 };
 
@@ -151,38 +146,12 @@ in
             eager objectProperties),
         ast_expression.ObjectExpression.create);
 
-// Function Expression
-////////////////////////////////////////
-functionExpression = label@'Function Expression' <| let
-    functionName =
-        optional(null, next(
-            keyword 'function',
-            optional(null, identifier))),
-    
-    functionBody =
-        either(
-            blockStatement,
-            then(
-                expression,
-                optional(null, punctuator '§')))
-in
-    nodea(
-        enumeration(
-            functionName,
-            next(
-                punctuator '\\',
-                pattern.argumentsPattern),
-            next(
-                punctuator '->',
-                functionBody |> expected@"function body")),
-        ast_expression.FunctionExpression.create);
-
 // Let Expression
 ////////////////////////////////////////
 var letBinding = label@'Let Binding' <|
     nodea(
         enumeration(
-            pattern.topLevelPattern |> expected@'pattern',
+            topLevelPattern |> expected@'pattern',
             punctuator('=', '=:', ':='),
             expression |> expected@'bound value'),
        \loc pattern rec expr ->
@@ -547,11 +516,11 @@ assignmentExpression = label@'Assignment Expression' <| rec\self ->
         append(
             attempt enumeration(
                 leftHandReferenceExpression,
-                punctuator '='),
+                punctuator('=', ':=')),
             enumeration(
                 either(self, expression) |> expected@'expression')),
         \loc left op right ->
-            ast_expression.AssignmentExpression.create(loc, '=', left, right));
+            ast_expression.AssignmentExpression.create(loc, op, left, right));
 
 // Delete Expression
 ////////////////////////////////////////
