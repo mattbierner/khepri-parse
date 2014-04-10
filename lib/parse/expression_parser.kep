@@ -70,7 +70,7 @@ with
     
     import './common' {node nodea precedence},
     import './token_parser' {keyword punctuator},
-    import './value_parser' {identifier literal stringLiteral},
+    import './value_parser' {identifier literal stringLiteral numericLiteral},
     import './pattern_parser' {topLevelPattern},
     import './function_parser' _
 in {
@@ -126,7 +126,10 @@ in
 // Object Literal
 ////////////////////////////////////////
 objectLiteral = label@'Object Literal' <| let
-    propertyName = stringLiteral,
+    propertyName = choice(
+        stringLiteral,
+        numericLiteral,
+        identifier),
     
     propertyInitializer = label@'Property Initializer' <|
         nodea(
@@ -198,17 +201,18 @@ conditionalExpression = label@'Conditional Expression' <|
 // Operators Expression
 ////////////////////////////////////////
 var unaryOperatorExpression = label@'Unary Operator Expression' <|
-    bind(
+    either(
         either(
             keyword 'typeof',
-            punctuator(
-                'void',
-                '~',
-                '!',
-                '++',
-                '--')),
-        \{loc, value} ->
-            always(ast_expression.UnaryOperatorExpression.create(loc, value)));
+            punctuator('void', '~', '!', '++', '--'))
+        .map \ {loc value} ->
+            ast_expression.UnaryOperatorExpression.create(loc, value),
+        
+        attempt <| next(
+            punctuator '.',
+            identifier)
+        .map \ {loc name} ->
+            ast_expression.UnaryOperatorExpression.create(loc, name));
 
 var binaryOperatorExpression = label@'Binary Operator Expression' <|
     nodea(
@@ -250,10 +254,9 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
             ast_expression.BinaryOperatorExpression.create(loc, op.value, !!flipped));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
-    bind(
-        punctuator '?',
-        \{loc, value} ->
-            always(ast_expression.TernaryOperatorExpression.create(loc, value)));
+    punctuator('?')
+        .map \ {loc value} ->
+            ast_expression.TernaryOperatorExpression.create(loc, value);
 
 operatorExpression = label@'Operator Expression' <| let
     op = choice(
@@ -265,11 +268,10 @@ in
         between(punctuator '(', punctuator ')',
             enumeration(
                 op,
-                optional(null,
-                    next(
-                        punctuator ',',
-                        eager <| sepBy1(punctuator ',',
-                            expression |> expected@"argument"))))),
+                optional next(
+                    punctuator ',',
+                    eager <| sepBy1(punctuator ',',
+                        expression |> expected@"argument")))),
         \loc target args ->
             ?args
                 :ast_expression.CurryExpression.create(loc, target, args)
@@ -384,13 +386,12 @@ in
     binds(
         enumeration(
             leftHandSideExpression,
-            many(
-                next(
-                    punctuator '@',
-                    either(
-                        argumentList,
-                        leftHandSideExpression)
-                    |> expected@'curry argument'))),
+            many next(
+                punctuator '@',
+                either(
+                    argumentList,
+                    leftHandSideExpression)
+                |> expected@'curry argument')),
         foldl@reducer \>> always);
 
 // Application Expression

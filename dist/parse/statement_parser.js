@@ -9,15 +9,12 @@
     "use strict";
     var NIL = __o["NIL"],
         append = __o0["append"],
-        attempt = __o0["attempt"],
-        binds = __o0["binds"],
         choice = __o0["choice"],
         cons = __o0["cons"],
         eager = __o0["eager"],
         either = __o0["either"],
         enumeration = __o0["enumeration"],
         expected = __o0["expected"],
-        lookahead = __o0["lookahead"],
         many = __o0["many"],
         next = __o0["next"],
         optional = __o0["optional"],
@@ -48,7 +45,7 @@
     (blockStatement = label("Block Statement", node(between(punctuator("{"), punctuator("}"), statementList),
         ast_statement.BlockStatement.create)));
     (emptyStatement = label("Empty Statement", node(logicalSemiColon, ast_statement.EmptyStatement.create)));
-    (debuggerStatement = label("Debugger Statement", node(next(keyword("debugger"), punctuator(";")),
+    (debuggerStatement = label("Debugger Statement", node(next(keyword("debugger"), logicalSemiColon),
         ast_statement.DebuggerStatement.create)));
     (expressionStatement = label("Expression Statement", node(then(topLevelExpression, logicalSemiColon),
         ast_statement.ExpressionStatement.create)));
@@ -71,23 +68,23 @@
             ":="), expression), (function(loc, pattern, rec, value) {
             return ast_declaration.Binding.create(loc, pattern, value, (rec.value ===
                 ":="));
-        })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(next(keyword("with"),
-            enumeration(expected("with bindings", bindings), next(keyword("in"), blockStatement))),
-        ast_statement.WithStatement.create))));
+        })))), (bindings = eager(sepBy1(punctuator(","), withBinding))), nodea(enumeration(between(
+            keyword("with"), keyword("in"), expected("with bindings", bindings)),
+        blockStatement), ast_statement.WithStatement.create))));
     var test, alternate;
     (ifStatement = label("If Statement", ((test = between(punctuator("("), punctuator(")"), expected(
         "if condition", expression))), (alternate = next(keyword("else"), statement)), nodea(next(
             keyword("if"), enumeration(test, statement, optional(alternate))), ast_statement.IfStatement
         .create))));
     var caseClause, defaultClause, caseClauses, caseBlock;
-    (switchStatement = label("Switch Statement", ((caseClause = nodea(next(keyword("case"), enumeration(then(
-        expression, punctuator(":")), statementList)), ast_clause.SwitchCase.create)), (
-        defaultClause = node(next(keyword("default"), next(punctuator(":"), statementList)), (
-            function(loc, consequent) {
-                return ast_clause.SwitchCase.create(loc, null, consequent);
-            }))), (caseClauses = many(caseClause)), (caseBlock = eager(between(punctuator("{"),
-        punctuator("}"), append(optional(NIL, caseClauses), optional(NIL, enumeration(
-            defaultClause)))))), nodea(next(keyword("switch"), enumeration(between(punctuator("("),
+    (switchStatement = label("Switch Statement", ((caseClause = nodea(enumeration(between(keyword("case"),
+            punctuator(":"), expected("case test", expression)), statementList), ast_clause.SwitchCase
+        .create)), (defaultClause = node(next(keyword("default"), next(punctuator(":"),
+        statementList)), (function(loc, consequent) {
+        return ast_clause.SwitchCase.create(loc, null, consequent);
+    }))), (caseClauses = many(caseClause)), (caseBlock = eager(between(punctuator("{"), punctuator(
+        "}"), append(optional(NIL, caseClauses), optional(NIL, enumeration(
+        defaultClause)))))), nodea(next(keyword("switch"), enumeration(between(punctuator("("),
             punctuator(")"), expected("switch discriminant", expression)), caseBlock)),
         ast_statement.SwitchStatement.create))));
     var whileStatement = label("While Statement", ((condition = between(punctuator("("), punctuator(")"),
@@ -100,8 +97,8 @@
                 variableDeclarationList), ast_declaration.VariableDeclaration.create),
             topLevelExpression)), (forTestExpression = expression), (forUpdateExpression =
             topLevelExpression), nodea(next(keyword("for"), enumeration(next(punctuator("("), optional(
-            forInitExpression)), next(punctuator(";"), optional(forTestExpression)), next(
-            punctuator(";"), optional(forUpdateExpression)), next(punctuator(")"),
+            forInitExpression)), next(logicalSemiColon, optional(forTestExpression)), next(
+            logicalSemiColon, optional(forUpdateExpression)), next(punctuator(")"),
             statement))), ast_statement.ForStatement.create)));
     (iterationStatement = label("Iteration Statement", choice(doWhileStatement, whileStatement, forStatement)));
     (continueStatement = label("Continue Statement", node(next(keyword("continue"), logicalSemiColon),

@@ -1,5 +1,11 @@
 # ChangeLog #
 
+## 0.12.0 - April 10, 2014
+* Currying of non-computed member accessor
+* Restored support for number and identifier keys on object literals now language
+  is more stable.
+* Added `:=` assignment operator for immutable assignments.
+
 ## 0.11.4 - April 9, 2014
 * Fixed assignment pattern not setting op correctly.
 

@@ -45,6 +45,7 @@ var __o = require("bennu")["parse"],
     identifier = __o5["identifier"],
     literal = __o5["literal"],
     stringLiteral = __o5["stringLiteral"],
+    numericLiteral = __o5["numericLiteral"],
     __o6 = require("./pattern_parser"),
     topLevelPattern = __o6["topLevelPattern"],
     _ = require("./function_parser"),
@@ -75,9 +76,9 @@ var args = label("Arguments", ((arg = expression), node(between(punctuator("("),
     "array element", arrayElement))), node(between(punctuator("["), punctuator("]"), eager(arrayElements)),
     ast_expression.ArrayExpression.create))));
 var propertyName, propertyInitializer, objectProperties;
-(objectLiteral = label("Object Literal", ((propertyName = stringLiteral), (propertyInitializer = label(
-    "Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")), expression),
-        ast_value.ObjectValue.create))), (objectProperties = sepBy(punctuator(","), expected(
+(objectLiteral = label("Object Literal", ((propertyName = choice(stringLiteral, numericLiteral, identifier)), (
+    propertyInitializer = label("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")),
+        expression), ast_value.ObjectValue.create))), (objectProperties = sepBy(punctuator(","), expected(
     "object property", propertyInitializer))), node(between(punctuator("{"), punctuator("}"), eager(
     objectProperties)), ast_expression.ObjectExpression.create))));
 var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", topLevelPattern), punctuator("=", "=:",
@@ -92,30 +93,37 @@ var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", topL
         punctuator(":"), expected("conditional consequent expression", expression)), next(punctuator(
         ":"), expected("conditional alternate expression", expression)))), ast_expression.ConditionalExpression
     .create)));
-var unaryOperatorExpression = label("Unary Operator Expression", bind(either(keyword("typeof"), punctuator("void", "~",
-    "!", "++", "--")), (function(__o7) {
-    var loc = __o7["loc"],
-        value = __o7["value"];
-    return always(ast_expression.UnaryOperatorExpression.create(loc, value));
-}))),
+var unaryOperatorExpression = label("Unary Operator Expression", either(either(keyword("typeof"), punctuator("void",
+        "~", "!", "++", "--"))
+    .map((function(__o7) {
+        var loc = __o7["loc"],
+            value = __o7["value"];
+        return ast_expression.UnaryOperatorExpression.create(loc, value);
+    })), attempt(next(punctuator("."), identifier)
+        .map((function(__o7) {
+            var loc = __o7["loc"],
+                name = __o7["name"];
+            return ast_expression.UnaryOperatorExpression.create(loc, name);
+        }))))),
     binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false, keyword("_")),
         either(keyword("instanceof", "new"), punctuator(".", "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<",
             ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
             "<\\", "<<\\", "@"))), (function(loc, flipped, op) {
         return ast_expression.BinaryOperatorExpression.create(loc, op.value, (!(!flipped)));
     }))),
-    ternayOperatorExpression = label("Ternary Operator Expression", bind(punctuator("?"), (function(__o7) {
-        var loc = __o7["loc"],
-            value = __o7["value"];
-        return always(ast_expression.TernaryOperatorExpression.create(loc, value));
-    }))),
+    ternayOperatorExpression = label("Ternary Operator Expression", punctuator("?")
+        .map((function(__o7) {
+            var loc = __o7["loc"],
+                value = __o7["value"];
+            return ast_expression.TernaryOperatorExpression.create(loc, value);
+        }))),
     op;
 (operatorExpression = label("Operator Expression", ((op = choice(unaryOperatorExpression, binaryOperatorExpression,
     ternayOperatorExpression)), nodea(between(punctuator("("), punctuator(")"), enumeration(op, optional(
-    null, next(punctuator(","), eager(sepBy1(punctuator(","), expected("argument", expression))))
-))), (function(loc, target, args0) {
-    return (args0 ? ast_expression.CurryExpression.create(loc, target, args0) : target);
-})))));
+    next(punctuator(","), eager(sepBy1(punctuator(","), expected("argument", expression))))))), (
+    function(loc, target, args0) {
+        return (args0 ? ast_expression.CurryExpression.create(loc, target, args0) : target);
+    })))));
 (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier, literal,
     arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(punctuator("("),
         punctuator(")"), expected("expression", expression)))));
