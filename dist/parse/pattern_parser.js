@@ -51,6 +51,9 @@
     (unpack = late((function() {
         return unpack;
     })));
+    (asPattern = late((function() {
+        return asPattern;
+    })));
     var sep = optional(punctuator(","));
     (listPattern = (function(pre, mid, post) {
         return append(sepEndWith(sep, mid, pre), next(sep, sepBy(sep, post)));

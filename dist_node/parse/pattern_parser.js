@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/pattern_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/pattern_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
     attempt = __o["attempt"],
     append = __o["append"],
@@ -55,6 +54,9 @@ var __o = require("bennu")["parse"],
 })));
 (unpack = late((function() {
     return unpack;
+})));
+(asPattern = late((function() {
+    return asPattern;
 })));
 var sep = optional(punctuator(","));
 (listPattern = (function(pre, mid, post) {

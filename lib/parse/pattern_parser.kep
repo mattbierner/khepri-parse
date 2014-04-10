@@ -75,6 +75,8 @@ topLevelPattern = late\-> { return topLevelPattern; };
 
 unpack = late\-> { return unpack; };
 
+asPattern = late\-> { return asPattern; };
+
 /* Parts
  ******************************************************************************/
 var sep = optional (punctuator ',');
