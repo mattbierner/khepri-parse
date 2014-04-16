@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 1.0.0 - April 15, 2014
+* Restrict delete to only delete member references.
+
 ## 0.12.0 - April 10, 2014
 * Currying of non-computed member accessor
 * Restored support for number and identifier keys on object literals now language

@@ -14,6 +14,7 @@ var __o = require("bennu")["parse"],
     enumeration = __o["enumeration"],
     expected = __o["expected"],
     many = __o["many"],
+    many1 = __o["many1"],
     memo = __o["memo"],
     next = __o["next"],
     optional = __o["optional"],
@@ -52,7 +53,7 @@ var __o = require("bennu")["parse"],
     arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor, memberExpression,
         newExpression, curryExpression, applicationExpression, unaryOperator, unaryExpression, binaryExpression,
         conditionalExpression, leftHandReferenceExpression, assignmentExpression, expression, topLevelExpression, arg,
-        reducer, x0, y0, functionExpression = late((function() {
+        reducer, x0, y0, x3, y3, functionExpression = late((function() {
             var __o7 = require("./function_parser"),
                 functionExpression0 = __o7["functionExpression"];
             return functionExpression0;
@@ -255,6 +256,13 @@ var x2, y2;
     }))), (y2 = always), (function() {
         return y2(x2.apply(null, arguments));
     })))));
+var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(memo(accessor))), (
+    (x3 = foldl.bind(null, (function(p, c) {
+        return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property,
+            c.computed);
+    }))), (y3 = always), (function() {
+        return y3(x3.apply(null, arguments));
+    }))));
 (assignmentExpression = label("Assignment Expression", rec((function(self) {
     return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=", ":="))),
         enumeration(expected("expression", either(self, expression)))), (function(loc, left, op0,
@@ -263,7 +271,7 @@ var x2, y2;
     }));
 }))));
 var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected("reference expression",
-    leftHandReferenceExpression)), (function(loc, expression0) {
+    leftHandMemberReference)), (function(loc, expression0) {
     return ast_expression.UnaryExpression.create(loc, "delete", expression0);
 })));
 (topLevelExpression = choice(deleteExpression, assignmentExpression, expression));

@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
     "khepri-ast/expression", "khepri-ast/value", "khepri-ast/position", "./common", "./token_parser",
     "./value_parser", "./pattern_parser", "./function_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_declaration, ast_expression, ast_value, __o2, __o3, __o4, __o5,
@@ -19,6 +18,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         enumeration = __o["enumeration"],
         expected = __o["expected"],
         many = __o["many"],
+        many1 = __o["many1"],
         memo = __o["memo"],
         next = __o["next"],
         optional = __o["optional"],
@@ -46,8 +46,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor,
             memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
             unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression,
-            assignmentExpression, expression, topLevelExpression, arg, reducer, x0, y0, functionExpression =
-            late((function() {
+            assignmentExpression, expression, topLevelExpression, arg, reducer, x0, y0, x3, y3,
+            functionExpression = late((function() {
                 var __o7 = require("./function_parser"),
                     functionExpression0 = __o7["functionExpression"];
                 return functionExpression0;
@@ -256,6 +256,13 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     }))), (y2 = always), (function() {
         return y2(x2.apply(null, arguments));
     })))));
+    var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(
+        memo(accessor))), ((x3 = foldl.bind(null, (function(p, c) {
+        return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc),
+            p, c.property, c.computed);
+    }))), (y3 = always), (function() {
+        return y3(x3.apply(null, arguments));
+    }))));
     (assignmentExpression = label("Assignment Expression", rec((function(self) {
         return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=",
             ":="))), enumeration(expected("expression", either(self, expression)))), (
@@ -265,7 +272,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
             }));
     }))));
     var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected(
-        "reference expression", leftHandReferenceExpression)), (function(loc, expression0) {
+        "reference expression", leftHandMemberReference)), (function(loc, expression0) {
         return ast_expression.UnaryExpression.create(loc, "delete", expression0);
     })));
     (topLevelExpression = choice(deleteExpression, assignmentExpression, expression));

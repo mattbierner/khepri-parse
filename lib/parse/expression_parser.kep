@@ -49,6 +49,7 @@ with
         enumeration
         expected
         many
+        many1
         memo
         next
         optional
@@ -510,6 +511,13 @@ leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
             many <| memo accessor),
         foldl@accessorReducer \>> always);
 
+var leftHandMemberReference = label@'Left Hand Reference Expression' <|
+    binds(
+        enumeration(
+            identifier,
+            many1 <| memo accessor),
+        foldl@accessorReducer \>> always);
+
 // Assignment Expression
 ////////////////////////////////////////
 assignmentExpression = label@'Assignment Expression' <| rec\self ->
@@ -529,7 +537,7 @@ var deleteExpression = label@'Delete Expression' <|
     node(
         next(
             keyword 'delete',
-            leftHandReferenceExpression |> expected@'reference expression'),
+            leftHandMemberReference |> expected@'reference expression'),
         \loc expression ->
             ast_expression.UnaryExpression.create(loc, 'delete', expression));
 
