@@ -10,9 +10,9 @@ var __o = require("bennu")["parse"],
     ast_value = require("khepri-ast")["value"],
     __o2 = require("khepri-ast")["position"],
     __o3 = require("./common"),
-    __o4 = require("./token_parser"),
-    __o5 = require("./value_parser"),
-    __o6 = require("./pattern_parser"),
+    tokenParser = require("./token_parser"),
+    value = require("./value_parser"),
+    __o4 = require("./pattern_parser"),
     _ = require("./function_parser"),
     arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor, memberExpression,
         newExpression, curryExpression, applicationExpression, unaryOperator, unaryExpression, binaryExpression,
@@ -45,17 +45,17 @@ var __o = require("bennu")["parse"],
     node = __o3["node"],
     nodea = __o3["nodea"],
     precedence = __o3["precedence"],
-    keyword = __o4["keyword"],
-    punctuator = __o4["punctuator"],
-    prefixedOp = __o4["prefixedOp"],
-    identifier = __o5["identifier"],
-    literal = __o5["literal"],
-    stringLiteral = __o5["stringLiteral"],
-    numericLiteral = __o5["numericLiteral"],
-    topLevelPattern = __o6["topLevelPattern"],
+    keyword = tokenParser["keyword"],
+    punctuator = tokenParser["punctuator"],
+    prefixedOp = tokenParser["prefixedOp"],
+    identifier = value["identifier"],
+    literal = value["literal"],
+    stringLiteral = value["stringLiteral"],
+    numericLiteral = value["numericLiteral"],
+    topLevelPattern = __o4["topLevelPattern"],
     arg, reducer, x0, x3, functionExpression = late((function() {
-        var __o7 = require("./function_parser"),
-            functionExpression0 = __o7["functionExpression"];
+        var __o5 = require("./function_parser"),
+            functionExpression0 = __o5["functionExpression"];
         return functionExpression0;
     }));
 (expression = late((function() {
@@ -72,7 +72,6 @@ var args = label("Arguments", ((arg = expression), node(between(punctuator("("),
     (x.loc = loc);
     return x;
 })))),
-    unaryOpToken = prefixedOp("~", "!", "++", "--"),
     arrayElement, arrayElements;
 (arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = sepBy(punctuator(","), expected(
     "array element", arrayElement))), node(between(punctuator("["), punctuator("]"), eager(arrayElements)),
@@ -95,28 +94,27 @@ var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", topL
         punctuator(":"), expected("conditional consequent expression", expression)), next(punctuator(
         ":"), expected("conditional alternate expression", expression)))), ast_expression.ConditionalExpression
     .create)));
-var unaryOperatorExpression = label("Unary Operator Expression", either(either(keyword("typeof", "void"), unaryOpToken)
-    .map((function(__o7) {
-        var loc = __o7["loc"],
-            value = __o7["value"];
-        return ast_expression.UnaryOperatorExpression.create(loc, value);
+var unaryOperatorExpression = label("Unary Operator Expression", choice(value.unaryOperator, keyword("typeof", "void")
+    .map((function(__o5) {
+        var loc = __o5["loc"],
+            value0 = __o5["value"];
+        return ast_value.UnaryOperator.create(loc, value0);
     })), attempt(next(punctuator("."), identifier)
-        .map((function(__o7) {
-            var loc = __o7["loc"],
-                name = __o7["name"];
-            return ast_expression.UnaryOperatorExpression.create(loc, name);
+        .map((function(__o5) {
+            var loc = __o5["loc"],
+                name = __o5["name"];
+            return ast_value.UnaryOperator.create(loc, ("." + name));
         }))))),
     binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false, keyword("_")),
-        either(keyword("instanceof", "new"), prefixedOp(".", "*", "/", "+", "-", "%", "<<", ">>", ">>>", "<",
-            ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
-            "<\\", "<<\\", "@"))), (function(loc, flipped, op) {
-        return ast_expression.BinaryOperatorExpression.create(loc, op.value, (!(!flipped)));
+        either(keyword("instanceof", "new"), punctuator(".", "@"), tokenParser.binaryOperator)), (function(loc,
+        flipped, op) {
+        return ast_value.BinaryOperator.create(loc, op.value, (!(!flipped)));
     }))),
     ternayOperatorExpression = label("Ternary Operator Expression", punctuator("?")
-        .map((function(__o7) {
-            var loc = __o7["loc"],
-                value = __o7["value"];
-            return ast_expression.TernaryOperatorExpression.create(loc, value);
+        .map((function(__o5) {
+            var loc = __o5["loc"],
+                value0 = __o5["value"];
+            return ast_value.TernaryOperator.create(loc, value0);
         }))),
     op;
 (operatorExpression = label("Operator Expression", ((op = choice(unaryOperatorExpression, binaryOperatorExpression,
@@ -138,9 +136,9 @@ var argumentList = label("Argument List", either(attempt(node(operatorExpression
     })), between(punctuator("("), punctuator(")"), expected("accessor expression", expression))
     .map((function(x) {
         return [x, true];
-    })))), (function(loc, __o7) {
-    var x = __o7[0],
-        computed = __o7[1];
+    })))), (function(loc, __o5) {
+    var x = __o5[0],
+        computed = __o5[1];
     return ({
         "loc": loc,
         "property": x,
@@ -180,7 +178,7 @@ var leftHandSideExpression = label("Call Expression", ((reducer = (function(p, c
 (applicationExpression = label("Call Expression", chainl1(always((function(p, c) {
     return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [c]);
 })), curryExpression)));
-(unaryOperator = label("Unary Operator", either(keyword("typeof", "void"), unaryOpToken)));
+(unaryOperator = label("Unary Operator", either(keyword("typeof", "void"), tokenParser.unaryOperator)));
 var reducer1;
 (unaryExpression = label("Unary Expression", ((reducer1 = (function(argument, op0) {
     return ast_expression.UnaryExpression.create(SourceLocation.merge(op0.loc, argument.loc), op0.value,

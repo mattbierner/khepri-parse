@@ -4,7 +4,8 @@
 */"use strict";
 var __o = require("bennu")["parse"],
     punctuator, anyPunctuator, operator, anyOperator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral,
-        numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, ExpectError = __o["ExpectError"],
+        numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, unaryOperator, binaryOperator, ExpectError =
+        __o["ExpectError"],
     token = __o["token"],
     indexOf = Function.prototype.call.bind(Array.prototype.indexOf),
     join = Function.prototype.call.bind(Array.prototype.join),
@@ -88,6 +89,26 @@ var __o = require("bennu")["parse"],
             })))));
     }));
 }));
+var options = ["~", "!", "++", "--"];
+(unaryOperator = token((function(tok) {
+    var value, x;
+    return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(options, ((x =
+        String.prototype.indexOf.bind(value)), (function(z) {
+        var y = x(z);
+        return (0 === y);
+    })))));
+})));
+var options0 = ["*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=", "===", "!==", "&", "^",
+    "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\", "@"
+];
+(binaryOperator = token((function(tok) {
+    var value, x;
+    return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(options0, ((x =
+        String.prototype.indexOf.bind(value)), (function(z) {
+        var y = x(z);
+        return (0 === y);
+    })))));
+})));
 (exports["punctuator"] = punctuator);
 (exports["anyPunctuator"] = anyPunctuator);
 (exports["operator"] = operator);
@@ -101,3 +122,5 @@ var __o = require("bennu")["parse"],
 (exports["stringLiteral"] = stringLiteral);
 (exports["regularExpressionLiteral"] = regularExpressionLiteral);
 (exports["prefixedOp"] = prefixedOp);
+(exports["unaryOperator"] = unaryOperator);
+(exports["binaryOperator"] = binaryOperator);

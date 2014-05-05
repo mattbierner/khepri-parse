@@ -8,7 +8,6 @@
             identifier, operator, unaryOperator, binaryOperator, choice = __o["choice"],
         label = __o["label"],
         between = __o0["between"],
-        prefixedOp = token["prefixedOp"],
         p;
     (nullLiteral = label("Null Literal", ((p = token.nullLiteral), p.map((function(x) {
         return ast_value.Literal.create(x.loc, "null", x.value);
@@ -35,16 +34,12 @@
     (identifier = label("Identifier", token.anyIdentifier.map((function(x) {
         return ast_value.Identifier.create(x.loc, x.value);
     }))));
-    (unaryOperator = label("Unary Operator", prefixedOp("~", "!", "++", "--")
-        .map((function(x) {
-            return ast_value.UnaryOperator.create(x.loc, x.value);
-        }))));
-    (binaryOperator = label("Binary Operator", prefixedOp("*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">",
-            "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
-            "<\\", "<<\\", "@")
-        .map((function(x) {
-            return ast_value.BinaryOperator.create(x.loc, x.value);
-        }))));
+    (unaryOperator = label("Unary Operator", token.unaryOperator.map((function(x) {
+        return ast_value.UnaryOperator.create(x.loc, x.value);
+    }))));
+    (binaryOperator = label("Binary Operator", token.binaryOperator.map((function(x) {
+        return ast_value.BinaryOperator.create(x.loc, x.value);
+    }))));
     (operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
     (exports["literal"] = literal);
     (exports["nullLiteral"] = nullLiteral);

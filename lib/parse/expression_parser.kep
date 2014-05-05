@@ -71,11 +71,11 @@ with
     import 'khepri-ast::position' {SourceLocation},
     
     import './common' {node nodea precedence},
-    import './token_parser' {
+    import './token_parser' tokenParser#{
         keyword
         punctuator
         prefixedOp},
-    import './value_parser' {i
+    import './value_parser' value#{
         identifier
         literal
         stringLiteral
@@ -115,11 +115,6 @@ in
             x.loc = loc;
             return x;
         });
-
-// Unary Operator Token
-////////////////////////////////////////
-var unaryOpToken = prefixedOp('~', '!', '++', '--');
-
 
 /* SubExpression
  ******************************************************************************/
@@ -215,18 +210,16 @@ conditionalExpression = label@'Conditional Expression' <|
 // Operators Expression
 ////////////////////////////////////////
 var unaryOperatorExpression = label@'Unary Operator Expression' <|
-    either(
-        either(
-            keyword('typeof', 'void'),
-            unaryOpToken)
-        .map \ {loc value} ->
-            ast_expression.UnaryOperatorExpression.create(loc, value),
-        
+    choice(
+        value.unaryOperator,
+        keyword('typeof', 'void').map \ {loc value} ->
+            ast_value.UnaryOperator.create(loc, value),
+            
         attempt <| next(
             punctuator '.',
             identifier)
         .map \ {loc name} ->
-            ast_expression.UnaryOperatorExpression.create(loc, name));
+            ast_value.UnaryOperator.create(loc, '.' + name));
 
 var binaryOperatorExpression = label@'Binary Operator Expression' <|
     nodea(
@@ -234,43 +227,15 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
             optional(false, keyword '_'),
             either(
                 keyword ('instanceof', 'new'),
-                prefixedOp(
-                    '.',
-                    '*',
-                    '/',
-                    '+',
-                    '-',
-                    '%',
-                    '<<',
-                    '>>',
-                    '>>>',
-                    '<',
-                    '>',
-                    '<=',
-                    '>=',
-                    '==',
-                    '!=',
-                    '===',
-                    '!==',
-                    '&',
-                    '^',
-                    '|',
-                    '||',
-                    '&&',
-                    '|>',
-                    '\\>',
-                    '\\>>',
-                    '<|',
-                    '<\\',
-                    '<<\\',
-                    '@'))),
+                punctuator('.', '@'),
+                tokenParser.binaryOperator)),
         \loc flipped op ->
-            ast_expression.BinaryOperatorExpression.create(loc, op.value, !!flipped));
+            ast_value.BinaryOperator.create(loc, op.value, !!flipped));
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
     punctuator('?')
         .map \ {loc value} ->
-            ast_expression.TernaryOperatorExpression.create(loc, value);
+            ast_value.TernaryOperator.create(loc, value);
 
 operatorExpression = label@'Operator Expression' <| let
     op = choice(
@@ -424,7 +389,7 @@ applicationExpression = label@'Call Expression' <|
 unaryOperator = label@'Unary Operator' <|
     either(
         keyword('typeof', 'void'),
-        unaryOpToken);
+        tokenParser.unaryOperator);
 
 unaryExpression = label@'Unary Expression' <| let
     reducer = \argument op -> 

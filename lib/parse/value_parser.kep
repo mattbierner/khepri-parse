@@ -63,44 +63,14 @@ literal = label@'Literal' <|
 /* Symbols
  ******************************************************************************/
 identifier := label@'Identifier' <|
-    token.anyIdentifier
-        .map\x -> ast_value.Identifier.create(x.loc, x.value);
+    token.anyIdentifier.map\x -> ast_value.Identifier.create(x.loc, x.value);
 
 unaryOperator := label@'Unary Operator' <|
-    prefixedOp('~', '!', '++', '--').map \ x -> 
+    token.unaryOperator.map \ x -> 
         ast_value.UnaryOperator.create(x.loc, x.value);
 
 binaryOperator := label@'Binary Operator' <|
-    prefixedOp(
-        '*',
-        '/',
-        '+',
-        '-',
-        '%',
-        '<<',
-        '>>',
-        '>>>',
-        '<',
-        '>',
-        '<=',
-        '>=',
-        '==',
-        '!=',
-        '===',
-        '!==',
-        '&',
-        '^',
-        '|',
-        '||',
-        '&&',
-        '|>',
-        '\\>',
-        '\\>>',
-        '<|',
-        '<\\',
-        '<<\\',
-        '@')
-    .map \ x -> 
+    token.binaryOperator.map \ x -> 
         ast_value.BinaryOperator.create(x.loc, x.value);
 
 operator = between(token.punctuator '(', token.punctuator ')',
