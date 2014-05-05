@@ -55,9 +55,9 @@ var singleEscapeCharacter = choice(doubleQuote, singleQuote, escape, next(charac
 (characterEscapeSequence = either(singleEscapeCharacter, nonEscapeCharacter));
 var y;
 (escapeSequence = choice(characterEscapeSequence, sequence(character("0"), either(eof, token(((y = test.bind(null,
-    decimalDigit)), (function(x) {
-    var x0 = y(x);
-    return (!x0);
+    decimalDigit)), (function(z) {
+    var x = y(z);
+    return (!x);
 })))), always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
 (singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape, escapeSequence),
     token((function(tok) {

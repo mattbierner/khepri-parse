@@ -36,9 +36,9 @@ var __o = require("bennu")["parse"],
             }),
     join = foldl.bind(null, __add, ""),
     y;
-(regularExpressionNonTerminator = token(((y = test.bind(null, lineTerminator)), (function(x) {
-    var x0 = y(x);
-    return (!x0);
+(regularExpressionNonTerminator = token(((y = test.bind(null, lineTerminator)), (function(z) {
+    var x = y(z);
+    return (!x);
 }))));
 (regularExpressionBackslashSequence = next(character("\\"), map((function(y0) {
     return ("\\" + y0);

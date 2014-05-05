@@ -53,8 +53,8 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
     }));
     var x = streamFrom,
         y = parseStream;
-    (parseInput = (function(x0) {
-        return y(x(x0));
+    (parseInput = (function(z) {
+        return y(x(z));
     }));
     (exports["parserStream"] = parserStream);
     (exports["ParserPosition"] = ParserPosition);

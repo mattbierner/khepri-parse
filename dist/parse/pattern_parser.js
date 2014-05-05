@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/pattern_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/pattern_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/pattern", "./common",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/pattern", "./common",
     "./token_parser", "./value_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_pattern, __o2, __o3, __o4) {
     "use strict";
@@ -74,11 +75,15 @@
             return ast_pattern.EllipsisPattern.create(x.loc, null);
         })), node(next(punctuator("..."), optional(identifierPattern)), ast_pattern.EllipsisPattern.create)
     )));
-    var element;
+    var element, pre, mid, post, sep0;
     (arrayPattern = label("Array Pattern", ((element = topLevelPattern), node(between(punctuator("["),
-            punctuator("]"), eager(listPattern(expected("array pattern element", element),
-                ellipsisPattern, expected("non-ellipsis array pattern element", element)))),
-        ast_pattern.ArrayPattern.create))));
+        punctuator("]"), eager(((pre = expected("array pattern element", element)), (mid =
+            ellipsisPattern), (post = expected("non-ellipsis array pattern element",
+            element)), append(((sep0 = sep), either(enumeration(mid), rec((function(
+            self) {
+            return cons(pre, optional(NIL, next(sep0, either(
+                enumeration(mid), self))));
+        })))), next(sep, sepBy(sep, post)))))), ast_pattern.ArrayPattern.create))));
     (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), unpack)), ast_pattern
         .ObjectPatternElement.create), node(either(asPattern, identifierPattern), (function(loc, key) {
         return ast_pattern.ObjectPatternElement.create(loc, key, null);

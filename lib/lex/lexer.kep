@@ -6,8 +6,9 @@ package (
     token
     inputElement
     lexer
-    lexManyState
-    lex)
+    
+    lex
+    lexStream)
 with
     import 'bennu::parse' parse#{
         always
@@ -15,22 +16,18 @@ with
         binds
         bind
         choice
-        either
         eof
         getPosition
         enumeration
         extract
-        expected
-        next
         many
         runState
-        label
         ParserState},
     import 'bennu::lang' {then},
-    import 'nu-stream::stream' {memoStream, NIL, 'from': streamFrom},
+    import 'nu-stream::stream' {'from': streamFrom},
     
     import 'khepri-ast::token' lexToken,
-    import 'khepri-ast::position' {SourceLocation, SourcePosition},
+    import 'khepri-ast::position' {SourceLocation SourcePosition},
     
     import './boolean_lexer' {booleanLiteral},
     import './comment_lexer' {comment},
@@ -45,8 +42,14 @@ with
     import './regular_expression_lexer' {regularExpressionLiteral}
 in {
 
-var makeToken = \type, p ->
+var makeToken := \type p ->
     p.map \ value -> [type, value];
+
+var location := \start end ->
+    new SourceLocation(
+        start,
+        end,
+        start.file || end.file);
 
 var buildToken = \p ->
     binds(
@@ -54,10 +57,10 @@ var buildToken = \p ->
             getPosition,
             p,
             getPosition),
-        \start, [type, value], end ->
+        \start, [type value], end ->
             always(
                 new type(
-                    new SourceLocation(start, end),
+                    location(start, end),
                     value)));
 /* Lexers
  ******************************************************************************/
@@ -94,10 +97,34 @@ lexer = then(
 
 /* Running
  ******************************************************************************/
-lex = \input -> 
-    runState(lexer,
+var initialFilePosition = \file ->
+    new SourcePosition(
+        SourcePosition.initial.line,
+        SourcePosition.initial.column,
+        file);
+
+/**
+ * Tokenize a stream of khepri source characters.
+ * 
+ * @param input Nu stream of characters.
+ * @param [file] {string} File name.
+ */
+lexStream := \input file -> 
+    runState(
+        lexer,
         new ParserState(
-            streamFrom(input),
-            SourcePosition.initial));
+            input,
+            initialFilePosition file));
+    
+/**
+ * Tokenize a khepri source string.
+ * 
+ * @param input {string} Input.
+ * @param [file] {string} File name.
+ */
+lex := \input file ->
+    lexStream(
+        streamFrom input,
+        file);
 
 }

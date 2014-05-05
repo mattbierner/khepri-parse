@@ -32,9 +32,9 @@ var __o = require("bennu")["parse"],
     join = map.bind(null, foldl.bind(null, __add, ""));
 (singleLineCommentMarker = string("//"));
 var y;
-(singleLineCommentChar = token(((y = test.bind(null, lineTerminator)), (function(x) {
-    var x0 = y(x);
-    return (!x0);
+(singleLineCommentChar = token(((y = test.bind(null, lineTerminator)), (function(z) {
+    var x = y(z);
+    return (!x);
 }))));
 (singleLineCommentChars = many(singleLineCommentChar));
 (singleLineComment = label("Single Line Comment Lexer", next(singleLineCommentMarker, join(singleLineCommentChars))));
