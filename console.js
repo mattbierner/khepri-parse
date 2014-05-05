@@ -8,7 +8,7 @@ requirejs.config({
         'nu-stream': 'dependencies/nu/dist',
         'seshet': 'dependencies/seshet/dist/seshet',
 
-        'khepri-ast': '../khepri-ast/dist',
+        'khepri-ast': 'dependencies/khepri-ast/dist',
     }
 });
 

@@ -31,7 +31,7 @@ exports.operator = function(test) {
     var result = testParser("f (+);");
     test.equal(result.type, 'CallExpression');
     test.equal(result.args.length, 1);
-    test.equal(result.args[0].type, 'BinaryOperatorExpression');
+    test.equal(result.args[0].type, 'BinaryOperator');
 
     test.done();
 };
@@ -41,7 +41,7 @@ exports.curried_operator = function(test) {
     test.equal(result.type, 'CallExpression');
     test.equal(result.args.length, 1);
     test.equal(result.args[0].type, 'CurryExpression');
-    test.equal(result.args[0].base.type, 'BinaryOperatorExpression');
+    test.equal(result.args[0].base.type, 'BinaryOperator');
     test.equal(result.args[0].args.length, 1);
 
     test.done();

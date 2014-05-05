@@ -32,7 +32,7 @@ exports.unary_lambda = function(test) {
 
 
 exports.empty_function = function(test) {
-    var result = testParser(lexer.lex("function \\() -> {};"));
+    var result = testParser(lexer.lex("function \\ -> {};"));
     test.equal(result.type, 'FunctionExpression');
     test.equal(result.params.elements.length, 0);
     test.equal(result.name, null);
@@ -42,7 +42,7 @@ exports.empty_function = function(test) {
 };
 
 exports.function_without_name = function(test) {
-    var result = testParser(lexer.lex("function\\ x ->{ return x; };"));
+    var result = testParser(lexer.lex("function\\ x -> { return x; };"));
     test.equal(result.type, 'FunctionExpression');
     test.equal(result.name, null);
     test.equal(result.params.elements.length, 1);
