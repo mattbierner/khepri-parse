@@ -1,6 +1,9 @@
 # ChangeLog #
 
-## 1.1.0 - April 15, 2014
+## 2.0.0 - May 5, 2014
+* Fixed op to function of `void`.
+
+## 1.1.0 - May 5, 2014
 * Added support for tracking file names in source locations during lexing.
 
 ## 1.0.0 - April 15, 2014

@@ -1,15 +1,15 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/value_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/value_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "khepri-ast/value", "./token_parser"], (function(require, exports, __o,
-    ast_value, token) {
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "./token_parser"], (function(require,
+    exports, __o, __o0, ast_value, token) {
     "use strict";
-    var bind = __o["bind"],
-        choice = __o["choice"],
+    var literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
+            identifier, operator, unaryOperator, binaryOperator, choice = __o["choice"],
         label = __o["label"],
-        literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
-            identifier, p;
+        between = __o0["between"],
+        prefixedOp = token["prefixedOp"],
+        p;
     (nullLiteral = label("Null Literal", ((p = token.nullLiteral), p.map((function(x) {
         return ast_value.Literal.create(x.loc, "null", x.value);
     })))));
@@ -35,6 +35,17 @@ define(["require", "exports", "bennu/parse", "khepri-ast/value", "./token_parser
     (identifier = label("Identifier", token.anyIdentifier.map((function(x) {
         return ast_value.Identifier.create(x.loc, x.value);
     }))));
+    (unaryOperator = label("Unary Operator", prefixedOp("~", "!", "++", "--")
+        .map((function(x) {
+            return ast_value.UnaryOperator.create(x.loc, x.value);
+        }))));
+    (binaryOperator = label("Binary Operator", prefixedOp("*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">",
+            "<=", ">=", "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|",
+            "<\\", "<<\\", "@")
+        .map((function(x) {
+            return ast_value.BinaryOperator.create(x.loc, x.value);
+        }))));
+    (operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
     (exports["literal"] = literal);
     (exports["nullLiteral"] = nullLiteral);
     (exports["booleanLiteral"] = booleanLiteral);
@@ -42,4 +53,7 @@ define(["require", "exports", "bennu/parse", "khepri-ast/value", "./token_parser
     (exports["stringLiteral"] = stringLiteral);
     (exports["regularExpressionLiteral"] = regularExpressionLiteral);
     (exports["identifier"] = identifier);
+    (exports["operator"] = operator);
+    (exports["unaryOperator"] = unaryOperator);
+    (exports["binaryOperator"] = binaryOperator);
 }));

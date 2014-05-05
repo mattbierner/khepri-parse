@@ -1,15 +1,17 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/value_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/value_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
-    bind = __o["bind"],
-    choice = __o["choice"],
-    label = __o["label"],
+    __o0 = require("bennu")["lang"],
     ast_value = require("khepri-ast")["value"],
     token = require("./token_parser"),
-    literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, identifier, p;
+    literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, identifier, operator,
+        unaryOperator, binaryOperator, choice = __o["choice"],
+    label = __o["label"],
+    between = __o0["between"],
+    prefixedOp = token["prefixedOp"],
+    p;
 (nullLiteral = label("Null Literal", ((p = token.nullLiteral), p.map((function(x) {
     return ast_value.Literal.create(x.loc, "null", x.value);
 })))));
@@ -34,6 +36,16 @@ var p3;
 (identifier = label("Identifier", token.anyIdentifier.map((function(x) {
     return ast_value.Identifier.create(x.loc, x.value);
 }))));
+(unaryOperator = label("Unary Operator", prefixedOp("~", "!", "++", "--")
+    .map((function(x) {
+        return ast_value.UnaryOperator.create(x.loc, x.value);
+    }))));
+(binaryOperator = label("Binary Operator", prefixedOp("*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=",
+        "==", "!=", "===", "!==", "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\", "@")
+    .map((function(x) {
+        return ast_value.BinaryOperator.create(x.loc, x.value);
+    }))));
+(operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
 (exports["literal"] = literal);
 (exports["nullLiteral"] = nullLiteral);
 (exports["booleanLiteral"] = booleanLiteral);
@@ -41,3 +53,6 @@ var p3;
 (exports["stringLiteral"] = stringLiteral);
 (exports["regularExpressionLiteral"] = regularExpressionLiteral);
 (exports["identifier"] = identifier);
+(exports["operator"] = operator);
+(exports["unaryOperator"] = unaryOperator);
+(exports["binaryOperator"] = binaryOperator);

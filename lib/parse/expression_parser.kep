@@ -54,6 +54,7 @@ with
         next
         optional
         rec
+        token
         late
         label},
     import 'bennu::lang' {
@@ -70,8 +71,15 @@ with
     import 'khepri-ast::position' {SourceLocation},
     
     import './common' {node nodea precedence},
-    import './token_parser' {keyword punctuator},
-    import './value_parser' {identifier literal stringLiteral numericLiteral},
+    import './token_parser' {
+        keyword
+        punctuator
+        prefixedOp},
+    import './value_parser' {i
+        identifier
+        literal
+        stringLiteral
+        numericLiteral},
     import './pattern_parser' {topLevelPattern},
     import './function_parser' _
 in {
@@ -107,6 +115,11 @@ in
             x.loc = loc;
             return x;
         });
+
+// Unary Operator Token
+////////////////////////////////////////
+var unaryOpToken = prefixedOp('~', '!', '++', '--');
+
 
 /* SubExpression
  ******************************************************************************/
@@ -204,8 +217,8 @@ conditionalExpression = label@'Conditional Expression' <|
 var unaryOperatorExpression = label@'Unary Operator Expression' <|
     either(
         either(
-            keyword 'typeof',
-            punctuator('void', '~', '!', '++', '--'))
+            keyword('typeof', 'void'),
+            unaryOpToken)
         .map \ {loc value} ->
             ast_expression.UnaryOperatorExpression.create(loc, value),
         
@@ -221,7 +234,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
             optional(false, keyword '_'),
             either(
                 keyword ('instanceof', 'new'),
-                punctuator(
+                prefixedOp(
                     '.',
                     '*',
                     '/',
@@ -411,7 +424,7 @@ applicationExpression = label@'Call Expression' <|
 unaryOperator = label@'Unary Operator' <|
     either(
         keyword('typeof', 'void'),
-        punctuator('++', '--', '~', '!'));
+        unaryOpToken);
 
 unaryExpression = label@'Unary Expression' <| let
     reducer = \argument op -> 
@@ -431,63 +444,63 @@ in
 ////////////////////////////////////////
 var precedenceTable = [
     {
-        'sep': punctuator('*', '/', '%'),
+        'sep': prefixedOp('*', '/', '%'),
         'precedence': 1,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator('+', '-'),
+        'sep': prefixedOp('+', '-'),
         'precedence': 2,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator('<<', '>>', '>>>'),
+        'sep': prefixedOp('<<', '>>', '>>>'),
         'precedence': 3,
         'node': ast_expression.BinaryExpression
     }, {
         'sep': either(
-            punctuator('<', '>', '<=', '>='),
+            prefixedOp('<', '>', '<=', '>='),
             keyword 'instanceof'),
         'precedence': 4,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep':  punctuator('==', '!=', '===', '!=='),
+        'sep':  prefixedOp('==', '!=', '===', '!=='),
         'precedence': 5,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '&',
+        'sep': prefixedOp '&',
         'precedence': 6,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '^',
+        'sep': prefixedOp '^',
         'precedence': 7,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '|',
+        'sep': prefixedOp '|',
         'precedence': 8,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator('\\>', '\\>>'),
+        'sep': prefixedOp('\\>', '\\>>'),
         'precedence': 9,
         'right': true,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator('<\\', '<<\\'),
+        'sep': prefixedOp('<\\', '<<\\'),
         'precedence': 9,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '|>',
+        'sep': prefixedOp '|>',
         'precedence': 10,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '<|',
+        'sep': prefixedOp '<|',
         'precedence': 10,
         'right': true,
         'node': ast_expression.BinaryExpression
     }, {
-        'sep': punctuator '||',
+        'sep': prefixedOp '||',
         'precedence': 11,
         'node': ast_expression.LogicalExpression
     }, {
-        'sep': punctuator '&&',
+        'sep': prefixedOp '&&',
         'precedence': 12,
         'node': ast_expression.LogicalExpression
     }

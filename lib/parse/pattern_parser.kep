@@ -10,6 +10,7 @@ package (
     topLevelPattern
     
     identifierPattern
+    operatorPattern
     sinkPattern
     ellipsisPattern
     
@@ -50,7 +51,10 @@ with
     
     import './common' {node nodea},
     import './token_parser' {keyword punctuator},
-    import './value_parser' {identifier stringLiteral}
+    import './value_parser' {
+        identifier
+        operator
+        stringLiteral}
 in {
 
 var sepEndWith1 = \sep end p ->
@@ -101,6 +105,12 @@ identifierPattern = label@'Identifier Pattern' <|
     identifier
         .map\x -> ast_pattern.IdentifierPattern.create(x.loc, x);
 
+// Identifier Pattern
+////////////////////////////////////////
+operatorPattern = label@'Operator Pattern' <|
+    operator
+        .map\x -> ast_pattern.IdentifierPattern.create(x.loc, x);
+
 // Sink Pattern
 ////////////////////////////////////////
 sinkPattern = label@'Sink Pattern' <|
@@ -113,7 +123,7 @@ sinkPattern = label@'Sink Pattern' <|
 ////////////////////////////////////////
 ellipsisPattern = label@'Ellipsis Pattern' <|
     either(
-        between(punctuator '(', punctuator ')',
+        attempt <| between(punctuator '(', punctuator ')',
             punctuator '...')
             .map\x -> ast_pattern.EllipsisPattern.create(x.loc, null),
         
@@ -150,7 +160,7 @@ objectPatternElement = either(
         either(
             asPattern,
             identifierPattern),
-        \loc key -> ast_pattern.ObjectPatternElement.create(loc, key, null)));
+        ast_pattern.ObjectPatternElement.create));
 
 objectPattern = label@'Object Pattern' <|
     node(
@@ -193,7 +203,8 @@ unpack = label@'Unpack' <|
         arrayPattern,
         objectPattern,
         asPattern,
-        identifierPattern);
+        identifierPattern,
+        operatorPattern);
 
 // Top Level Pattern
 ////////////////////////////////////////

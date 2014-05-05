@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Khepri Console</title>
+    <title>Khepri Parse Console</title>
     <style>
         body {
             height: 100%;
@@ -66,56 +66,57 @@
             margin-bottom: 25em;
         }
         
-        span.Token.Keyword {
+        .Token.Keyword {
             color: red;
         }
         
-        span.Token.Comment {
+        .Token.Comment {
             color: blue;
         }
         
-        span.Token.Comment:before {
+        .Token.Comment:before {
             content: "/*";
         }
         
-        span.Token.Comment:after {
+        .Token.Comment:after {
             content: "*/";
         }
         
-        span.Token.String {
+        .Token.String {
             color: green;
         }
         
-        span.Token.Punctuator {
+        .Token.Punctuator,
+        .Token.Operator {
             color: pink;
         }
         
-        span.Token.RegularExpression {
+        .Token.RegularExpression {
             color: orange;
         }
         
-        span.Token.Whitespace,
-        span.Token.LineTerminator {
+        .Token.Whitespace,
+        .Token.LineTerminator {
             color: rgb(215, 215, 215);
         }
         
-        span.Token.Whitespace {
+        .Token.Whitespace {
             display:inline-block;
         }
         
-        span.Token.Whitespace:after {
+        .Token.Whitespace:after {
             content: '\00B7';
         }
         
-        span.Token.Whitespace.Tab {
+        .Token.Whitespace.Tab {
             width: 2em;
             text-align: center;
         }
-        span.Token.Whitespace.Tab:after {
+        .Token.Whitespace.Tab:after {
             content: '\21E5';
         }
         
-        span.Token.LineTerminator:before {
+        .Token.LineTerminator:before {
             content: '\00B6';
         }
         
@@ -133,7 +134,7 @@
         }
         
         .Active,
-        span.Token:hover {
+        .Token:hover {
             background: rgb(220, 220, 220);
         }
     </style>

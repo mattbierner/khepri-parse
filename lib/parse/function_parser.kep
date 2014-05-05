@@ -18,6 +18,7 @@ with
         late
         label},
     import 'bennu::lang' {
+        between
         sepBy
         sepBy1
         then},
@@ -27,9 +28,14 @@ with
     import 'khepri-ast::pattern' ast_pattern,
     
     import './common' {node nodea},
-    import './token_parser' {keyword punctuator},
+    import './token_parser' {keyword punctuator operator},
     import './value_parser' {identifier},
-    import './pattern_parser' {topLevelPattern listPattern0 ellipsisPattern unpack identifierPattern},
+    import './pattern_parser' {
+        topLevelPattern
+        listPattern0
+        ellipsisPattern
+        unpack
+        identifierPattern},
     
     import './expression_parser' _
 in {
@@ -74,14 +80,13 @@ argumentList = label@'Argument List' <|
 
 namedArgumentList = label@'Named Argument List' <|
     nodea(
-        enumeration(
-            attempt then(
+        next(
+            operator '-',
+            enumeration(
                 optional identifierPattern,
-                punctuator '('),
-            then(
-                argumentElements,
-                punctuator ')'),
-            optional selfPattern),
+                between(punctuator '(', punctuator ')',
+                    argumentElements),
+                optional selfPattern)),
         ast_pattern.ArgumentsPattern.create);
 
 argumentsPattern = label@'Arguments Pattern' <|

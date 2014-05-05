@@ -2,16 +2,22 @@
  * @fileOverview Parsers for working with lex tokens.
  */
 package (
-    punctuator,
-    keyword,
-    identifier,
-    anyIdentifier,
+    punctuator
+    anyPunctuator
+    operator
+    anyOperator
     
-    nullLiteral,
-    booleanLiteral,
-    numericLiteral,
-    stringLiteral,
-    regularExpressionLiteral)
+    keyword
+    identifier
+    anyIdentifier
+    
+    nullLiteral
+    booleanLiteral
+    numericLiteral
+    stringLiteral
+    regularExpressionLiteral
+    
+    prefixedOp)
 with
     import 'bennu::parse' {
         ExpectError
@@ -41,6 +47,12 @@ var selectAny = \type ->
  ******************************************************************************/
 punctuator = selectAny 'Punctuator' ;
 
+anyPunctuator = typeParser('Punctuator', 'any punctuator');
+
+operator = selectAny 'Operator' ;
+
+anyOperator  = typeParser('Operator', 'any operator');
+
 keyword = selectAny 'Keyword';
 
 anyIdentifier = typeParser('Identifier', 'any identifier');
@@ -56,5 +68,16 @@ numericLiteral = typeParser('Number', 'numeric literal');
 stringLiteral = typeParser('String', 'string literal');
 
 regularExpressionLiteral = typeParser('RegularExpression', 'regular expression literal');
+
+/* Parsers
+ ******************************************************************************/
+var startsWith := \choices value ->
+    Array.prototype.some.call(choices,
+        String.prototype.indexOf.bind(value) \> (===, 0));
+
+prefixedOp := \options(...) ->
+    token \ tok -> 
+        (tok.type === 'Operator' &&
+        (startsWith(options, tok.value)));
 
 }

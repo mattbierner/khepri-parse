@@ -56,7 +56,9 @@ with
     import './pattern_parser' {
         importPattern
         topLevelPattern},
-    import './value_parser' {identifier}
+    import './value_parser' {
+        identifier
+        operator}
 in {
 
 /* Forward declarations
@@ -121,14 +123,18 @@ in
 // Variable Declaration Statement
 ////////////////////////////////////////
 var variableDeclarationList = let
-    initialiser = enumeration(
+    declaratorId = either(
+        identifier,
+        operator),
+    
+    initializer = enumeration(
         punctuator('=', ':=', '=:'),
         expression |> expected@"variable initilizer"),
 
     variableDeclaration = nodea(
         cons(
-            identifier,
-            optional(NIL, initialiser)),
+            declaratorId,
+            optional(NIL, initializer)),
         \loc id op init ->
             ast_declaration.VariableDeclarator.create(
                 loc,

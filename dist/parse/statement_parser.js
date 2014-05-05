@@ -1,14 +1,15 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/statement_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
+*/define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
     "khepri-ast/declaration", "khepri-ast/statement", "./common", "./token_parser", "./expression_parser",
     "./pattern_parser", "./value_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_clause, ast_declaration, ast_statement, __o2, __o3, __o4, __o5,
     __o6) {
     "use strict";
-    var NIL = __o["NIL"],
+    var blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement,
+            withStatement, iterationStatement, continueStatement, breakStatement, returnStatement,
+            switchStatement, throwStatement, tryStatement, debuggerStatement, statement, NIL = __o["NIL"],
         append = __o0["append"],
         choice = __o0["choice"],
         cons = __o0["cons"],
@@ -33,11 +34,8 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
         importPattern = __o5["importPattern"],
         topLevelPattern = __o5["topLevelPattern"],
         identifier = __o6["identifier"],
-        blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement,
-            withStatement, iterationStatement, continueStatement, breakStatement, returnStatement,
-            switchStatement, throwStatement, tryStatement, debuggerStatement, statement, initialiser,
-            variableDeclaration, condition, condition0, forInitExpression, forTestExpression,
-            forUpdateExpression;
+        operator = __o6["operator"],
+        declaratorId, initializer, variableDeclaration, condition, condition0, forInitExpression;
     (statement = late((function() {
         return statement;
     })));
@@ -55,12 +53,12 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
             .create)), (staticDeclarationList = eager(sepBy1(punctuator(","), staticDeclaration))),
         node(between(keyword("static"), logicalSemiColon, staticDeclarationList), ast_declaration.StaticDeclaration
             .create))));
-    var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", "=:"), expected(
-        "variable initilizer", expression))), (variableDeclaration = nodea(cons(identifier, optional(NIL,
-        initialiser)), (function(loc, id, op, init) {
-        return ast_declaration.VariableDeclarator.create(loc, id, init, (op && ((op.value ===
-            ":=") || (op.value === "=:"))), (!(op && (op.value === "=:"))));
-    }))), eager(sepBy1(punctuator(","), variableDeclaration)));
+    var variableDeclarationList = ((declaratorId = either(identifier, operator)), (initializer = enumeration(
+        punctuator("=", ":=", "=:"), expected("variable initilizer", expression))), (variableDeclaration =
+        nodea(cons(declaratorId, optional(NIL, initializer)), (function(loc, id, op, init) {
+            return ast_declaration.VariableDeclarator.create(loc, id, init, (op && ((op.value ===
+                ":=") || (op.value === "=:"))), (!(op && (op.value === "=:"))));
+        }))), eager(sepBy1(punctuator(","), variableDeclaration)));
     (variableStatement = label("Variable Statement", node(between(keyword("var"), logicalSemiColon,
         variableDeclarationList), ast_declaration.VariableDeclaration.create)));
     var withIdentifier, withBinding, bindings;
@@ -96,10 +94,9 @@ define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "
             logicalSemiColon, condition0))), ast_statement.DoWhileStatement.create))),
         forStatement = label("For Statement", ((forInitExpression = either(node(next(keyword("var"),
                 variableDeclarationList), ast_declaration.VariableDeclaration.create),
-            topLevelExpression)), (forTestExpression = expression), (forUpdateExpression =
-            topLevelExpression), nodea(next(keyword("for"), enumeration(next(punctuator("("), optional(
-            forInitExpression)), next(logicalSemiColon, optional(forTestExpression)), next(
-            logicalSemiColon, optional(forUpdateExpression)), next(punctuator(")"),
+            topLevelExpression)), nodea(next(keyword("for"), enumeration(next(punctuator("("), optional(
+            forInitExpression)), next(logicalSemiColon, optional(expression)), next(
+            logicalSemiColon, optional(topLevelExpression)), next(punctuator(")"),
             statement))), ast_statement.ForStatement.create)));
     (iterationStatement = label("Iteration Statement", choice(doWhileStatement, whileStatement, forStatement)));
     (continueStatement = label("Continue Statement", node(next(keyword("continue"), logicalSemiColon),

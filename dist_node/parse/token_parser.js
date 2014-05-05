@@ -1,13 +1,12 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
-    ExpectError = __o["ExpectError"],
+    punctuator, anyPunctuator, operator, anyOperator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral,
+        numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, ExpectError = __o["ExpectError"],
     token = __o["token"],
-    punctuator, keyword, identifier, anyIdentifier, nullLiteral, booleanLiteral, numericLiteral, stringLiteral,
-        regularExpressionLiteral, indexOf = Function.prototype.call.bind(Array.prototype.indexOf),
+    indexOf = Function.prototype.call.bind(Array.prototype.indexOf),
     join = Function.prototype.call.bind(Array.prototype.join),
     expectError = (function(msg) {
         return (function(pos, tok) {
@@ -20,6 +19,22 @@ var __o = require("bennu")["parse"],
         return ((tok.type === "Punctuator") && (indexOf(options, tok.value) >= 0));
     }), expectError(join(options, ", ")));
 }));
+(anyPunctuator = token((function(tok) {
+    return (tok.type === "Punctuator");
+}), (function(pos, tok) {
+    return new(ExpectError)(pos, "any punctuator", (tok ? tok.value : "end of input"));
+})));
+(operator = (function() {
+    var options = arguments;
+    return token((function(tok) {
+        return ((tok.type === "Operator") && (indexOf(options, tok.value) >= 0));
+    }), expectError(join(options, ", ")));
+}));
+(anyOperator = token((function(tok) {
+    return (tok.type === "Operator");
+}), (function(pos, tok) {
+    return new(ExpectError)(pos, "any operator", (tok ? tok.value : "end of input"));
+})));
 (keyword = (function() {
     var options = arguments;
     return token((function(tok) {
@@ -62,7 +77,21 @@ var __o = require("bennu")["parse"],
 }), (function(pos, tok) {
     return new(ExpectError)(pos, "regular expression literal", (tok ? tok.value : "end of input"));
 })));
+(prefixedOp = (function() {
+    var options = arguments;
+    return token((function(tok) {
+        var value, x;
+        return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(options, (
+            (x = String.prototype.indexOf.bind(value)), (function(z) {
+                var y = x(z);
+                return (0 === y);
+            })))));
+    }));
+}));
 (exports["punctuator"] = punctuator);
+(exports["anyPunctuator"] = anyPunctuator);
+(exports["operator"] = operator);
+(exports["anyOperator"] = anyOperator);
 (exports["keyword"] = keyword);
 (exports["identifier"] = identifier);
 (exports["anyIdentifier"] = anyIdentifier);
@@ -71,3 +100,4 @@ var __o = require("bennu")["parse"],
 (exports["numericLiteral"] = numericLiteral);
 (exports["stringLiteral"] = stringLiteral);
 (exports["regularExpressionLiteral"] = regularExpressionLiteral);
+(exports["prefixedOp"] = prefixedOp);

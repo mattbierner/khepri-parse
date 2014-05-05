@@ -1,11 +1,21 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/statement_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("nu-stream")["stream"],
-    NIL = __o["NIL"],
     __o0 = require("bennu")["parse"],
+    __o1 = require("bennu")["lang"],
+    ast_clause = require("khepri-ast")["clause"],
+    ast_declaration = require("khepri-ast")["declaration"],
+    ast_statement = require("khepri-ast")["statement"],
+    __o2 = require("./common"),
+    __o3 = require("./token_parser"),
+    __o4 = require("./expression_parser"),
+    __o5 = require("./pattern_parser"),
+    __o6 = require("./value_parser"),
+    blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement, withStatement,
+        iterationStatement, continueStatement, breakStatement, returnStatement, switchStatement, throwStatement,
+        tryStatement, debuggerStatement, statement, NIL = __o["NIL"],
     append = __o0["append"],
     choice = __o0["choice"],
     cons = __o0["cons"],
@@ -18,31 +28,20 @@ var __o = require("nu-stream")["stream"],
     optional = __o0["optional"],
     label = __o0["label"],
     late = __o0["late"],
-    __o1 = require("bennu")["lang"],
     between = __o1["between"],
     sepBy1 = __o1["sepBy1"],
     then = __o1["then"],
-    ast_clause = require("khepri-ast")["clause"],
-    ast_declaration = require("khepri-ast")["declaration"],
-    ast_statement = require("khepri-ast")["statement"],
-    __o2 = require("./common"),
     node = __o2["node"],
     nodea = __o2["nodea"],
-    __o3 = require("./token_parser"),
     keyword = __o3["keyword"],
     punctuator = __o3["punctuator"],
-    __o4 = require("./expression_parser"),
     expression = __o4["expression"],
     topLevelExpression = __o4["topLevelExpression"],
-    __o5 = require("./pattern_parser"),
     importPattern = __o5["importPattern"],
     topLevelPattern = __o5["topLevelPattern"],
-    __o6 = require("./value_parser"),
     identifier = __o6["identifier"],
-    blockStatement, staticStatement, variableStatement, emptyStatement, expressionStatement, ifStatement, withStatement,
-        iterationStatement, continueStatement, breakStatement, returnStatement, switchStatement, throwStatement,
-        tryStatement, debuggerStatement, statement, initialiser, variableDeclaration, condition, condition0,
-        forInitExpression, forTestExpression, forUpdateExpression;
+    operator = __o6["operator"],
+    declaratorId, initializer, variableDeclaration, condition, condition0, forInitExpression;
 (statement = late((function() {
     return statement;
 })));
@@ -59,9 +58,9 @@ var staticDeclaration, staticDeclarationList;
 (staticStatement = label("Static Statement", ((staticDeclaration = node(identifier, ast_declaration.StaticDeclarator.create)), (
     staticDeclarationList = eager(sepBy1(punctuator(","), staticDeclaration))), node(between(keyword(
     "static"), logicalSemiColon, staticDeclarationList), ast_declaration.StaticDeclaration.create))));
-var variableDeclarationList = ((initialiser = enumeration(punctuator("=", ":=", "=:"), expected("variable initilizer",
-    expression))), (variableDeclaration = nodea(cons(identifier, optional(NIL, initialiser)), (function(loc, id, op,
-    init) {
+var variableDeclarationList = ((declaratorId = either(identifier, operator)), (initializer = enumeration(punctuator("=",
+    ":=", "=:"), expected("variable initilizer", expression))), (variableDeclaration = nodea(cons(declaratorId,
+    optional(NIL, initializer)), (function(loc, id, op, init) {
     return ast_declaration.VariableDeclarator.create(loc, id, init, (op && ((op.value === ":=") || (op.value ===
         "=:"))), (!(op && (op.value === "=:"))));
 }))), eager(sepBy1(punctuator(","), variableDeclaration)));
@@ -94,11 +93,10 @@ var whileStatement = label("While Statement", ((condition = between(punctuator("
         nodea(next(keyword("do"), enumeration(blockStatement, between(keyword("while"), logicalSemiColon,
             condition0))), ast_statement.DoWhileStatement.create))),
     forStatement = label("For Statement", ((forInitExpression = either(node(next(keyword("var"),
-        variableDeclarationList), ast_declaration.VariableDeclaration.create), topLevelExpression)), (
-        forTestExpression = expression), (forUpdateExpression = topLevelExpression), nodea(next(keyword("for"),
-        enumeration(next(punctuator("("), optional(forInitExpression)), next(logicalSemiColon, optional(
-            forTestExpression)), next(logicalSemiColon, optional(forUpdateExpression)), next(punctuator(
-            ")"), statement))), ast_statement.ForStatement.create)));
+        variableDeclarationList), ast_declaration.VariableDeclaration.create), topLevelExpression)), nodea(next(
+        keyword("for"), enumeration(next(punctuator("("), optional(forInitExpression)), next(
+                logicalSemiColon, optional(expression)), next(logicalSemiColon, optional(topLevelExpression)),
+            next(punctuator(")"), statement))), ast_statement.ForStatement.create)));
 (iterationStatement = label("Iteration Statement", choice(doWhileStatement, whileStatement, forStatement)));
 (continueStatement = label("Continue Statement", node(next(keyword("continue"), logicalSemiColon), ast_statement.ContinueStatement
     .create)));

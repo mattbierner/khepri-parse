@@ -10,11 +10,15 @@ package (
     stringLiteral
     regularExpressionLiteral
     
-    identifier)
+    identifier
+    operator
+    unaryOperator
+    binaryOperator)
 with
     import 'bennu::parse' {bind choice label},
+    import 'bennu::lang' {between},
     import 'khepri-ast::value' ast_value,
-    import './token_parser' token
+    import './token_parser' token#{prefixedOp}
 in {
 
 var literalParser = \kind p ->
@@ -58,8 +62,50 @@ literal = label@'Literal' <|
 
 /* Symbols
  ******************************************************************************/
-identifier = label@'Identifier' <|
+identifier := label@'Identifier' <|
     token.anyIdentifier
         .map\x -> ast_value.Identifier.create(x.loc, x.value);
+
+unaryOperator := label@'Unary Operator' <|
+    prefixedOp('~', '!', '++', '--').map \ x -> 
+        ast_value.UnaryOperator.create(x.loc, x.value);
+
+binaryOperator := label@'Binary Operator' <|
+    prefixedOp(
+        '*',
+        '/',
+        '+',
+        '-',
+        '%',
+        '<<',
+        '>>',
+        '>>>',
+        '<',
+        '>',
+        '<=',
+        '>=',
+        '==',
+        '!=',
+        '===',
+        '!==',
+        '&',
+        '^',
+        '|',
+        '||',
+        '&&',
+        '|>',
+        '\\>',
+        '\\>>',
+        '<|',
+        '<\\',
+        '<<\\',
+        '@')
+    .map \ x -> 
+        ast_value.BinaryOperator.create(x.loc, x.value);
+
+operator = between(token.punctuator '(', token.punctuator ')',
+    choice(
+        unaryOperator,
+        binaryOperator));
 
 }

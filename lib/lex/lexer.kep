@@ -35,7 +35,7 @@ with
     import './line_terminator_lexer' {lineTerminator},
     import './null_lexer' {nullLiteral},
     import './number_lexer' {numericLiteral},
-    import './punctuator_lexer' {punctuator},
+    import './punctuator_lexer' {punctuator operator},
     import './reserved_word_lexer' {reservedWord},
     import './string_lexer' {stringLiteral},
     import './whitespace_lexer' {whitespace},
@@ -77,6 +77,8 @@ var tokenImpl = choice(
     attempt <|
         literalImpl,
     makeToken(lexToken.KeywordToken, reservedWord),
+    attempt <|
+        makeToken(lexToken.OperatorToken, operator),
     makeToken(lexToken.PunctuatorToken, punctuator));
 
 var inputElementImpl = choice(
