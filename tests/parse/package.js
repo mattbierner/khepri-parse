@@ -54,3 +54,47 @@ exports.exports = function(test) {
     
     test.done();
 };
+
+exports.symbol_export = function(test) {
+    var result = testParser(lexer.lex("package ((+) max) { }"));
+    test.equal(result.type, "Package");
+    test.equal(result.exports.type, "PackageExports");
+    test.equal(result.exports.exports.length, 2);
+    test.equal(result.exports.exports[0].type, 'PackageExport');
+    test.equal(result.exports.exports[0].id.type, 'BinaryOperator');
+    test.equal(result.exports.exports[0].id.op, '+');
+    test.equal(result.exports.exports[1].type, 'PackageExport');
+    test.equal(result.exports.exports[1].id.type, 'Identifier');
+    test.equal(result.exports.exports[1].id.name, 'max');
+    test.equal(result.body.type, 'BlockStatement');
+    test.equal(result.body.body.length, 0);
+    
+    test.done();
+};
+
+
+exports.top_level_exports = function(test) {
+    var result = testParser(lexer.lex("package min { }"));
+    test.equal(result.type, "Package");
+
+    test.equal(result.exports.type, 'PackageExport');
+    test.equal(result.exports.id.type, 'Identifier');
+    test.equal(result.exports.id.name, 'min');
+    test.equal(result.body.type, 'BlockStatement');
+    test.equal(result.body.body.length, 0);
+    
+    test.done();
+};
+
+exports.top_level_symbol_exports = function(test) {
+    var result = testParser(lexer.lex("package (+) { }"));
+    test.equal(result.type, "Package");
+
+    test.equal(result.exports.type, 'PackageExport');
+    test.equal(result.exports.id.type, 'BinaryOperator');
+    test.equal(result.exports.id.op, '+');
+    test.equal(result.body.type, 'BlockStatement');
+    test.equal(result.body.body.length, 0);
+    
+    test.done();
+};

@@ -30,7 +30,6 @@ exports.unary_lambda = function(test) {
     test.done();
 };
 
-
 exports.empty_function = function(test) {
     var result = testParser(lexer.lex("function \\ -> {};"));
     test.equal(result.type, 'FunctionExpression');

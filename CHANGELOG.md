@@ -2,6 +2,14 @@
 
 ## 2.0.0 - May 5, 2014
 * Fixed op to function of `void`.
+* Added support for custom prefix unary and infix binary operators
+* Can be used in variable declarations, package exports, and unpacks.
+** Operators inherit precedence from their prefix op `1 +? 2 *> 3` is `(1 +? (2 *> 3));`
+** Parsing and lexing have no knowledge of what ops are actually defined so will
+  merge unary ops. The compiler can then split merged unary ops.
+* Changed argument unpack syntax to require a prefixed `-`. `\-args(x ...)-> ...`
+** Allows the parser to produce better error messages and support operators in the
+  parameter list `\(+) -> 1 + 2;`
 
 ## 1.1.0 - May 5, 2014
 * Added support for tracking file names in source locations during lexing.
