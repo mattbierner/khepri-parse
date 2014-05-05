@@ -102,7 +102,7 @@
                 return ast_value.UnaryOperator.create(loc, ("." + name));
             }))))),
         binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false,
-            keyword("_")), either(keyword("instanceof", "new"), punctuator(".", "@"), tokenParser.binaryOperator)), (
+            keyword("_")), choice(keyword("instanceof", "new"), punctuator(".", "@"), tokenParser.binaryOperator)), (
             function(loc, flipped, op) {
                 return ast_value.BinaryOperator.create(loc, op.value, (!(!flipped)));
             }))),

@@ -225,7 +225,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
     nodea(
         enumeration(
             optional(false, keyword '_'),
-            either(
+            choice(
                 keyword ('instanceof', 'new'),
                 punctuator('.', '@'),
                 tokenParser.binaryOperator)),
