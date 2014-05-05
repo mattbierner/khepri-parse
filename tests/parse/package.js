@@ -62,7 +62,7 @@ exports.symbol_export = function(test) {
     test.equal(result.exports.exports.length, 2);
     test.equal(result.exports.exports[0].type, 'PackageExport');
     test.equal(result.exports.exports[0].id.type, 'BinaryOperator');
-    test.equal(result.exports.exports[0].id.op, '+');
+    test.equal(result.exports.exports[0].id.name, '+');
     test.equal(result.exports.exports[1].type, 'PackageExport');
     test.equal(result.exports.exports[1].id.type, 'Identifier');
     test.equal(result.exports.exports[1].id.name, 'max');
@@ -92,7 +92,7 @@ exports.top_level_symbol_exports = function(test) {
 
     test.equal(result.exports.type, 'PackageExport');
     test.equal(result.exports.id.type, 'BinaryOperator');
-    test.equal(result.exports.id.op, '+');
+    test.equal(result.exports.id.name, '+');
     test.equal(result.body.type, 'BlockStatement');
     test.equal(result.body.body.length, 0);
     

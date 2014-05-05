@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/statement_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/statement_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
+*/
+define(["require", "exports", "nu-stream/stream", "bennu/parse", "bennu/lang", "khepri-ast/clause",
     "khepri-ast/declaration", "khepri-ast/statement", "./common", "./token_parser", "./expression_parser",
     "./pattern_parser", "./value_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_clause, ast_declaration, ast_statement, __o2, __o3, __o4, __o5,

@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
+*/
+define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
     __o1) {
     "use strict";
     var punctuator, operator, always = __o["always"],
