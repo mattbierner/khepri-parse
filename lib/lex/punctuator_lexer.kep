@@ -53,7 +53,7 @@ var operators := [
     '|>', '<|',
     '\\>', '\\>>', '<\\', '<<\\'];
 
-var operatorChar := oneOf '?:+-*/%|&^<>=!~@';
+var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 
 operator = label @ 'Operator Lexer' <| binds(
     enumeration(

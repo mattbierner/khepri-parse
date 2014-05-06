@@ -1,6 +1,6 @@
 # ChangeLog #
 
-## 2.0.0 - May 5, 2014
+## 2.0.0 - May 6, 2014
 * Fixed op to function of `void`.
 * Added support for custom prefix unary and infix binary operators
 * Can be used in variable declarations, package exports, and unpacks.

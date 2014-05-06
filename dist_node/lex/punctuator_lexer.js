@@ -26,7 +26,7 @@ var __o = require("bennu")["parse"],
 var operators = ["&&", "||", "<<", ">>", ">>>", "<=", "<", ">=", ">", "===", "!==", "==", "!=", "!", "~", "++", "--",
     "&", "|", "^", "+", "-", "*", "/", "%", "|>", "<|", "\\>", "\\>>", "<\\", "<<\\"
 ],
-    operatorChar = oneOf("?:+-*/%|&^<>=!~@");
+    operatorChar = oneOf("?+-*/%|&^<>=!~@");
 (operator = label("Operator Lexer", binds(enumeration(trie(operators), join(many(operatorChar))), (function() {
     var args = arguments,
         x = __add.apply(null, args);
