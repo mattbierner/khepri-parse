@@ -5,30 +5,14 @@
     parse, stream, __o) {
     "use strict";
     var precedence, node, nodea, positionParser, always = parse["always"],
-        bind = parse["bind"],
         binds = parse["binds"],
         extract = parse["extract"],
         enumeration = parse["enumeration"],
         eager = parse["eager"],
         optional = parse["optional"],
         NIL = stream["NIL"],
-        SourceLocation = __o["SourceLocation"];
-    (precedence = (function(p, table) {
-        var sep = parse.choicea(table.map((function(entry) {
-            return bind(entry.sep, (function(__o0) {
-                var value = __o0["value"];
-                return always(({
-                    "value": value,
-                    "node": entry.node,
-                    "precedence": entry.precedence,
-                    "right": entry.right
-                }));
-            }));
-        })));
-        return bind(eager(parse.rec((function(self) {
-            return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected(
-                "binary expression", self))));
-        }))), (function(list) {
+        SourceLocation = __o["SourceLocation"],
+        pres = (function(list) {
             var stack = [],
                 out = [];
             while ((list.length > 0)) {
@@ -38,13 +22,11 @@
                 } else {
                     while ((stack.length > 0)) {
                         var o2 = stack[(stack.length - 1)];
-                        if ((((!tok.right) && (o2.precedence === tok.precedence)) || (o2.precedence <
-                            tok.precedence))) {
+                        if ((((!tok.right) && (o2.precedence === tok.precedence)) || (o2.precedence < tok.precedence))) {
                             stack.pop();
                             var rt = out.pop(),
                                 lf = out.pop();
-                            out.push(o2.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf,
-                                rt));
+                            out.push(o2.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf, rt));
                         } else {
                             break;
                         }
@@ -58,8 +40,24 @@
                     lf0 = out.pop();
                 out.push(o.node(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
             }
-            return always(out.pop());
-        }));
+            return out.pop();
+        });
+    (precedence = (function(p, table) {
+        var sep = parse.choicea(table.map((function(entry) {
+            return entry.sep.map((function(value) {
+                return ({
+                    value: value,
+                    node: entry.node,
+                    precedence: entry.precedence,
+                    right: entry.right
+                });
+            }));
+        })));
+        return eager(parse.rec((function(self) {
+            return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected(
+                "binary expression", self))));
+        })))
+            .map(pres);
     }));
     (positionParser = extract((function(__o0) {
         var position = __o0["position"];

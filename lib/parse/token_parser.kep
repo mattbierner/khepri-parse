@@ -79,8 +79,7 @@ var startsWith := \choices value ->
 
 prefixedOp := \options(...) ->
     token \ tok -> 
-        (tok.type === 'Operator' &&
-        (startsWith(options, tok.value)));
+        (tok.type === 'Operator' && startsWith(options, tok.value));
 
 unaryOperator :=  prefixedOp('~', '!', '++', '--');
 
