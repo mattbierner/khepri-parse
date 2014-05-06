@@ -15,6 +15,7 @@
         attempt = __o["attempt"],
         binds = __o["binds"],
         choice = __o["choice"],
+        cons = __o["cons"],
         eager = __o["eager"],
         either = __o["either"],
         enumeration = __o["enumeration"],
@@ -91,35 +92,39 @@
                 punctuator(":"), expected("conditional alternate expression", expression)))),
         ast_expression.ConditionalExpression.create)));
     var unaryOperatorExpression = label("Unary Operator Expression", choice(value.unaryOperator, keyword(
-            "typeof", "void")
-        .map((function(__o5) {
-            var loc = __o5["loc"],
-                value0 = __o5["value"];
-            return ast_value.UnaryOperator.create(loc, value0);
-        })), attempt(next(punctuator("."), identifier)
+                "typeof", "void")
             .map((function(__o5) {
                 var loc = __o5["loc"],
-                    name = __o5["name"];
-                return ast_value.UnaryOperator.create(loc, ("." + name));
-            }))))),
-        binaryOperatorExpression = label("Binary Operator Expression", nodea(enumeration(optional(false,
-            keyword("_")), choice(keyword("instanceof", "new"), punctuator(".", "@"), tokenParser.binaryOperator)), (
-            function(loc, flipped, op) {
-                return ast_value.BinaryOperator.create(loc, op.value, (!(!flipped)));
-            }))),
+                    value0 = __o5["value"];
+                return ast_value.UnaryOperator.create(loc, value0);
+            })), attempt(next(punctuator("."), identifier)
+                .map((function(__o5) {
+                    var loc = __o5["loc"],
+                        name = __o5["name"];
+                    return ast_value.UnaryOperator.create(loc, ("." + name));
+                }))))
+        .map((function(op) {
+            return ast_expression.OperatorExpression.create(op.loc, op);
+        }))),
+        binaryOperatorExpression = label("Binary Operator Expression", nodea(cons(optional(keyword("_")),
+            either(enumeration(either(keyword("new"), punctuator(".")), optional(next(punctuator(","),
+                expression))), enumeration(choice(keyword("instanceof"), punctuator("@"),
+                tokenParser.binaryOperator), optional(next(optional(punctuator(",")),
+                expression))))), (function(loc, flipped, op, arg0) {
+            var operator0 = ast_expression.OperatorExpression.create(loc, ast_value.BinaryOperator.create(
+                loc, op.value), flipped);
+            return (arg0 ? ast_expression.CurryExpression.create(loc, operator0, [arg0]) :
+                operator0);
+        }))),
         ternayOperatorExpression = label("Ternary Operator Expression", punctuator("?")
             .map((function(__o5) {
                 var loc = __o5["loc"],
                     value0 = __o5["value"];
-                return ast_value.TernaryOperator.create(loc, value0);
-            }))),
-        op;
-    (operatorExpression = label("Operator Expression", ((op = choice(unaryOperatorExpression,
-        binaryOperatorExpression, ternayOperatorExpression)), nodea(between(punctuator("("),
-        punctuator(")"), enumeration(op, optional(next(punctuator(","), eager(sepBy1(punctuator(
-            ","), expected("argument", expression))))))), (function(loc, target, args0) {
-        return (args0 ? ast_expression.CurryExpression.create(loc, target, args0) : target);
-    })))));
+                return ast_expression.OperatorExpression.create(loc, ast_value.TernaryOperator.create(
+                    loc, value0));
+            })));
+    (operatorExpression = label("Operator Expression", between(punctuator("("), punctuator(")"), choice(
+        unaryOperatorExpression, binaryOperatorExpression, ternayOperatorExpression))));
     (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier,
         literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(
             punctuator("("), punctuator(")"), expected("expression", expression)))));
@@ -181,15 +186,15 @@
     })), curryExpression)));
     (unaryOperator = label("Unary Operator", either(keyword("typeof", "void"), tokenParser.unaryOperator)));
     var reducer1;
-    (unaryExpression = label("Unary Expression", ((reducer1 = (function(argument, op0) {
-        return ast_expression.UnaryExpression.create(SourceLocation.merge(op0.loc, argument
-            .loc), ast_value.UnaryOperator.create(op0.loc, op0.value), argument);
+    (unaryExpression = label("Unary Expression", ((reducer1 = (function(argument, op) {
+        return ast_expression.UnaryExpression.create(SourceLocation.merge(op.loc, argument.loc),
+            ast_value.UnaryOperator.create(op.loc, op.value), argument);
     })), binds(enumeration(many(unaryOperator), expected("unary argument", applicationExpression)), (
         function(ops, expression0) {
             return always(foldr(reducer1, expression0, ops));
         })))));
-    var createBinary = (function(loc, op0, l, r) {
-        return ast_expression.BinaryExpression.create(loc, ast_value.BinaryOperator.create(op0.loc, op0.value),
+    var createBinary = (function(loc, op, l, r) {
+        return ast_expression.BinaryExpression.create(loc, ast_value.BinaryOperator.create(op.loc, op.value),
             l, r);
     }),
         precedenceTable = [({
@@ -273,8 +278,8 @@
     (assignmentExpression = label("Assignment Expression", rec((function(self) {
         return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=",
             ":="))), enumeration(expected("expression", either(self, expression)))), (
-            function(loc, left, op0, right) {
-                return ast_expression.AssignmentExpression.create(loc, op0.value, left,
+            function(loc, left, op, right) {
+                return ast_expression.AssignmentExpression.create(loc, op.value, left,
                     right);
             }));
     }))));

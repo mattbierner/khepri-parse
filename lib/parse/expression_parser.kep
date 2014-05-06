@@ -43,6 +43,7 @@ with
         bind
         binds
         choice
+        cons
         eager
         either
         enumeration
@@ -212,49 +213,56 @@ conditionalExpression = label@'Conditional Expression' <|
 var unaryOperatorExpression = label@'Unary Operator Expression' <|
     choice(
         value.unaryOperator,
+        
         keyword('typeof', 'void').map \ {loc value} ->
             ast_value.UnaryOperator.create(loc, value),
-            
-        attempt <| next(
-            punctuator '.',
-            identifier)
-        .map \ {loc name} ->
-            ast_value.UnaryOperator.create(loc, '.' + name));
+        
+        attempt <| next(punctuator '.', identifier).map \ {loc name} ->
+            ast_value.UnaryOperator.create(loc, '.' + name))
+    .map \ op ->
+        ast_expression.OperatorExpression.create(op.loc, op);
 
 var binaryOperatorExpression = label@'Binary Operator Expression' <|
     nodea(
-        enumeration(
-            optional(false, keyword '_'),
-            choice(
-                keyword ('instanceof', 'new'),
-                punctuator('.', '@'),
-                tokenParser.binaryOperator)),
-        \loc flipped op ->
-            ast_value.BinaryOperator.create(loc, op.value, !!flipped));
+        cons(
+            optional keyword('_'),
+            either(
+                enumeration(
+                    either(
+                        keyword 'new',
+                        punctuator '.'),
+                    optional next(punctuator ',', expression)),
+                enumeration(
+                    choice(
+                        keyword 'instanceof',
+                        punctuator '@',
+                        tokenParser.binaryOperator),
+                    optional next(
+                        optional punctuator(','),
+                        expression)))),
+        \loc flipped op arg -> let
+            operator = ast_expression.OperatorExpression.create(loc,
+                ast_value.BinaryOperator.create(loc, op.value),
+                flipped)
+        in
+            ?arg
+                :ast_expression.CurryExpression.create(loc,
+                    operator,
+                    [arg])
+                :operator);
 
 var ternayOperatorExpression = label@'Ternary Operator Expression' <|
     punctuator('?')
         .map \ {loc value} ->
-            ast_value.TernaryOperator.create(loc, value);
+            ast_expression.OperatorExpression.create(loc,
+                ast_value.TernaryOperator.create(loc, value));
 
-operatorExpression = label@'Operator Expression' <| let
-    op = choice(
-        unaryOperatorExpression,
-        binaryOperatorExpression,
-        ternayOperatorExpression)
-in
-    nodea(
-        between(punctuator '(', punctuator ')',
-            enumeration(
-                op,
-                optional next(
-                    punctuator ',',
-                    eager <| sepBy1(punctuator ',',
-                        expression |> expected@"argument")))),
-        \loc target args ->
-            ?args
-                :ast_expression.CurryExpression.create(loc, target, args)
-                :target);
+operatorExpression = label@'Operator Expression' <|
+    between(punctuator '(', punctuator ')',
+        choice(
+            unaryOperatorExpression,
+            binaryOperatorExpression,
+            ternayOperatorExpression));
 
 // Primary Expression
 ////////////////////////////////////////

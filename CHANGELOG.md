@@ -10,6 +10,9 @@
 * Changed argument unpack syntax to require a prefixed `-`. `\-args(x ...)-> ...`
 ** Allows the parser to produce better error messages and support operators in the
   parameter list `\(+) -> 1 + 2;`
+* Removed the not very useful unary operator curry syntax.
+* Allow a curried binary operator to omit the comma for the argument in most cases.
+** The two exceptions being `(new, x)` and `(., x)`;
 
 ## 1.1.0 - May 5, 2014
 * Added support for tracking file names in source locations during lexing.
