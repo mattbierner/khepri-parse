@@ -7,11 +7,17 @@ var testParser = function(stream) {
     return expr.body[0].expression;
 };
 
+var checkUnaryOp = function(test, op, value) {
+    test.equal(value.type, 'UnaryOperator');
+    test.equal(value.name, op);
+};
+
 
 exports.unary_expression = function(test) {
     var expr = testParser(lexer.lex("!a;"));
+    
     test.equal(expr.type, 'UnaryExpression');
-    test.equal(expr.operator, '!');
+    checkUnaryOp(test, '!', expr.operator);
     test.equal(expr.argument.name, 'a');
     
     test.done();
@@ -19,10 +25,12 @@ exports.unary_expression = function(test) {
 
 exports.unary_associativity = function(test) {
     var expr = testParser(lexer.lex("~ ! a;"));
+    
     test.equal(expr.type, 'UnaryExpression');
-    test.equal(expr.operator, '~');
+    checkUnaryOp(test, '~', expr.operator);
+    
     test.equal(expr.argument.type, 'UnaryExpression');
-    test.equal(expr.argument.operator, '!');
+    checkUnaryOp(test, '!', expr.argument.operator);
     test.equal(expr.argument.argument.name, 'a');
     
     test.done();
@@ -31,8 +39,9 @@ exports.unary_associativity = function(test) {
 
 exports.unary_grouping = function(test) {
     var expr = testParser(lexer.lex("~!a;"));
+    
     test.equal(expr.type, 'UnaryExpression');
-    test.equal(expr.operator, '~!');
+    checkUnaryOp(test, '~!', expr.operator);
     test.equal(expr.argument.name, 'a');
     
     test.done();
@@ -40,8 +49,9 @@ exports.unary_grouping = function(test) {
 
 exports.custom_unary = function(test) {
     var expr = testParser(lexer.lex("~|a;"));
+    
     test.equal(expr.type, 'UnaryExpression');
-    test.equal(expr.operator, '~|');
+    checkUnaryOp(test, '~|', expr.operator);
     test.equal(expr.argument.name, 'a');
     
     test.done();
@@ -49,8 +59,9 @@ exports.custom_unary = function(test) {
 
 exports.custom_unary_does_not_capture_parans = function(test) {
     var expr = testParser(lexer.lex("~|(a);"));
+    
     test.equal(expr.type, 'UnaryExpression');
-    test.equal(expr.operator, '~|');
+    checkUnaryOp(test, '~|', expr.operator);
     test.equal(expr.argument.name, 'a');
     
     test.done();
