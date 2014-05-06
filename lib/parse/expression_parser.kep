@@ -395,7 +395,7 @@ unaryExpression = label@'Unary Expression' <| let
     reducer = \argument op -> 
         ast_expression.UnaryExpression.create(
             SourceLocation.merge(op.loc, argument.loc),
-            op.value,
+            ast_value.UnaryOperator.create(op.loc, op.value),
             argument)
 in
     binds(
@@ -408,8 +408,8 @@ in
 // Binary Expressions
 ////////////////////////////////////////
 var createBinary := \loc op l r ->
-    ast_expression.BinaryExpression(loc,
-        ast_value.BinaryOperator.create(op.loc, op.name),
+    ast_expression.BinaryExpression.create(loc,
+        ast_value.BinaryOperator.create(op.loc, op.value),
         l,
         r);
         

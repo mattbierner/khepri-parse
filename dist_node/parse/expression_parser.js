@@ -182,14 +182,14 @@ var leftHandSideExpression = label("Call Expression", ((reducer = (function(p, c
 (unaryOperator = label("Unary Operator", either(keyword("typeof", "void"), tokenParser.unaryOperator)));
 var reducer1;
 (unaryExpression = label("Unary Expression", ((reducer1 = (function(argument, op0) {
-    return ast_expression.UnaryExpression.create(SourceLocation.merge(op0.loc, argument.loc), op0.value,
-        argument);
+    return ast_expression.UnaryExpression.create(SourceLocation.merge(op0.loc, argument.loc),
+        ast_value.UnaryOperator.create(op0.loc, op0.value), argument);
 })), binds(enumeration(many(unaryOperator), expected("unary argument", applicationExpression)), (function(
     ops, expression0) {
     return always(foldr(reducer1, expression0, ops));
 })))));
 var createBinary = (function(loc, op0, l, r) {
-    return ast_expression.BinaryExpression(loc, ast_value.BinaryOperator.create(op0.loc, op0.name), l, r);
+    return ast_expression.BinaryExpression.create(loc, ast_value.BinaryOperator.create(op0.loc, op0.value), l, r);
 }),
     precedenceTable = [({
         "sep": prefixedOp("*", "/", "%"),
