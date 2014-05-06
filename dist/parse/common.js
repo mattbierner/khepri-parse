@@ -1,11 +1,10 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
+*/define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
-    var always = parse["always"],
+    var precedence, node, nodea, positionParser, always = parse["always"],
         bind = parse["bind"],
         binds = parse["binds"],
         extract = parse["extract"],
@@ -13,8 +12,7 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
         eager = parse["eager"],
         optional = parse["optional"],
         NIL = stream["NIL"],
-        SourceLocation = __o["SourceLocation"],
-        precedence, node, nodea, positionParser;
+        SourceLocation = __o["SourceLocation"];
     (precedence = (function(p, table) {
         var sep = parse.choicea(table.map((function(entry) {
             return bind(entry.sep, (function(__o0) {
@@ -45,8 +43,8 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
                             stack.pop();
                             var rt = out.pop(),
                                 lf = out.pop();
-                            out.push(new(o2.node)(SourceLocation.merge(lf.loc, rt.loc), o2.value,
-                                lf, rt));
+                            out.push(o2.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf,
+                                rt));
                         } else {
                             break;
                         }
@@ -58,7 +56,7 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
                 var o = stack.pop(),
                     rt0 = out.pop(),
                     lf0 = out.pop();
-                out.push(new(o.node)(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
+                out.push(o.node(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
             }
             return always(out.pop());
         }));

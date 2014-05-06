@@ -77,6 +77,7 @@ with
     import './value_parser' value#{
         identifier
         literal
+        operator
         stringLiteral
         numericLiteral},
     import './pattern_parser' {topLevelPattern},
@@ -406,67 +407,73 @@ in
 
 // Binary Expressions
 ////////////////////////////////////////
+var createBinary := \loc op l r ->
+    ast_expression.BinaryExpression(loc,
+        ast_value.BinaryOperator.create(op.loc, op.name),
+        l,
+        r);
+        
 var precedenceTable = [
     {
         'sep': prefixedOp('*', '/', '%'),
         'precedence': 1,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp('+', '-'),
         'precedence': 2,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp('<<', '>>', '>>>'),
         'precedence': 3,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': either(
             prefixedOp('<', '>', '<=', '>='),
             keyword 'instanceof'),
         'precedence': 4,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep':  prefixedOp('==', '!=', '===', '!=='),
         'precedence': 5,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '&',
         'precedence': 6,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '^',
         'precedence': 7,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '|',
         'precedence': 8,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp('\\>', '\\>>'),
         'precedence': 9,
         'right': true,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp('<\\', '<<\\'),
         'precedence': 9,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '|>',
         'precedence': 10,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '<|',
         'precedence': 10,
         'right': true,
-        'node': ast_expression.BinaryExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '||',
         'precedence': 11,
-        'node': ast_expression.LogicalExpression
+        'node': createBinary
     }, {
         'sep': prefixedOp '&&',
         'precedence': 12,
-        'node': ast_expression.LogicalExpression
+        'node': createBinary
     }
 ];
 
@@ -482,11 +489,13 @@ expression = binaryExpression;
 // Left Hand Reference Expression
 ////////////////////////////////////////
 leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
-    binds(
-        enumeration(
-            identifier,
-            many <| memo accessor),
-        foldl@accessorReducer \>> always);
+    either(
+        operator,
+        binds(
+            enumeration(
+                identifier,
+                many <| memo accessor),
+            foldl@accessorReducer \>> always));
 
 var leftHandMemberReference = label@'Left Hand Reference Expression' <|
     binds(

@@ -1,21 +1,19 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var parse = require("bennu")["parse"],
-    always = parse["always"],
+    stream = require("nu-stream")["stream"],
+    __o = require("khepri-ast")["position"],
+    precedence, node, nodea, positionParser, always = parse["always"],
     bind = parse["bind"],
     binds = parse["binds"],
     extract = parse["extract"],
     enumeration = parse["enumeration"],
     eager = parse["eager"],
     optional = parse["optional"],
-    stream = require("nu-stream")["stream"],
     NIL = stream["NIL"],
-    __o = require("khepri-ast")["position"],
-    SourceLocation = __o["SourceLocation"],
-    precedence, node, nodea, positionParser;
+    SourceLocation = __o["SourceLocation"];
 (precedence = (function(p, table) {
     var sep = parse.choicea(table.map((function(entry) {
         return bind(entry.sep, (function(__o0) {
@@ -45,7 +43,7 @@ var parse = require("bennu")["parse"],
                         stack.pop();
                         var rt = out.pop(),
                             lf = out.pop();
-                        out.push(new(o2.node)(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf, rt));
+                        out.push(o2.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf, rt));
                     } else {
                         break;
                     }
@@ -57,7 +55,7 @@ var parse = require("bennu")["parse"],
             var o = stack.pop(),
                 rt0 = out.pop(),
                 lf0 = out.pop();
-            out.push(new(o.node)(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
+            out.push(o.node(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
         }
         return always(out.pop());
     }));

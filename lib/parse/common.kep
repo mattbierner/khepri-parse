@@ -53,10 +53,16 @@ precedence = \p, table -> {
                         if ((!tok.right && o2.precedence === tok.precedence) ||
                           (o2.precedence < tok.precedence)) {
                             stack.pop();
-                            var rt = out.pop(),
-                                lf = out.pop();
-                            
-                            out.push(new (o2.node)(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf, rt));
+                            with
+                                rt = out.pop(),
+                                lf = out.pop()
+                            in {
+                                out.push(o2.node(
+                                    SourceLocation.merge(lf.loc, rt.loc),
+                                    o2.value,
+                                    lf,
+                                    rt));
+                            }
                         } else {
                             break;
                         }
@@ -65,11 +71,17 @@ precedence = \p, table -> {
                 }
             }
             
-            while (stack.length > 0){
-                var o = stack.pop();
-                var rt = out.pop(),
-                    lf = out.pop();
-                out.push(new (o.node)(SourceLocation.merge(lf.loc, rt.loc), o.value, lf, rt));
+            while (stack.length > 0)
+            with
+                o = stack.pop(),
+                rt = out.pop(),
+                lf = out.pop()
+            in {
+                out.push(o.node(
+                    SourceLocation.merge(lf.loc, rt.loc),
+                    o.value,
+                    lf,
+                    rt));
             }
             
             return always(out.pop());

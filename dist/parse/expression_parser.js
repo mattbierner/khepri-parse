@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
+*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
     "khepri-ast/expression", "khepri-ast/value", "khepri-ast/position", "./common", "./token_parser",
     "./value_parser", "./pattern_parser", "./function_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_declaration, ast_expression, ast_value, __o2, __o3, tokenParser,
@@ -44,6 +43,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         prefixedOp = tokenParser["prefixedOp"],
         identifier = value["identifier"],
         literal = value["literal"],
+        operator = value["operator"],
         stringLiteral = value["stringLiteral"],
         numericLiteral = value["numericLiteral"],
         topLevelPattern = __o4["topLevelPattern"],
@@ -188,76 +188,80 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         function(ops, expression0) {
             return always(foldr(reducer1, expression0, ops));
         })))));
-    var precedenceTable = [({
-        "sep": prefixedOp("*", "/", "%"),
-        "precedence": 1,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("+", "-"),
-        "precedence": 2,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("<<", ">>", ">>>"),
-        "precedence": 3,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": either(prefixedOp("<", ">", "<=", ">="), keyword("instanceof")),
-        "precedence": 4,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("==", "!=", "===", "!=="),
-        "precedence": 5,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("&"),
-        "precedence": 6,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("^"),
-        "precedence": 7,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("|"),
-        "precedence": 8,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("\\>", "\\>>"),
-        "precedence": 9,
-        "right": true,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("<\\", "<<\\"),
-        "precedence": 9,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("|>"),
-        "precedence": 10,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("<|"),
-        "precedence": 10,
-        "right": true,
-        "node": ast_expression.BinaryExpression
-    }), ({
-        "sep": prefixedOp("||"),
-        "precedence": 11,
-        "node": ast_expression.LogicalExpression
-    }), ({
-        "sep": prefixedOp("&&"),
-        "precedence": 12,
-        "node": ast_expression.LogicalExpression
-    })];
+    var createBinary = (function(loc, op0, l, r) {
+        return ast_expression.BinaryExpression(loc, ast_value.BinaryOperator.create(op0.loc, op0.name), l,
+            r);
+    }),
+        precedenceTable = [({
+            "sep": prefixedOp("*", "/", "%"),
+            "precedence": 1,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("+", "-"),
+            "precedence": 2,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("<<", ">>", ">>>"),
+            "precedence": 3,
+            "node": createBinary
+        }), ({
+            "sep": either(prefixedOp("<", ">", "<=", ">="), keyword("instanceof")),
+            "precedence": 4,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("==", "!=", "===", "!=="),
+            "precedence": 5,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("&"),
+            "precedence": 6,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("^"),
+            "precedence": 7,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("|"),
+            "precedence": 8,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("\\>", "\\>>"),
+            "precedence": 9,
+            "right": true,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("<\\", "<<\\"),
+            "precedence": 9,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("|>"),
+            "precedence": 10,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("<|"),
+            "precedence": 10,
+            "right": true,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("||"),
+            "precedence": 11,
+            "node": createBinary
+        }), ({
+            "sep": prefixedOp("&&"),
+            "precedence": 12,
+            "node": createBinary
+        })];
     (binaryExpression = label("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
     (expression = binaryExpression);
     var x2;
-    (leftHandReferenceExpression = label("Left Hand Reference Expression", binds(enumeration(identifier, many(
-        memo(accessor))), ((x2 = foldl.bind(null, (function(p, c) {
-        return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c
-            .loc), p, c.property, c.computed);
+    (leftHandReferenceExpression = label("Left Hand Reference Expression", either(operator, binds(enumeration(
+        identifier, many(memo(accessor))), ((x2 = foldl.bind(null, (function(p, c) {
+        return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc,
+            c.loc), p, c.property, c.computed);
     }))), (function() {
         var args0 = arguments;
         return always(x2.apply(null, args0));
-    })))));
+    }))))));
     var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(
         memo(accessor))), ((x3 = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc),
