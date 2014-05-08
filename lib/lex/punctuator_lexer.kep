@@ -39,7 +39,8 @@ var punctuators := [
     '=', ':=', '=:',
     '@',
     '...', '#',
-    '\\', '->', '§'];
+    '\\', '->', '§',
+    '-|', '|-'];
 
 punctuator = label @ 'Punctuator Lexer' <|
     trie punctuators;

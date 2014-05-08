@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
+*/define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
     __o1) {
     "use strict";
     var punctuator, prefixOperator, infixOperator, operator, always = __o["always"],
@@ -21,7 +20,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], 
         }),
         join = map.bind(null, foldl.bind(null, __add, "")),
         punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#",
-            "\\", "->", "§"
+            "\\", "->", "§", "-|", "|-"
         ];
     (punctuator = label("Punctuator Lexer", trie(punctuators)));
     var operatorChar = oneOf("?+-*/%|&^<>=!~@");

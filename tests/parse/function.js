@@ -40,11 +40,11 @@ exports.empty_function = function(test) {
     test.done();
 };
 
-exports.args_unpack = function(test) {
+exports.args_unpack_no_elements = function(test) {
     var result = testParser(lexer.lex("\\-x()-> x;"));
     test.equal(result.type, 'FunctionExpression');
-    test.equal(result.params.elements.length, 1);
     test.equal(result.params.id.id.name, 'x');
+    test.equal(result.params.elements.length, 0);
     test.equal(result.name, null);
     test.equal(result.body.type, 'Identifier');
     test.equal(result.body.name, 'x');
@@ -52,6 +52,21 @@ exports.args_unpack = function(test) {
     test.done();
 };
 
+exports.args_unpack_with_elements = function(test) {
+    var result = testParser(lexer.lex("\\-x(a b)-> x;"));
+    test.equal(result.type, 'FunctionExpression');
+    test.equal(result.params.id.id.name, 'x');
+    
+    test.equal(result.params.elements.length, 2);
+    test.equal(result.params.elements[0].id.name, 'a');
+    test.equal(result.params.elements[1].id.name, 'b');
+
+    test.equal(result.name, null);
+    test.equal(result.body.type, 'Identifier');
+    test.equal(result.body.name, 'x');
+
+    test.done();
+};
 
 exports.function_without_name = function(test) {
     var result = testParser(lexer.lex("function\\ x -> { return x; };"));
