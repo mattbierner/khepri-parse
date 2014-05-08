@@ -441,7 +441,7 @@ var precedenceTable = [
         'precedence': 4,
         'node': createBinary
     }, {
-        'sep':  prefixedOp('==', '!=', '===', '!=='),
+        'sep': prefixedOp('==', '!=', '===', '!=='),
         'precedence': 5,
         'node': createBinary
     }, {

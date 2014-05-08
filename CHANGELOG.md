@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.1.1 - May 7, 2014
+* Fixed args unpack parser to work with new tokens.
+
 ## 2.1.0 - May 7, 2014
 * Lex stream generates `PrefixOperator` and `InfixOperator` tokens instead of the
   generic `Operator` and using the parser for prefix and infix determination.

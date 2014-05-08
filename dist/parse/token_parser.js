@@ -1,12 +1,11 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
+*/define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     "use strict";
     var punctuator, anyPunctuator, operator, anyOperator, keyword, identifier, anyIdentifier, nullLiteral,
-            booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, unaryOperator,
-            binaryOperator, ExpectError = __o["ExpectError"],
+            booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, prefixOperator,
+            infixOperator, unaryOperator, binaryOperator, ExpectError = __o["ExpectError"],
         token = __o["token"],
         indexOf = Function.prototype.call.bind(Array.prototype.indexOf),
         join = Function.prototype.call.bind(Array.prototype.join),
@@ -91,6 +90,18 @@ define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
                 })))));
         }));
     }));
+    (prefixOperator = (function() {
+        var options = arguments;
+        return token((function(tok) {
+            return ((tok.type === "PrefixOperator") && (indexOf(options, tok.value) >= 0));
+        }), expectError(join(options, ", ")));
+    }));
+    (infixOperator = (function() {
+        var options = arguments;
+        return token((function(tok) {
+            return ((tok.type === "InfixOperator") && (indexOf(options, tok.value) >= 0));
+        }), expectError(join(options, ", ")));
+    }));
     (unaryOperator = token((function(tok) {
         return (tok.type === "PrefixOperator");
     }), (function(pos, tok) {
@@ -114,6 +125,8 @@ define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     (exports["stringLiteral"] = stringLiteral);
     (exports["regularExpressionLiteral"] = regularExpressionLiteral);
     (exports["prefixedOp"] = prefixedOp);
+    (exports["prefixOperator"] = prefixOperator);
+    (exports["infixOperator"] = infixOperator);
     (exports["unaryOperator"] = unaryOperator);
     (exports["binaryOperator"] = binaryOperator);
 }));

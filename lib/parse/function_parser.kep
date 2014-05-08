@@ -28,7 +28,10 @@ with
     import 'khepri-ast::pattern' ast_pattern,
     
     import './common' {node nodea},
-    import './token_parser' {keyword punctuator operator},
+    import './token_parser' {
+        keyword
+        punctuator
+        infixOperator},
     import './value_parser' {identifier},
     import './pattern_parser' {
         topLevelPattern
@@ -81,7 +84,7 @@ argumentList = label@'Argument List' <|
 namedArgumentList = label@'Named Argument List' <|
     nodea(
         next(
-            operator '-',
+            infixOperator '-',
             enumeration(
                 optional identifierPattern,
                 between(punctuator '(', punctuator ')',

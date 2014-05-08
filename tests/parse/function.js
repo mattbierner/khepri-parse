@@ -40,6 +40,19 @@ exports.empty_function = function(test) {
     test.done();
 };
 
+exports.args_unpack = function(test) {
+    var result = testParser(lexer.lex("\\-x()-> x;"));
+    test.equal(result.type, 'FunctionExpression');
+    test.equal(result.params.elements.length, 1);
+    test.equal(result.params.id.id.name, 'x');
+    test.equal(result.name, null);
+    test.equal(result.body.type, 'Identifier');
+    test.equal(result.body.name, 'x');
+
+    test.done();
+};
+
+
 exports.function_without_name = function(test) {
     var result = testParser(lexer.lex("function\\ x -> { return x; };"));
     test.equal(result.type, 'FunctionExpression');

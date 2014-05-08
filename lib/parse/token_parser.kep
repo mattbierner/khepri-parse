@@ -18,6 +18,8 @@ package (
     regularExpressionLiteral
     
     prefixedOp
+    prefixOperator
+    infixOperator
     unaryOperator
     binaryOperator)
 with
@@ -77,9 +79,14 @@ var startsWith := \choices value ->
     Array.prototype.some.call(choices,
         String.prototype.indexOf.bind(value) \> (===, 0));
 
+
 prefixedOp := \options(...) ->
     token \ tok -> 
         (tok.type === 'InfixOperator' && startsWith(options, tok.value));
+
+prefixOperator := selectAny 'PrefixOperator';
+
+infixOperator := selectAny 'InfixOperator';
 
 unaryOperator := typeParser('PrefixOperator', 'prefix operator');
 
