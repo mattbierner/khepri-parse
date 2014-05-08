@@ -1,10 +1,12 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/common.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/common.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
+*/
+define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
-    var precedence, node, nodea, positionParser, always = parse["always"],
+    var always = parse["always"],
+        bind = parse["bind"],
         binds = parse["binds"],
         extract = parse["extract"],
         enumeration = parse["enumeration"],
@@ -12,7 +14,7 @@
         optional = parse["optional"],
         NIL = stream["NIL"],
         SourceLocation = __o["SourceLocation"],
-        pres = (function(list) {
+        precedence, node, nodea, positionParser, pres = (function(list) {
             var stack = [],
                 out = [];
             while ((list.length > 0)) {

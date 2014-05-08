@@ -1,18 +1,17 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "khepri-ast/declaration",
     "khepri-ast/expression", "khepri-ast/value", "khepri-ast/position", "./common", "./token_parser",
     "./value_parser", "./pattern_parser", "./function_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_declaration, ast_expression, ast_value, __o2, __o3, tokenParser,
     value, __o4, _) {
     "use strict";
-    var arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor,
-            memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
-            unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression,
-            assignmentExpression, expression, topLevelExpression, always = __o["always"],
+    var always = __o["always"],
         append = __o["append"],
         attempt = __o["attempt"],
+        bind = __o["bind"],
         binds = __o["binds"],
         choice = __o["choice"],
         cons = __o["cons"],
@@ -26,6 +25,7 @@
         next = __o["next"],
         optional = __o["optional"],
         rec = __o["rec"],
+        token = __o["token"],
         late = __o["late"],
         label = __o["label"],
         between = __o0["between"],
@@ -48,11 +48,15 @@
         stringLiteral = value["stringLiteral"],
         numericLiteral = value["numericLiteral"],
         topLevelPattern = __o4["topLevelPattern"],
-        arg, reducer, x0, x3, functionExpression = late((function() {
-            var __o5 = require("./function_parser"),
-                functionExpression0 = __o5["functionExpression"];
-            return functionExpression0;
-        }));
+        arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor,
+            memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
+            unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression,
+            assignmentExpression, expression, topLevelExpression, arg, reducer, x0, y0, x3, y3,
+            functionExpression = late((function() {
+                var __o5 = require("./function_parser"),
+                    functionExpression0 = __o5["functionExpression"];
+                return functionExpression0;
+            }));
     (expression = late((function() {
         return expression;
     })));
@@ -151,33 +155,30 @@
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected(
         "member expression", memberExpression), expected("argument list", either(args,
         eager(enumeration(curryExpression)))))), ast_expression.NewExpression.create)));
-    var x;
+    var x, y;
     (memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression),
         many(memo(accessor))), ((x = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c
             .loc), p, c.property, c.computed);
-    }))), (function() {
-        var args0 = arguments;
-        return always(x.apply(null, args0));
+    }))), (y = always), (function() {
+        return y(x.apply(null, arguments));
     })))));
     var leftHandSideExpression = label("Call Expression", ((reducer = (function(p, c) {
         return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(
                 SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed) : ast_expression
             .CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
     })), binds(enumeration(memberExpression, many(either(argumentList, accessor))), ((x0 = foldl.bind(
-        null, reducer)), (function() {
-        var args0 = arguments;
-        return always(x0.apply(null, args0));
+        null, reducer)), (y0 = always), (function() {
+        return y0(x0.apply(null, arguments));
     }))))),
-        reducer0, x1;
+        reducer0, x1, y1;
     (curryExpression = label("Curry Expression", ((reducer0 = (function(f, args0) {
         return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args0.loc),
             f, [].concat(args0));
     })), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected(
         "curry argument", either(argumentList, leftHandSideExpression))))), ((x1 = foldl.bind(
-        null, reducer0)), (function() {
-        var args0 = arguments;
-        return always(x1.apply(null, args0));
+        null, reducer0)), (y1 = always), (function() {
+        return y1(x1.apply(null, arguments));
     }))))));
     (applicationExpression = label("Call Expression", chainl1(always((function(p, c) {
         return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [
@@ -258,22 +259,20 @@
         })];
     (binaryExpression = label("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
     (expression = binaryExpression);
-    var x2;
+    var x2, y2;
     (leftHandReferenceExpression = label("Left Hand Reference Expression", either(operator, binds(enumeration(
         identifier, many(memo(accessor))), ((x2 = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc,
             c.loc), p, c.property, c.computed);
-    }))), (function() {
-        var args0 = arguments;
-        return always(x2.apply(null, args0));
+    }))), (y2 = always), (function() {
+        return y2(x2.apply(null, arguments));
     }))))));
     var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(
         memo(accessor))), ((x3 = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc),
             p, c.property, c.computed);
-    }))), (function() {
-        var args0 = arguments;
-        return always(x3.apply(null, args0));
+    }))), (y3 = always), (function() {
+        return y3(x3.apply(null, arguments));
     }))));
     (assignmentExpression = label("Assignment Expression", rec((function(self) {
         return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=",

@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 2.1.0 - May 7, 2014
+* Lex stream generates `PrefixOperator` and `InfixOperator` tokens instead of the
+  generic `Operator` and using the parser for prefix and infix determination.
+
 ## 2.0.0 - May 6, 2014
 * Fixed op to function of `void`.
 * Added support for custom prefix unary and infix binary operators

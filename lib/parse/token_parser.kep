@@ -47,11 +47,11 @@ var selectAny = \type ->
 
 /* Parsers
  ******************************************************************************/
-punctuator = selectAny 'Punctuator' ;
+punctuator = selectAny 'Punctuator';
 
 anyPunctuator = typeParser('Punctuator', 'any punctuator');
 
-operator = selectAny 'Operator' ;
+operator = selectAny 'Operator';
 
 anyOperator  = typeParser('Operator', 'any operator');
 
@@ -79,37 +79,10 @@ var startsWith := \choices value ->
 
 prefixedOp := \options(...) ->
     token \ tok -> 
-        (tok.type === 'Operator' && startsWith(options, tok.value));
+        (tok.type === 'InfixOperator' && startsWith(options, tok.value));
 
-unaryOperator :=  prefixedOp('~', '!', '++', '--');
+unaryOperator := typeParser('PrefixOperator', 'prefix operator');
 
-binaryOperator := prefixedOp(
-    '*',
-    '/',
-    '+',
-    '-',
-    '%',
-    '<<',
-    '>>',
-    '>>>',
-    '<',
-    '>',
-    '<=',
-    '>=',
-    '==',
-    '!=',
-    '===',
-    '!==',
-    '&',
-    '^',
-    '|',
-    '||',
-    '&&',
-    '|>',
-    '\\>',
-    '\\>>',
-    '<|',
-    '<\\',
-    '<<\\');
+binaryOperator := typeParser('InfixOperator', 'infix operator');
 
 }

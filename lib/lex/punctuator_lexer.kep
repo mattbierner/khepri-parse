@@ -3,6 +3,10 @@
  */
 package (
     punctuator
+    
+    prefixOperator
+    infixOperator
+    
     operator)
 with
     import 'bennu::parse' {
@@ -40,29 +44,39 @@ var punctuators := [
 punctuator = label @ 'Punctuator Lexer' <|
     trie punctuators;
 
-// Operator
+// Prefix Operator
 ////////////////////////////////////////
-var operators := [
-    '&&', '||',
-    '<<', '>>', '>>>',
-    '<=', '<', '>=', '>',
-    '===', '!==', '==', '!=',
-    '!', '~', '++', '--',
-    '&', '|', '^', 
-    '+', '-', '*', '/', '%',
-    '|>', '<|',
-    '\\>', '\\>>', '<\\', '<<\\'];
-
 var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 
-operator = label @ 'Operator Lexer' <| binds(
+prefixOperator := label @ 'Prefix Operator Lexer' <| binds(
     enumeration(
-        trie operators,
+        trie ['~', '!', '++', '--'],
+        join <| many operatorChar),
+    always <<\ (+));
+
+// Infix Operator
+////////////////////////////////////////
+infixOperator = label @ 'Infix Operator Lexer' <| binds(
+    enumeration(
+        trie [
+            '&&', '||',
+            '<<', '>>', '>>>',
+            '<=', '<', '>=', '>',
+            '===', '!==', '==', '!=',
+            '&', '|', '^', 
+            '+', '-', '*', '/', '%',
+            '|>', '<|',
+            '\\>', '\\>>', '<\\', '<<\\'],
         join <| many operatorChar),
     (+) \>> \x ->
         ?punctuators.indexOf x >= 0
             :fail("Cannot use puctuator "+ x + " as operator")
             :always x);
 
-
+// Operator
+////////////////////////////////////////
+operator = label @ 'Prefix Operator Lexer' <|
+    either(
+        prefixOperator,
+        infixOperator);
 }

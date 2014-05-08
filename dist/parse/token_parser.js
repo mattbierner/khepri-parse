@@ -83,32 +83,22 @@
         var options = arguments;
         return token((function(tok) {
             var value, x;
-            return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(
-                options, ((x = String.prototype.indexOf.bind(value)), (function(z) {
+            return ((tok.type === "InfixOperator") && ((value = tok.value), Array.prototype.some
+                .call(options, ((x = String.prototype.indexOf.bind(value)), (function(z) {
                     var y = x(z);
                     return (0 === y);
                 })))));
         }));
     }));
-    var options = ["~", "!", "++", "--"];
     (unaryOperator = token((function(tok) {
-        var value, x;
-        return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(
-            options, ((x = String.prototype.indexOf.bind(value)), (function(z) {
-                var y = x(z);
-                return (0 === y);
-            })))));
+        return (tok.type === "PrefixOperator");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "prefix operator", (tok ? tok.value : "end of input"));
     })));
-    var options0 = ["*", "/", "+", "-", "%", "<<", ">>", ">>>", "<", ">", "<=", ">=", "==", "!=", "===", "!==",
-        "&", "^", "|", "||", "&&", "|>", "\\>", "\\>>", "<|", "<\\", "<<\\"
-    ];
     (binaryOperator = token((function(tok) {
-        var value, x;
-        return ((tok.type === "Operator") && ((value = tok.value), Array.prototype.some.call(
-            options0, ((x = String.prototype.indexOf.bind(value)), (function(z) {
-                var y = x(z);
-                return (0 === y);
-            })))));
+        return (tok.type === "InfixOperator");
+    }), (function(pos, tok) {
+        return new(ExpectError)(pos, "infix operator", (tok ? tok.value : "end of input"));
     })));
     (exports["punctuator"] = punctuator);
     (exports["anyPunctuator"] = anyPunctuator);

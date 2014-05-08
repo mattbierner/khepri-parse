@@ -39,13 +39,14 @@ var parse = require("bennu")["parse"],
     nullLiteral = __o6["nullLiteral"],
     numericLiteral = __o7["numericLiteral"],
     punctuator = __o8["punctuator"],
-    operator = __o8["operator"],
+    infixOperator = __o8["infixOperator"],
+    prefixOperator = __o8["prefixOperator"],
     reservedWord = __o9["reservedWord"],
     stringLiteral = __o10["stringLiteral"],
     whitespace = __o11["whitespace"],
     regularExpressionLiteral = __o12["regularExpressionLiteral"],
-    type, type0, type1, type2, type3, type4, type5, type6, type7, type8, type9, type10, literalImpl = choice(((type =
-        lexToken.StringToken), stringLiteral.map((function(value) {
+    type, type0, type1, type2, type3, type4, type5, type6, type7, type8, type9, type10, type11, literalImpl = choice(((
+        type = lexToken.StringToken), stringLiteral.map((function(value) {
         return [type, value];
     }))), ((type0 = lexToken.RegularExpressionToken), regularExpressionLiteral.map((function(value) {
         return [type0, value];
@@ -60,35 +61,37 @@ var parse = require("bennu")["parse"],
         return [type4, value];
     })))), attempt(literalImpl), ((type5 = lexToken.KeywordToken), reservedWord.map((function(value) {
         return [type5, value];
-    }))), attempt(((type6 = lexToken.OperatorToken), operator.map((function(value) {
+    }))), ((type6 = lexToken.PrefixOperatorToken), prefixOperator.map((function(value) {
         return [type6, value];
-    })))), ((type7 = lexToken.PunctuatorToken), punctuator.map((function(value) {
+    }))), attempt(((type7 = lexToken.InfixOperatorToken), infixOperator.map((function(value) {
         return [type7, value];
-    })))),
-    inputElementImpl = choice(((type8 = lexToken.CommentToken), comment.map((function(value) {
+    })))), ((type8 = lexToken.PunctuatorToken), punctuator.map((function(value) {
         return [type8, value];
-    }))), ((type9 = lexToken.WhitespaceToken), whitespace.map((function(value) {
+    })))),
+    inputElementImpl = choice(((type9 = lexToken.CommentToken), comment.map((function(value) {
         return [type9, value];
-    }))), ((type10 = lexToken.LineTerminatorToken), lineTerminator.map((function(value) {
+    }))), ((type10 = lexToken.WhitespaceToken), whitespace.map((function(value) {
         return [type10, value];
+    }))), ((type11 = lexToken.LineTerminatorToken), lineTerminator.map((function(value) {
+        return [type11, value];
     }))), tokenImpl),
     p = literalImpl;
 (literal = binds(enumeration(getPosition, p, getPosition), (function(start, __o13, end) {
-    var type11 = __o13[0],
+    var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type11)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 var p0 = tokenImpl;
 (token = binds(enumeration(getPosition, p0, getPosition), (function(start, __o13, end) {
-    var type11 = __o13[0],
+    var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type11)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 var p1 = inputElementImpl;
 (inputElement = binds(enumeration(getPosition, p1, getPosition), (function(start, __o13, end) {
-    var type11 = __o13[0],
+    var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type11)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 (lexer = then(many(inputElement), eof));
 var initialFilePosition = (function(file) {

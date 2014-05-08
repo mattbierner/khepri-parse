@@ -1,18 +1,14 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/function_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/function_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
-    __o0 = require("bennu")["lang"],
-    ast_expression = require("khepri-ast")["expression"],
-    ast_statement = require("khepri-ast")["statement"],
-    ast_pattern = require("khepri-ast")["pattern"],
-    __o1 = require("./common"),
-    __o2 = require("./token_parser"),
-    __o3 = require("./value_parser"),
-    __o4 = require("./pattern_parser"),
-    _ = require("./expression_parser"),
-    argumentList, namedArgumentList, argumentsPattern, functionExpression, eager = __o["eager"],
+    attempt = __o["attempt"],
+    bind = __o["bind"],
+    binds = __o["binds"],
+    choice = __o["choice"],
+    eager = __o["eager"],
     either = __o["either"],
     enumeration = __o["enumeration"],
     expected = __o["expected"],
@@ -20,19 +16,31 @@ var __o = require("bennu")["parse"],
     optional = __o["optional"],
     late = __o["late"],
     label = __o["label"],
+    __o0 = require("bennu")["lang"],
     between = __o0["between"],
+    sepBy = __o0["sepBy"],
+    sepBy1 = __o0["sepBy1"],
     then = __o0["then"],
+    ast_expression = require("khepri-ast")["expression"],
+    ast_statement = require("khepri-ast")["statement"],
+    ast_pattern = require("khepri-ast")["pattern"],
+    __o1 = require("./common"),
+    node = __o1["node"],
     nodea = __o1["nodea"],
+    __o2 = require("./token_parser"),
     keyword = __o2["keyword"],
     punctuator = __o2["punctuator"],
     operator = __o2["operator"],
+    __o3 = require("./value_parser"),
     identifier = __o3["identifier"],
+    __o4 = require("./pattern_parser"),
     topLevelPattern = __o4["topLevelPattern"],
     listPattern0 = __o4["listPattern0"],
     ellipsisPattern = __o4["ellipsisPattern"],
     unpack = __o4["unpack"],
     identifierPattern = __o4["identifierPattern"],
-    blockStatement = late((function() {
+    _ = require("./expression_parser"),
+    argumentList, namedArgumentList, argumentsPattern, functionExpression, element, blockStatement = late((function() {
         var __o5 = require("./statement_parser"),
             blockStatement0 = __o5["blockStatement"];
         return blockStatement0;
@@ -42,8 +50,8 @@ var __o = require("bennu")["parse"],
             expression0 = __o5["expression"];
         return expression0;
     })),
-    argumentElements = eager(listPattern0(expected("pattern", topLevelPattern), ellipsisPattern, expected(
-        "non-ellipsis pattern", topLevelPattern))),
+    argumentElements = ((element = topLevelPattern), eager(listPattern0(expected("pattern", element), ellipsisPattern,
+        expected("non-ellipsis pattern", element)))),
     selfPattern = next(punctuator("="), unpack);
 (argumentList = label("Argument List", nodea(enumeration(argumentElements, optional(selfPattern)), (function(loc,
     elements, self) {

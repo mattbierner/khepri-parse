@@ -5,11 +5,13 @@
 define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "./token_parser"], (function(require,
     exports, __o, __o0, ast_value, token) {
     "use strict";
-    var literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
-            identifier, operator, unaryOperator, binaryOperator, choice = __o["choice"],
+    var bind = __o["bind"],
+        choice = __o["choice"],
         label = __o["label"],
         between = __o0["between"],
-        p;
+        prefixedOp = token["prefixedOp"],
+        literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
+            identifier, operator, unaryOperator, binaryOperator, p;
     (nullLiteral = label("Null Literal", ((p = token.nullLiteral), p.map((function(x) {
         return ast_value.Literal.create(x.loc, "null", x.value);
     })))));
