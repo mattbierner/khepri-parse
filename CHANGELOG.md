@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.1.3 - May 13, 2014
+* Fixed infix operators extending puctuators ators like `->-` lexed incorrectly.
+
 ## 2.1.2 - May 13, 2014
 * Fixed infix ops `!=` getting lexed as prefix ops.
 
