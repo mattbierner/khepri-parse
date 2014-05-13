@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.1.2 - May 13, 2014
+* Fixed infix ops `!=` getting lexed as prefix ops.
+
 ## 2.1.1 - May 7, 2014
 * Fixed args unpack parser to work with new tokens.
 
