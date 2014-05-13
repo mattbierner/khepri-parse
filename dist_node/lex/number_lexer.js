@@ -1,37 +1,31 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
-    always = __o["always"],
+    __o0 = require("bennu")["lang"],
+    __o1 = require("bennu")["text"],
+    __o2 = require("nu-stream")["stream"],
+    decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit, hexDigit,
+        decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
+        decimalIntegerLiteral, decimalLiteral, numericLiteral, always = __o["always"],
     attempt = __o["attempt"],
-    bind = __o["bind"],
     binds = __o["binds"],
-    choice = __o["choice"],
     either = __o["either"],
     enumeration = __o["enumeration"],
     expected = __o["expected"],
-    many = __o["many"],
     many1 = __o["many1"],
     map = __o["map"],
     next = __o["next"],
     optional = __o["optional"],
     label = __o["label"],
-    __o0 = require("bennu")["lang"],
-    then = __o0["then"],
-    __o1 = require("bennu")["text"],
     character = __o1["character"],
     oneOf = __o1["oneOf"],
-    match = __o1["match"],
     string = __o1["string"],
-    __o2 = require("nu-stream")["stream"],
     foldl = __o2["foldl"],
-    decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit, hexDigit,
-        decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
-        decimalIntegerLiteral, decimalLiteral, numericLiteral, __minus = (function(x) {
-            return (-x);
-        }),
+    __minus = (function(x) {
+        return (-x);
+    }),
     __add = (function(x, y) {
         return (x + y);
     }),

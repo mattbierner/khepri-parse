@@ -25,6 +25,7 @@ with
     import 'bennu::parse' {
         always
         attempt
+        anyToken
         bind
         binds
         choice
@@ -34,71 +35,72 @@ with
         many
         map
         next
+        not
         label
-        token
-        test},
+        token},
     import 'bennu::lang' {between},
-    import 'bennu::text' {character},
+    import 'bennu::text' {character noneOf},
     import 'nu-stream::stream' {foldl},
     import './identifier_lexer' {identifierPart},
     import './line_terminator_lexer' {lineTerminator}
 in {
 
-var join = foldl @ (+) @ '';
+var join := foldl @ (+) @ '';
 
 /* Lexers
  ******************************************************************************/
 // Parts
 ////////////////////////////////////////
-regularExpressionNonTerminator = token(
-    (!) <\ test@lineTerminator);
+regularExpressionNonTerminator =
+    next(
+        not lineTerminator,
+        anyToken);
 
-regularExpressionBackslashSequence = next(
+regularExpressionBackslashSequence := next(
     character '\\',
     map(
-        (+, '\\'),
+        (+ '\\'),
         regularExpressionNonTerminator));
 
 // Class
 ////////////////////////////////////////
-regularExpressionClassChar = either(
-    attempt <| token \ tok ->
-        !test(lineTerminator, tok) &&
-            tok !== ']' && tok !== '\\',
+regularExpressionClassChar := either(
+    next(
+        not lineTerminator,
+        noneOf ']\\'),
     regularExpressionBackslashSequence);
 
-regularExpressionClassChars = many regularExpressionClassChar;
+regularExpressionClassChars := many regularExpressionClassChar;
 
-regularExpressionClass = between(character '[', character ']', 
+regularExpressionClass := between(character '[', character ']', 
     map(
         \body ->
-            '[' + join(body) + ']',
+            '[' + join body + ']',
         regularExpressionClassChars));
 
 // Characters
 ////////////////////////////////////////
-regularExpressionFirstChar = choice(
-    token \ tok ->
-        !test(lineTerminator, tok) &&
-            tok !== '*' && tok !== '\\' && tok !== '`' && tok !== '[',
+regularExpressionFirstChar := choice(
+    next(
+        not lineTerminator,
+        noneOf '*\\`['),
     regularExpressionBackslashSequence,
     regularExpressionClass);
 
-regularExpressionChar =  choice(
-    token(
-        \tok ->
-            !test(lineTerminator, tok) &&
-                tok !== '\\' && tok !== '`' && tok !== '['),
+regularExpressionChar := choice(
+    next(
+        not lineTerminator,
+        noneOf '\\`['),
     regularExpressionBackslashSequence,
     regularExpressionClass);
 
-regularExpressionChars = many regularExpressionChar;
+regularExpressionChars := many regularExpressionChar;
 
 // Literal Parts
 ////////////////////////////////////////
-regularExpressionFlags = many identifierPart;
+regularExpressionFlags := many identifierPart;
 
-regularExpressionBody = map(
+regularExpressionBody := map(
     join,
     cons(
         regularExpressionFirstChar,
@@ -109,7 +111,7 @@ regularExpressionBody = map(
 /**
  * Lexer for regular expression literals.
  */
-regularExpressionLiteral = label@'Regular Expression Lexer' <|
+regularExpressionLiteral := label@'Regular Expression Lexer' <|
     binds(
         enumeration(
             between(character '`', character '`',

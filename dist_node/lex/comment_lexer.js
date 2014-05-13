@@ -1,50 +1,39 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/comment_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
-    anyToken = __o["anyToken"],
-    always = __o["always"],
-    bind = __o["bind"],
-    cons = __o["cons"],
+    __o0 = require("bennu")["text"],
+    __o1 = require("bennu")["lang"],
+    __o2 = require("nu-stream")["stream"],
+    __o3 = require("./line_terminator_lexer"),
+    singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,
+        multiLineCommentStartMarker, multiLineCommentEndMarker, multiLineCommentChars, multiLineComment, comment,
+        anyToken = __o["anyToken"],
     either = __o["either"],
     many = __o["many"],
     map = __o["map"],
     next = __o["next"],
+    not = __o["not"],
     label = __o["label"],
-    rec = __o["rec"],
-    test = __o["test"],
-    token = __o["token"],
-    __o0 = require("bennu")["text"],
-    character = __o0["character"],
     string = __o0["string"],
-    __o1 = require("nu-stream")["stream"],
-    foldl = __o1["foldl"],
-    NIL = __o1["NIL"],
-    __o2 = require("./line_terminator_lexer"),
-    lineTerminator = __o2["lineTerminator"],
-    singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,
-        multiLineCommentStartMarker, multiLineCommentEndMarker, multiLineCommentChars, multiLineComment, comment, __add =
-        (function(x, y) {
+    between = __o1["between"],
+    foldl = __o2["foldl"],
+    lineTerminator = __o3["lineTerminator"],
+    __add = (function(x, y) {
         return (x + y);
     }),
     join = map.bind(null, foldl.bind(null, __add, ""));
 (singleLineCommentMarker = string("//"));
-var y;
-(singleLineCommentChar = token(((y = test.bind(null, lineTerminator)), (function(z) {
-    var x = y(z);
-    return (!x);
-}))));
+(singleLineCommentChar = next(not(lineTerminator), anyToken));
 (singleLineCommentChars = many(singleLineCommentChar));
 (singleLineComment = label("Single Line Comment Lexer", next(singleLineCommentMarker, join(singleLineCommentChars))));
 (multiLineCommentStartMarker = string("/*"));
 (multiLineCommentEndMarker = string("*/"));
-(multiLineCommentChars = label("Multi Line Comment Characters Lexer", rec((function(self) {
-    return either(next(character("*"), either(next(character("/"), always(NIL)), cons(always("*"), self))),
-        cons(anyToken, self));
-}))));
-(multiLineComment = label("Multi Line Comment Lexer", next(multiLineCommentStartMarker, join(multiLineCommentChars))));
+(multiLineCommentChars = label("Multi Line Comment Characters Lexer", many(next(not(multiLineCommentEndMarker),
+    anyToken))));
+(multiLineComment = label("Multi Line Comment Lexer", between(multiLineCommentStartMarker, multiLineCommentEndMarker,
+    join(multiLineCommentChars))));
 (comment = label("Comment Lexer", either(singleLineComment, multiLineComment)));
 (exports["singleLineCommentMarker"] = singleLineCommentMarker);
 (exports["singleLineCommentChar"] = singleLineCommentChar);

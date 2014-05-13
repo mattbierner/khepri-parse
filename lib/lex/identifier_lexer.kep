@@ -7,7 +7,6 @@ package (
     unicodeLetter
     unicodeDigit
     unicodeConnectorPunctuation
-    unicodeCombiningMark
     
 // Parts
     identifierStart
@@ -31,7 +30,6 @@ with
         never
         next
         label
-        testStream
         token},
     import 'bennu::text' {
         character
@@ -43,7 +41,7 @@ with
     import './reserved_word_lexer' {reservedWordList}
 in {
 
-var join = foldl@((+), '');
+var join := foldl@ (+) @ '';
 
 /* Lexers
  ******************************************************************************/
@@ -72,7 +70,7 @@ zwj = character '\u200d';
  * 
  * @TODO Implement for unicode based on spec.
  */
-unicodeLetter = letter; 
+unicodeLetter = letter;
 
 /**
  * Lexer for a Unicode digit character.
@@ -100,17 +98,6 @@ unicodeConnectorPunctuation = oneOf [
     '\uFE4F',
     '\uFF3F'];
 
-/**
- * Lexer for any combining mark Unicode character.
- * 
- * Any character in any of the Unicode categories:
- * - Non-spacing mark (Mn)
- * - Combining spacing mark (Mc)
- * 
- * @TODO Implement for unicode based on spec
- */
-unicodeCombiningMark = never();
-
 // Parts
 ////////////////////////////////////////
 identifierStart = either(
@@ -119,7 +106,6 @@ identifierStart = either(
 
 identifierPart = choice(
     attempt identifierStart,
-    unicodeCombiningMark,
     unicodeDigit,
     unicodeConnectorPunctuation,
     zwnj,

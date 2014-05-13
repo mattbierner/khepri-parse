@@ -16,78 +16,67 @@ package (
 with
     import 'bennu::parse' {
         anyToken
-        always
-        bind
-        cons
         either
         many
         map
         next
-        label
-        rec
-        test
-        token},
+        not
+        label},
     import 'bennu::text' {
-        character
         string},
+    import 'bennu::lang' {
+        between},
     import 'nu-stream::stream' {
-        foldl
-        NIL},
+        foldl},
     
     import './line_terminator_lexer' {lineTerminator}
 in {
 
-var join = map @ (foldl @ ((+), ''));
+var join := map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/
 // Single Line Comment
 ////////////////////////////////////////
-singleLineCommentMarker = string '//';
+singleLineCommentMarker := string '//';
 
-singleLineCommentChar = token(
-    (!) <\ test@lineTerminator);
+singleLineCommentChar := next(not lineTerminator, anyToken);
 
-singleLineCommentChars = many singleLineCommentChar;
+singleLineCommentChars := many singleLineCommentChar;
 
 /**
  * Lexer for a single line comment
  * 
  * Returns the contents of the comment.
  */
-singleLineComment = label@'Single Line Comment Lexer' <|
+singleLineComment := label@'Single Line Comment Lexer' <|
     next(
         singleLineCommentMarker,
         join singleLineCommentChars);
 
 // Multi Line Comment
 ////////////////////////////////////////
-multiLineCommentStartMarker = string '/*';
+multiLineCommentStartMarker := string '/*';
 
-multiLineCommentEndMarker = string '*/';
+multiLineCommentEndMarker := string '*/';
 
-multiLineCommentChars = label@'Multi Line Comment Characters Lexer' <| rec\self ->
-    either(
-        next(
-            character '*',
-            either(
-                next(character '/', always NIL),
-                cons(always '*', self))),
-        cons(anyToken, self));
+multiLineCommentChars := label@'Multi Line Comment Characters Lexer' <|
+    many next(
+        not multiLineCommentEndMarker,
+        anyToken);
 
 /**
  * Multi line comment.
  * 
  * Returns the contents of the comment.
  */
-multiLineComment = label@'Multi Line Comment Lexer' <|
-    next(
-        multiLineCommentStartMarker,
+multiLineComment := label@'Multi Line Comment Lexer' <|
+    between(multiLineCommentStartMarker, multiLineCommentEndMarker,
         join multiLineCommentChars);
 
 // Comment
 ////////////////////////////////////////
-comment = label@'Comment Lexer' <|
+comment := label@'Comment Lexer' <|
     either(
         singleLineComment,
         multiLineComment);

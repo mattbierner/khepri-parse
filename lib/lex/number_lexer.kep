@@ -35,11 +35,9 @@ with
         attempt
         bind
         binds
-        choice
         either
         enumeration
         expected
-        many
         many1
         map
         next
@@ -79,11 +77,11 @@ hexDigit = oneOf '0123456789abcdefABCDEF';
 
 // Strings
 ////////////////////////////////////////
-decimalDigits = label@'Decimal Digits Lexer' <|
-    join <| many1 decimalDigit;
+decimalDigits = label('Decimal Digits Lexer',
+    join <| many1 decimalDigit);
 
-hexDigits = label@'Hex Digits Lexer' <|
-    join <| many1 hexDigit;
+hexDigits = label('Hex Digits Lexer',
+    join <| many1 hexDigit);
 
 // Integers
 ////////////////////////////////////////
@@ -128,7 +126,7 @@ decimalIntegerLiteral = label@'Decimal Integer Literal' <|
         decimalDigits);
 
 /**
- * A decimal number literal.
+ * Decimal number literal.
  * 
  * Either a integer or a decimal number. Before or after the decimal must contain
  * at least one number. May contain an exponent value at the end.
@@ -145,7 +143,7 @@ decimalLiteral = label@'Decimal Literal Lexer' <|
                         attempt <| next(
                             decimal,
                             decimalDigits))),
-                \whole, fractional ->
+                \whole fractional ->
                     always(parseFloat(whole + '.' + fractional))),
             optional(0, exponentPart)),
         \num, exp ->
@@ -159,7 +157,7 @@ decimalLiteral = label@'Decimal Literal Lexer' <|
 numericLiteral = label@'Numeric Literal Lexer' <|
     either(
         next(
-            attempt <| hexIndicator,
+            attempt hexIndicator,
             hexIntegerLiteralDigits |> expected@'hex digits'),
         decimalLiteral);
 

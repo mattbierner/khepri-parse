@@ -1,11 +1,11 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
-    __o1) {
+*/define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream"], (function(require,
+    exports, __o, __o0, __o1, __o2) {
     "use strict";
     var punctuator, prefixOperator, infixOperator, operator, always = __o["always"],
+        attempt = __o["attempt"],
         binds = __o["binds"],
         fail = __o["fail"],
         label = __o["label"],
@@ -13,9 +13,12 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], 
         enumeration = __o["enumeration"],
         map = __o["map"],
         many = __o["many"],
+        not = __o["not"],
         trie = __o0["trie"],
+        character = __o0["character"],
         oneOf = __o0["oneOf"],
-        foldl = __o1["foldl"],
+        then = __o1["then"],
+        foldl = __o2["foldl"],
         __add = (function(x, y) {
             return (x + y);
         }),
@@ -25,8 +28,8 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], 
         ];
     (punctuator = label("Punctuator Lexer", trie(punctuators)));
     var operatorChar = oneOf("?+-*/%|&^<>=!~@");
-    (prefixOperator = label("Prefix Operator Lexer", binds(enumeration(trie(["~", "!", "++", "--"]), join(many(
-        operatorChar))), (function() {
+    (prefixOperator = label("Prefix Operator Lexer", binds(enumeration(either(trie(["~", "++", "--"]), attempt(
+        then(character("!"), not(character("="))))), join(many(operatorChar))), (function() {
         var args = arguments;
         return always(__add.apply(null, args));
     }))));

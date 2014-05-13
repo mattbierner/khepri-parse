@@ -10,19 +10,22 @@ package (
     operator)
 with
     import 'bennu::parse' {
-        attempt
         always
+        attempt
         binds
         fail
         label
         either
         enumeration
         map
-        many},
+        many
+        not},
     import 'bennu::text' {
         trie
+        character
         oneOf},
-    
+    import 'bennu::lang' {
+        then},
     import 'nu-stream::stream' {foldl}
 in {
 
@@ -51,7 +54,9 @@ var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 
 prefixOperator := label @ 'Prefix Operator Lexer' <| binds(
     enumeration(
-        trie ['~', '!', '++', '--'],
+        either(
+            trie ['~', '++', '--'],
+            attempt then(character '!', not (character '='))),
         join <| many operatorChar),
     always <<\ (+));
 

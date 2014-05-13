@@ -36,12 +36,15 @@ with
         eof
         many
         map
+        not
         next
         sequence
         label
-        test
-        token},
-    import 'bennu::text' {character},
+        anyToken},
+    import 'bennu::text' {
+        character
+        oneOf
+        noneOf},
     import 'bennu::lang' {between times},
     import 'nu-stream::stream' {foldl},
     
@@ -56,7 +59,7 @@ in {
 var join = foldl @ (+) @ '';
 
 var fromCharCode = map @ \x ->
-    String.fromCharCode(parseInt(join(x), 16));
+    String.fromCharCode(parseInt(join x, 16));
 
 /* Lexers
  ******************************************************************************/
@@ -75,25 +78,27 @@ lineContinuation = sequence(
 
 // Escape Character
 ////////////////////////////////////////
-var singleEscapeCharacter = choice(
-    doubleQuote,
-    singleQuote,
-    escape,
-    next(character 'b', always '\u0008'),
-    next(character 'f', always '\u000C'),
-    next(character 'n', always '\u000A'),
-    next(character 'r', always '\u000D'),
-    next(character 't', always '\u0009'),
-    next(character 'v', always '\u000B'));
+var singleEscapeCharacter = oneOf('"\'\\bfnrtv')
+    .map (., {
+        '"': '"',
+        "'": "'",
+        '\\': '\\',
+        'b': '\u0008',
+        'f': '\u000C',
+        'n': '\u000A',
+        'r': '\u000D',
+        't': '\u0009',
+        'v': '\u000B' });
 
 var escapeCharacter = choice(
     singleEscapeCharacter,
     decimalDigit,
-    character 'u',
-    character 'x');
+    oneOf 'ux');
 
-var nonEscapeCharacter = token <|\ tok ->
-    !(test(escapeCharacter, tok) || test(lineTerminator, tok));
+var nonEscapeCharacter = sequence(
+    not escapeCharacter,
+    not lineTerminator,
+    anyToken);
 
 // Escape Sequence
 ////////////////////////////////////////
@@ -115,7 +120,9 @@ escapeSequence = choice(
         character '0',
         either(
             eof,
-            token((!) <\ test@decimalDigit)),
+            next(
+                not decimalDigit,
+                anyToken)),
         always '\u0000'),
     hexEscapeSequence,
     unicodeEscapeSequence);
@@ -129,10 +136,9 @@ singleStringCharacter = label@'Single String Character' <|
     choice(
         attempt lineContinuation,
         next(escape, escapeSequence),
-        token <|\ tok ->
-            !(test(singleQuote, tok) ||
-                test(escape, tok) || 
-                test(lineTerminator, tok)));
+        next(
+            not lineTerminator,
+            noneOf "'\\"));
 
 /**
  * Sequence of single string characters.
@@ -156,10 +162,9 @@ singleStringLiteral = label@'Single String Literal' <|
 doubleStringCharacter = choice(
     attempt lineContinuation,
     next(escape, escapeSequence),
-    token <|\ tok ->
-        !(test(doubleQuote, tok) ||
-            test(escape, tok) ||
-            test(lineTerminator, tok)));
+    next(
+        not lineTerminator,
+        noneOf '"\\'));
 
 /**
  * Sequence of double string characters.

@@ -1,12 +1,18 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/lex/regular_expression_lexer.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
-*/
-"use strict";
+*/"use strict";
 var __o = require("bennu")["parse"],
-    always = __o["always"],
-    attempt = __o["attempt"],
-    bind = __o["bind"],
+    __o0 = require("bennu")["lang"],
+    __o1 = require("bennu")["text"],
+    __o2 = require("nu-stream")["stream"],
+    __o3 = require("./identifier_lexer"),
+    __o4 = require("./line_terminator_lexer"),
+    regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
+        regularExpressionClassChars, regularExpressionClass, regularExpressionChar, regularExpressionChars,
+        regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral, always =
+        __o["always"],
+    anyToken = __o["anyToken"],
     binds = __o["binds"],
     choice = __o["choice"],
     cons = __o["cons"],
@@ -15,48 +21,31 @@ var __o = require("bennu")["parse"],
     many = __o["many"],
     map = __o["map"],
     next = __o["next"],
+    not = __o["not"],
     label = __o["label"],
-    token = __o["token"],
-    test = __o["test"],
-    __o0 = require("bennu")["lang"],
     between = __o0["between"],
-    __o1 = require("bennu")["text"],
     character = __o1["character"],
-    __o2 = require("nu-stream")["stream"],
+    noneOf = __o1["noneOf"],
     foldl = __o2["foldl"],
-    __o3 = require("./identifier_lexer"),
     identifierPart = __o3["identifierPart"],
-    __o4 = require("./line_terminator_lexer"),
     lineTerminator = __o4["lineTerminator"],
-    regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
-        regularExpressionClassChars, regularExpressionClass, regularExpressionChar, regularExpressionChars,
-        regularExpressionFirstChar, regularExpressionFlags, regularExpressionBody, regularExpressionLiteral, __add = (
-            function(x, y) {
-                return (x + y);
-            }),
-    join = foldl.bind(null, __add, ""),
-    y;
-(regularExpressionNonTerminator = token(((y = test.bind(null, lineTerminator)), (function(z) {
-    var x = y(z);
-    return (!x);
-}))));
-(regularExpressionBackslashSequence = next(character("\\"), map((function(y0) {
-    return ("\\" + y0);
+    __add = (function(x, y) {
+        return (x + y);
+    }),
+    join = foldl.bind(null, __add, "");
+(regularExpressionNonTerminator = next(not(lineTerminator), anyToken));
+(regularExpressionBackslashSequence = next(character("\\"), map((function(y) {
+    return ("\\" + y);
 }), regularExpressionNonTerminator)));
-(regularExpressionClassChar = either(attempt(token((function(tok) {
-    return (((!test(lineTerminator, tok)) && (tok !== "]")) && (tok !== "\\"));
-}))), regularExpressionBackslashSequence));
+(regularExpressionClassChar = either(next(not(lineTerminator), noneOf("]\\")), regularExpressionBackslashSequence));
 (regularExpressionClassChars = many(regularExpressionClassChar));
 (regularExpressionClass = between(character("["), character("]"), map((function(body) {
     return (("[" + join(body)) + "]");
 }), regularExpressionClassChars)));
-(regularExpressionFirstChar = choice(token((function(tok) {
-    return (((((!test(lineTerminator, tok)) && (tok !== "*")) && (tok !== "\\")) && (tok !== "`")) && (
-        tok !== "["));
-})), regularExpressionBackslashSequence, regularExpressionClass));
-(regularExpressionChar = choice(token((function(tok) {
-    return ((((!test(lineTerminator, tok)) && (tok !== "\\")) && (tok !== "`")) && (tok !== "["));
-})), regularExpressionBackslashSequence, regularExpressionClass));
+(regularExpressionFirstChar = choice(next(not(lineTerminator), noneOf("*\\`[")), regularExpressionBackslashSequence,
+    regularExpressionClass));
+(regularExpressionChar = choice(next(not(lineTerminator), noneOf("\\`[")), regularExpressionBackslashSequence,
+    regularExpressionClass));
 (regularExpressionChars = many(regularExpressionChar));
 (regularExpressionFlags = many(identifierPart));
 (regularExpressionBody = map(join, cons(regularExpressionFirstChar, regularExpressionChars)));
