@@ -46,52 +46,60 @@ var parse = require("bennu")["parse"],
     whitespace = __o11["whitespace"],
     regularExpressionLiteral = __o12["regularExpressionLiteral"],
     type, type0, type1, type2, type3, type4, type5, type6, type7, type8, type9, type10, type11, literalImpl = choice(((
-        type = lexToken.StringToken), stringLiteral.map((function(value) {
+        type = lexToken.StringToken.create), stringLiteral.map((function(value) {
         return [type, value];
-    }))), ((type0 = lexToken.RegularExpressionToken), regularExpressionLiteral.map((function(value) {
+    }))), ((type0 = lexToken.RegularExpressionToken.create), regularExpressionLiteral.map((function(value) {
         return [type0, value];
-    }))), ((type1 = lexToken.BooleanToken), booleanLiteral.map((function(value) {
+    }))), ((type1 = lexToken.BooleanToken.create), booleanLiteral.map((function(value) {
         return [type1, value];
-    }))), ((type2 = lexToken.NullToken), nullLiteral.map((function(value) {
+    }))), ((type2 = lexToken.NullToken.create), nullLiteral.map((function(value) {
         return [type2, value];
-    }))), ((type3 = lexToken.NumberToken), numericLiteral.map((function(value) {
+    }))), ((type3 = lexToken.NumberToken.create), numericLiteral.map((function(value) {
         return [type3, value];
     })))),
-    tokenImpl = choice(attempt(((type4 = lexToken.IdentifierToken), identifier.map((function(value) {
+    tokenImpl = choice(attempt(((type4 = lexToken.IdentifierToken.create), identifier.map((function(value) {
         return [type4, value];
-    })))), attempt(literalImpl), ((type5 = lexToken.KeywordToken), reservedWord.map((function(value) {
+    })))), attempt(literalImpl), ((type5 = lexToken.KeywordToken.create), reservedWord.map((function(value) {
         return [type5, value];
-    }))), ((type6 = lexToken.PrefixOperatorToken), prefixOperator.map((function(value) {
+    }))), ((type6 = (function(loc, __o13) {
+        var base = __o13[0],
+            user = __o13[1];
+        return lexToken.PrefixOperatorToken.create(loc, (base + user), base);
+    })), prefixOperator.map((function(value) {
         return [type6, value];
-    }))), attempt(((type7 = lexToken.InfixOperatorToken), infixOperator.map((function(value) {
+    }))), ((type7 = (function(loc, __o13) {
+        var base = __o13[0],
+            user = __o13[1];
+        return lexToken.InfixOperatorToken.create(loc, (base + user), base);
+    })), infixOperator.map((function(value) {
         return [type7, value];
-    })))), ((type8 = lexToken.PunctuatorToken), punctuator.map((function(value) {
+    }))), ((type8 = lexToken.PunctuatorToken.create), punctuator.map((function(value) {
         return [type8, value];
     })))),
-    inputElementImpl = choice(((type9 = lexToken.CommentToken), comment.map((function(value) {
+    inputElementImpl = choice(((type9 = lexToken.CommentToken.create), comment.map((function(value) {
         return [type9, value];
-    }))), ((type10 = lexToken.WhitespaceToken), whitespace.map((function(value) {
+    }))), ((type10 = lexToken.WhitespaceToken.create), whitespace.map((function(value) {
         return [type10, value];
-    }))), ((type11 = lexToken.LineTerminatorToken), lineTerminator.map((function(value) {
+    }))), ((type11 = lexToken.LineTerminatorToken.create), lineTerminator.map((function(value) {
         return [type11, value];
     }))), tokenImpl),
     p = literalImpl;
 (literal = binds(enumeration(getPosition, p, getPosition), (function(start, __o13, end) {
     var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(type12(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 var p0 = tokenImpl;
 (token = binds(enumeration(getPosition, p0, getPosition), (function(start, __o13, end) {
     var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(type12(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 var p1 = inputElementImpl;
 (inputElement = binds(enumeration(getPosition, p1, getPosition), (function(start, __o13, end) {
     var type12 = __o13[0],
         value = __o13[1];
-    return always(new(type12)(new(SourceLocation)(start, end, (start.file || end.file)), value));
+    return always(type12(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 (lexer = then(many(inputElement), eof));
 var initialFilePosition = (function(file) {

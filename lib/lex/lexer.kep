@@ -57,35 +57,46 @@ var buildToken = \p ->
             getPosition,
             p,
             getPosition),
-        \start, [type value], end ->
+        \start [type value] end ->
             always(
-                new type(
+                type(
                     location(start, end),
                     value)));
 /* Lexers
  ******************************************************************************/
 var literalImpl = choice(
-    makeToken(lexToken.StringToken, stringLiteral),
-    makeToken(lexToken.RegularExpressionToken, regularExpressionLiteral),
-    makeToken(lexToken.BooleanToken, booleanLiteral),
-    makeToken(lexToken.NullToken, nullLiteral),
-    makeToken(lexToken.NumberToken, numericLiteral));
+    makeToken(lexToken.StringToken.create, stringLiteral),
+    makeToken(lexToken.RegularExpressionToken.create, regularExpressionLiteral),
+    makeToken(lexToken.BooleanToken.create, booleanLiteral),
+    makeToken(lexToken.NullToken.create, nullLiteral),
+    makeToken(lexToken.NumberToken.create, numericLiteral));
 
 var tokenImpl = choice(
     attempt <|
-        makeToken(lexToken.IdentifierToken, identifier),
+        makeToken(
+            lexToken.IdentifierToken.create,
+            identifier),
     attempt <|
         literalImpl,
-    makeToken(lexToken.KeywordToken, reservedWord),
-    makeToken(lexToken.PrefixOperatorToken, prefixOperator),
-    attempt <|
-        makeToken(lexToken.InfixOperatorToken, infixOperator),
-    makeToken(lexToken.PunctuatorToken, punctuator));
+    makeToken(
+        lexToken.KeywordToken.create,
+        reservedWord),
+    makeToken(
+        \loc [base user] ->
+            lexToken.PrefixOperatorToken.create(loc, base + user, base),
+        prefixOperator),
+    makeToken(
+        \loc [base user] ->
+            lexToken.InfixOperatorToken.create(loc, base + user, base),
+        infixOperator),
+    makeToken(
+        lexToken.PunctuatorToken.create,
+        punctuator));
 
 var inputElementImpl = choice(
-    makeToken(lexToken.CommentToken, comment),
-    makeToken(lexToken.WhitespaceToken, whitespace),
-    makeToken(lexToken.LineTerminatorToken, lineTerminator),
+    makeToken(lexToken.CommentToken.create, comment),
+    makeToken(lexToken.WhitespaceToken.create, whitespace),
+    makeToken(lexToken.LineTerminatorToken.create, lineTerminator),
     tokenImpl);
 
 literal = buildToken(literalImpl);

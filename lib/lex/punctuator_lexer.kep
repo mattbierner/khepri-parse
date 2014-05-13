@@ -12,13 +12,13 @@ with
     import 'bennu::parse' {
         always
         attempt
-        binds
-        fail
         label
+        eager
         either
         enumeration
         map
         many
+        next
         not},
     import 'bennu::text' {
         trie
@@ -52,32 +52,29 @@ punctuator = label @ 'Punctuator Lexer' <|
 ////////////////////////////////////////
 var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 
-prefixOperator := label @ 'Prefix Operator Lexer' <| binds(
-    enumeration(
+prefixOperator := label @ 'Prefix Operator Lexer' <|
+    eager enumeration(
         either(
             trie ['~', '++', '--'],
             attempt then(character '!', not (character '='))),
-        join <| many operatorChar),
-    always <<\ (+));
+        join <| many operatorChar);
 
 // Infix Operator
 ////////////////////////////////////////
-infixOperator = label @ 'Infix Operator Lexer' <| binds(
-    enumeration(
-        trie [
-            '&&', '||',
-            '<<', '>>', '>>>',
-            '<=', '<', '>=', '>',
-            '===', '!==', '==', '!=',
-            '&', '|', '^', 
-            '+', '-', '*', '/', '%',
-            '|>', '<|',
-            '\\>', '\\>>', '<\\', '<<\\'],
-        join <| many operatorChar),
-    (+) \>> \x ->
-        ?punctuators.indexOf x >= 0
-            :fail("Cannot use puctuator "+ x + " as operator")
-            :always x);
+infixOperator = label @ 'Infix Operator Lexer' <|
+    next(
+        not punctuator,
+        eager enumeration(
+            trie [
+                '&&', '||',
+                '<<', '>>', '>>>',
+                '<=', '<', '>=', '>',
+                '===', '!==', '==', '!=',
+                '&', '|', '^', 
+                '+', '-', '*', '/', '%',
+                '|>', '<|',
+                '\\>', '\\>>', '<\\', '<<\\'],
+            join <| many operatorChar));
 
 // Operator
 ////////////////////////////////////////
@@ -85,4 +82,5 @@ operator = label @ 'Prefix Operator Lexer' <|
     either(
         prefixOperator,
         infixOperator);
+
 }

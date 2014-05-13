@@ -81,12 +81,7 @@ var __o = require("bennu")["parse"],
 (prefixedOp = (function() {
     var options = arguments;
     return token((function(tok) {
-        var value, x;
-        return ((tok.type === "InfixOperator") && ((value = tok.value), Array.prototype.some.call(
-            options, ((x = String.prototype.indexOf.bind(value)), (function(z) {
-                var y = x(z);
-                return (0 === y);
-            })))));
+        return ((tok.type === "InfixOperator") && (indexOf(options, tok.base) >= 0));
     }));
 }));
 (prefixOperator = (function() {

@@ -42,7 +42,7 @@ var typeParser = \type, msg ->
         expectError(msg));
 
 var selectAny = \type ->
-    \options(...) ->
+    \-options(...)->
         token(
             \tok -> (tok.type === type && indexOf(options, tok.value) >= 0),
             expectError(join(options, ', ')));
@@ -75,14 +75,9 @@ regularExpressionLiteral = typeParser('RegularExpression', 'regular expression l
 
 /* Parsers
  ******************************************************************************/
-var startsWith := \choices value ->
-    Array.prototype.some.call(choices,
-        String.prototype.indexOf.bind(value) \> (===, 0));
-
-
-prefixedOp := \options(...) ->
+prefixedOp := \-options(...)->
     token \ tok -> 
-        (tok.type === 'InfixOperator' && startsWith(options, tok.value));
+        (tok.type === 'InfixOperator' && indexOf(options, tok.base) >= 0);
 
 prefixOperator := selectAny 'PrefixOperator';
 

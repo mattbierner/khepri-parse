@@ -1,8 +1,7 @@
 /*
- * THIS FILE IS AUTO GENERATED FROM 'lib/parse/token_parser.kep'
+ * THIS FILE IS AUTO GENERATED from 'lib/parse/token_parser.kep'
  * DO NOT EDIT
-*/
-define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
+*/define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     "use strict";
     var punctuator, anyPunctuator, operator, anyOperator, keyword, identifier, anyIdentifier, nullLiteral,
             booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, prefixedOp, prefixOperator,
@@ -83,12 +82,7 @@ define(["require", "exports", "bennu/parse"], (function(require, exports, __o) {
     (prefixedOp = (function() {
         var options = arguments;
         return token((function(tok) {
-            var value, x;
-            return ((tok.type === "InfixOperator") && ((value = tok.value), Array.prototype.some
-                .call(options, ((x = String.prototype.indexOf.bind(value)), (function(z) {
-                    var y = x(z);
-                    return (0 === y);
-                })))));
+            return ((tok.type === "InfixOperator") && (indexOf(options, tok.base) >= 0));
         }));
     }));
     (prefixOperator = (function() {
