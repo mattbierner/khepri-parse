@@ -6,7 +6,6 @@
     "use strict";
     var zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, identifierStart, identifierPart,
             identifierParts, identifierName, identifier, always = __o["always"],
-        attempt = __o["attempt"],
         bind = __o["bind"],
         cons = __o["cons"],
         choice = __o["choice"],
@@ -30,7 +29,7 @@
     (unicodeDigit = digit);
     (unicodeConnectorPunctuation = oneOf(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
     (identifierStart = either(letter, oneOf("$_")));
-    (identifierPart = choice(attempt(identifierStart), digit, unicodeConnectorPunctuation, zwnj, zwj));
+    (identifierPart = choice(identifierStart, digit, unicodeConnectorPunctuation, zwnj, zwj));
     (identifierParts = many(identifierPart));
     (identifierName = cons(identifierStart, identifierParts));
     (identifier = label("Identifier Lexer", bind(identifierName, (function(name) {

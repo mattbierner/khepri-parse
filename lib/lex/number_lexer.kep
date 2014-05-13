@@ -33,7 +33,6 @@ with
     import 'bennu::parse' {
         always
         attempt
-        bind
         binds
         either
         enumeration
@@ -43,8 +42,10 @@ with
         next
         optional
         label},
-    import 'bennu::lang' {then},
-    import 'bennu::text' {character oneOf match string},
+    import 'bennu::text' {
+        character
+        oneOf
+        string},
     import 'nu-stream::stream' {foldl}
 in {
 

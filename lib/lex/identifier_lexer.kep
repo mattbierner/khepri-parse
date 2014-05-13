@@ -19,18 +19,14 @@ package (
 with
     import 'bennu::parse' {
         always
-        attempt 
         bind
         cons
         choice
         either
-        eof
         fail
         many
-        never
         next
-        label
-        token},
+        label},
     import 'bennu::text' {
         character
         oneOf
@@ -50,12 +46,12 @@ var join := foldl@ (+) @ '';
 /**
  * Zero Width non-joiner
  */
-zwnj = character '\u200c';
+zwnj := character '\u200c';
 
 /**
  * Zero Width joiner
  */
-zwj = character '\u200d';
+zwj := character '\u200d';
 
 /**
  * Lexer for a unicode letter character.
@@ -70,7 +66,7 @@ zwj = character '\u200d';
  * 
  * @TODO Implement for unicode based on spec.
  */
-unicodeLetter = letter;
+unicodeLetter := letter;
 
 /**
  * Lexer for a Unicode digit character.
@@ -79,14 +75,14 @@ unicodeLetter = letter;
  * 
  * @TODO Implement for unicode based on spec.
  */
-unicodeDigit = digit;
+unicodeDigit := digit;
 
 /**
  * Lexer for a Unicode connector punctuation character.
  * 
  * Any character in the Unicode category Connector Punctuation (Pc).
  */
-unicodeConnectorPunctuation = oneOf [
+unicodeConnectorPunctuation := oneOf [
     '\u005F',
     '\u203F',
     '\u2040',
@@ -100,25 +96,25 @@ unicodeConnectorPunctuation = oneOf [
 
 // Parts
 ////////////////////////////////////////
-identifierStart = either(
+identifierStart := either(
     unicodeLetter,
     oneOf '$_');
 
-identifierPart = choice(
-    attempt identifierStart,
+identifierPart := choice(
+    identifierStart,
     unicodeDigit,
     unicodeConnectorPunctuation,
     zwnj,
     zwj);
 
-identifierParts = many identifierPart;
+identifierParts := many identifierPart;
 
 /**
  * Identifier.
  * 
  * May be a keyword.
  */
-identifierName = cons(identifierStart, identifierParts);
+identifierName := cons(identifierStart, identifierParts);
 
 // Identifier
 ////////////////////////////////////////
@@ -127,7 +123,7 @@ identifierName = cons(identifierStart, identifierParts);
  * 
  * Checks to make sure returned identifier is not a keyword.
  */
-identifier = label@'Identifier Lexer' <|
+identifier := label@'Identifier Lexer' <|
     bind(identifierName, \name -> let n = join name in
         ?reservedWordList.indexOf(n) >= 0
             :fail()

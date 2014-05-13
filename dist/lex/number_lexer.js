@@ -1,8 +1,8 @@
 /*
  * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream"], (function(require,
-    exports, __o, __o0, __o1, __o2) {
+*/define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream"], (function(require, exports, __o, __o0,
+    __o1) {
     "use strict";
     var decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit,
             hexDigit, decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
@@ -17,10 +17,10 @@
         next = __o["next"],
         optional = __o["optional"],
         label = __o["label"],
-        character = __o1["character"],
-        oneOf = __o1["oneOf"],
-        string = __o1["string"],
-        foldl = __o2["foldl"],
+        character = __o0["character"],
+        oneOf = __o0["oneOf"],
+        string = __o0["string"],
+        foldl = __o1["foldl"],
         __minus = (function(x) {
             return (-x);
         }),

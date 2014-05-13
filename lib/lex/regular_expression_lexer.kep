@@ -24,9 +24,7 @@ package (
 with
     import 'bennu::parse' {
         always
-        attempt
         anyToken
-        bind
         binds
         choice
         cons
@@ -36,8 +34,7 @@ with
         map
         next
         not
-        label
-        token},
+        label},
     import 'bennu::lang' {between},
     import 'bennu::text' {character noneOf},
     import 'nu-stream::stream' {foldl},
@@ -109,7 +106,7 @@ regularExpressionBody := map(
 // Literal
 ////////////////////////////////////////
 /**
- * Lexer for regular expression literals.
+ * Regular expression literal.
  */
 regularExpressionLiteral := label@'Regular Expression Lexer' <|
     binds(
@@ -117,6 +114,6 @@ regularExpressionLiteral := label@'Regular Expression Lexer' <|
             between(character '`', character '`',
                 regularExpressionBody),
             regularExpressionFlags),
-        \body, flags -> always(new RegExp(body, join(flags))));
+        \body flags -> always(new RegExp(body, join(flags))));
 
 }

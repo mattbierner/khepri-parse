@@ -3,9 +3,8 @@
  * DO NOT EDIT
 */"use strict";
 var __o = require("bennu")["parse"],
-    __o0 = require("bennu")["lang"],
-    __o1 = require("bennu")["text"],
-    __o2 = require("nu-stream")["stream"],
+    __o0 = require("bennu")["text"],
+    __o1 = require("nu-stream")["stream"],
     decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit, hexDigit,
         decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
         decimalIntegerLiteral, decimalLiteral, numericLiteral, always = __o["always"],
@@ -19,10 +18,10 @@ var __o = require("bennu")["parse"],
     next = __o["next"],
     optional = __o["optional"],
     label = __o["label"],
-    character = __o1["character"],
-    oneOf = __o1["oneOf"],
-    string = __o1["string"],
-    foldl = __o2["foldl"],
+    character = __o0["character"],
+    oneOf = __o0["oneOf"],
+    string = __o0["string"],
+    foldl = __o1["foldl"],
     __minus = (function(x) {
         return (-x);
     }),
