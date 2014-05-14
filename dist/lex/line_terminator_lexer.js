@@ -4,15 +4,13 @@
 */
 define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
-    var always = __o["always"],
+    var lf, cr, ls, ps, lineTerminator, lineTerminatorSequence, always = __o["always"],
         choice = __o["choice"],
         next = __o["next"],
         optional = __o["optional"],
         label = __o["label"],
-        token = __o["token"],
         character = __o0["character"],
-        oneOf = __o0["oneOf"],
-        lf, cr, ls, ps, lineTerminator, lineTerminatorSequence;
+        oneOf = __o0["oneOf"];
     (lf = label("Line Feed Lexer", character("\n")));
     (cr = label("Carriage Return Lexer", character("\r")));
     (ls = label("Line Separator Lexer", character("\u2028")));

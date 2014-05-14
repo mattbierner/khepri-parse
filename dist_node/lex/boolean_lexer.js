@@ -4,13 +4,12 @@
 */
 "use strict";
 var __o = require("bennu")["parse"],
-    always = __o["always"],
+    __o0 = require("bennu")["text"],
+    trueLiteral, falseLiteral, booleanLiteral, always = __o["always"],
     either = __o["either"],
     next = __o["next"],
     label = __o["label"],
-    __o0 = require("bennu")["text"],
-    string = __o0["string"],
-    trueLiteral, falseLiteral, booleanLiteral;
+    string = __o0["string"];
 (trueLiteral = label("True Literal Lexer", next(string("true"), always(true))));
 (falseLiteral = label("False Literal Lexer", next(string("false"), always(false))));
 (booleanLiteral = label("Boolean Literal Lexer", either(trueLiteral, falseLiteral)));

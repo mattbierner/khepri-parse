@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/expression_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/expression_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["lang"],
     __o1 = require("nu-stream")["stream"],
@@ -206,11 +207,11 @@ var createBinary = (function(loc, op, l, r) {
         "precedence": 3,
         "node": createBinary
     }), ({
-        "sep": either(prefixedOp("<", ">", "<=", ">="), keyword("instanceof")),
+        "sep": either(prefixedOp("<", ">"), keyword("instanceof")),
         "precedence": 4,
         "node": createBinary
     }), ({
-        "sep": prefixedOp("==", "!=", "===", "!=="),
+        "sep": prefixedOp("==", "!="),
         "precedence": 5,
         "node": createBinary
     }), ({
@@ -275,7 +276,7 @@ var leftHandMemberReference = label("Left Hand Reference Expression", binds(enum
     return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=", ":="))),
         enumeration(expected("expression", either(self, expression)))), (function(loc, left, op,
         right) {
-        return ast_expression.AssignmentExpression.create(loc, op.value, left, right);
+        return ast_expression.AssignmentExpression.create(loc, left, right, (op.value === ":="));
     }));
 }))));
 var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected("reference expression",

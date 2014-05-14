@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/parse/function_parser.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/parse/function_parser.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["lang"],
     ast_expression = require("khepri-ast")["expression"],

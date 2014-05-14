@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/regular_expression_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
+*/
+define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
     "./line_terminator_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -29,7 +30,7 @@
         __add = (function(x, y) {
             return (x + y);
         }),
-        join = foldl.bind(null, __add, "");
+        join = map.bind(null, foldl.bind(null, __add, ""));
     (regularExpressionNonTerminator = next(not(lineTerminator), anyToken));
     (regularExpressionBackslashSequence = next(character("\\"), map((function(y) {
         return ("\\" + y);
@@ -38,18 +39,19 @@
         regularExpressionBackslashSequence));
     (regularExpressionClassChars = many(regularExpressionClassChar));
     (regularExpressionClass = between(character("["), character("]"), map((function(body) {
-        return (("[" + join(body)) + "]");
-    }), regularExpressionClassChars)));
+        return (("[" + body) + "]");
+    }), join(regularExpressionClassChars))));
     (regularExpressionFirstChar = choice(next(not(lineTerminator), noneOf("*\\`[")),
         regularExpressionBackslashSequence, regularExpressionClass));
     (regularExpressionChar = choice(next(not(lineTerminator), noneOf("\\`[")),
         regularExpressionBackslashSequence, regularExpressionClass));
     (regularExpressionChars = many(regularExpressionChar));
     (regularExpressionFlags = many(identifierPart));
-    (regularExpressionBody = map(join, cons(regularExpressionFirstChar, regularExpressionChars)));
+    (regularExpressionBody = cons(regularExpressionFirstChar, regularExpressionChars));
     (regularExpressionLiteral = label("Regular Expression Lexer", binds(enumeration(between(character("`"),
-        character("`"), regularExpressionBody), regularExpressionFlags), (function(body, flags) {
-        return always(new(RegExp)(body, join(flags)));
+        character("`"), join(regularExpressionBody)), join(regularExpressionFlags)), (function(body,
+        flags) {
+        return always(new(RegExp)(body, flags));
     }))));
     (exports["regularExpressionNonTerminator"] = regularExpressionNonTerminator);
     (exports["regularExpressionBackslashSequence"] = regularExpressionBackslashSequence);

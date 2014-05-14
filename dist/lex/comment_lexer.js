@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/comment_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer"], (
+*/
+define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer"], (
     function(require, exports, __o, __o0, __o1, __o2, __o3) {
         "use strict";
         var singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,

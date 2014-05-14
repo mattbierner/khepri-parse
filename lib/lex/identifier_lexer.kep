@@ -96,16 +96,18 @@ unicodeConnectorPunctuation := oneOf [
 
 // Parts
 ////////////////////////////////////////
-identifierStart := either(
-    unicodeLetter,
-    oneOf '$_');
+identifierStart :=
+    either(
+        unicodeLetter,
+        oneOf '$_');
 
-identifierPart := choice(
-    identifierStart,
-    unicodeDigit,
-    unicodeConnectorPunctuation,
-    zwnj,
-    zwj);
+identifierPart :=
+    choice(
+        identifierStart,
+        unicodeDigit,
+        unicodeConnectorPunctuation,
+        zwnj,
+        zwj);
 
 identifierParts := many identifierPart;
 
@@ -124,9 +126,10 @@ identifierName := cons(identifierStart, identifierParts);
  * Checks to make sure returned identifier is not a keyword.
  */
 identifier := label@'Identifier Lexer' <|
-    bind(identifierName, \name -> let n = join name in
-        ?reservedWordList.indexOf(n) >= 0
-            :fail()
-            :always n);
+    bind(identifierName, \name ->
+        let n = join name in
+            ?reservedWordList.indexOf(n) >= 0
+                :fail()
+                :always n);
 
 }

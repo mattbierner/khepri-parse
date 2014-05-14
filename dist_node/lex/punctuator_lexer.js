@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/punctuator_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     __o1 = require("bennu")["lang"],
@@ -32,8 +33,8 @@ var operatorChar = oneOf("?+-*/%|&^<>=!~@");
 (prefixOperator = label("Prefix Operator Lexer", eager(enumeration(either(trie(["~", "++", "--"]), attempt(then(
     character("!"), not(character("="))))), join(many(operatorChar))))));
 (infixOperator = label("Infix Operator Lexer", next(not(next(trie(["->", "-|", "|-"]), not(operatorChar))), eager(
-    enumeration(trie(["&&", "||", "<<", ">>", ">>>", "<=", "<", ">=", ">", "===", "!==", "==", "!=", "&",
-        "|", "^", "+", "-", "*", "/", "%", "|>", "<|", "\\>", "\\>>", "<\\", "<<\\"
+    enumeration(trie(["&&", "||", "<<", ">>", ">>>", "<", ">", "==", "!=", "&", "|", "^", "+", "-", "*",
+        "/", "%", "|>", "<|", "\\>", "\\>>", "<\\", "<<\\"
     ]), join(many(operatorChar)))))));
 (operator = label("Prefix Operator Lexer", either(prefixOperator, infixOperator)));
 (exports["punctuator"] = punctuator);

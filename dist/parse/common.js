@@ -5,8 +5,7 @@
 define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position"], (function(require, exports,
     parse, stream, __o) {
     "use strict";
-    var always = parse["always"],
-        bind = parse["bind"],
+    var precedence, node, nodea, positionParser, always = parse["always"],
         binds = parse["binds"],
         extract = parse["extract"],
         enumeration = parse["enumeration"],
@@ -14,7 +13,7 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
         optional = parse["optional"],
         NIL = stream["NIL"],
         SourceLocation = __o["SourceLocation"],
-        precedence, node, nodea, positionParser, pres = (function(list) {
+        pres = (function(list) {
             var stack = [],
                 out = [];
             while ((list.length > 0)) {

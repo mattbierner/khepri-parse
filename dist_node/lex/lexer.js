@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var parse = require("bennu")["parse"],
     __o = require("bennu")["lang"],
     __o0 = require("nu-stream")["stream"],
@@ -59,7 +60,7 @@ var parse = require("bennu")["parse"],
     })))),
     tokenImpl = choice(attempt(((type4 = lexToken.IdentifierToken.create), identifier.map((function(value) {
         return [type4, value];
-    })))), attempt(literalImpl), ((type5 = lexToken.KeywordToken.create), reservedWord.map((function(value) {
+    })))), literalImpl, ((type5 = lexToken.KeywordToken.create), reservedWord.map((function(value) {
         return [type5, value];
     }))), ((type6 = (function(loc, __o13) {
         var base = __o13[0],
@@ -102,15 +103,14 @@ var p1 = inputElementImpl;
     return always(type12(new(SourceLocation)(start, end, (start.file || end.file)), value));
 })));
 (lexer = then(many(inputElement), eof));
-var initialFilePosition = (function(file) {
-    return new(SourcePosition)(SourcePosition.initial.line, SourcePosition.initial.column, file);
-});
 (lexStream = (function(input, file) {
-    return runState(lexer, new(ParserState)(input, initialFilePosition(file)));
+    return runState(lexer, new(ParserState)(input, new(SourcePosition)(SourcePosition.initial.line,
+        SourcePosition.initial.column, file)));
 }));
 (lex = (function(input, file) {
     var input0 = streamFrom(input);
-    return runState(lexer, new(ParserState)(input0, initialFilePosition(file)));
+    return runState(lexer, new(ParserState)(input0, new(SourcePosition)(SourcePosition.initial.line,
+        SourcePosition.initial.column, file)));
 }));
 (exports["literal"] = literal);
 (exports["token"] = token);

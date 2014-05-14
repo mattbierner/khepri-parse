@@ -45,7 +45,7 @@ singleLineCommentChar := next(not lineTerminator, anyToken);
 singleLineCommentChars := many singleLineCommentChar;
 
 /**
- * Lexer for a single line comment
+ * Single line comment.
  * 
  * Returns the contents of the comment.
  */

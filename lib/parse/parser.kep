@@ -28,7 +28,7 @@ in {
  * 
  * @return Stream suitable for parsing.
  */
-parserStream = filter @ \x -> {
+parserStream := filter @ \x -> {
     switch (x.type) {
     case 'Whitespace':
     case 'LineTerminator':
@@ -41,10 +41,10 @@ parserStream = filter @ \x -> {
 
 /* Position
  ******************************************************************************/
-ParserPosition = function \tokenPosition sourcePosition prevEnd =self-> {
-    self.tokenPosition = tokenPosition;
-    self.sourcePosition = sourcePosition;
-    self.prevEnd = prevEnd;
+ParserPosition := function \tokenPosition sourcePosition prevEnd =self-> {
+    self.tokenPosition := tokenPosition;
+    self.sourcePosition := sourcePosition;
+    self.prevEnd := prevEnd;
 };
 ParserPosition.prototype = new parse.Position();
 ParserPosition.prototype.constructor = ParserPosition;
@@ -62,12 +62,11 @@ ParserPosition.prototype.increment = \tok r =self->
             :first(r).loc.start,
         tok.loc.end);
 
-ParserPosition.prototype.toString = \() =self->
+ParserPosition.prototype.toString = \ =self->
     '' + self.sourcePosition;
 
 ParserPosition.prototype.compare = \pos =self->
     self.tokenPosition.compare(pos.tokenPosition);
-
 
 /* Running
  ******************************************************************************/
@@ -80,7 +79,7 @@ ParserPosition.prototype.compare = \pos =self->
  * 
  * @return AST.
  */
-parseStream = \s -> 
+parseStream := \s -> 
     parse.runState(
         program,
         new ParserState(
@@ -96,6 +95,6 @@ parseStream = \s ->
  * 
  * @return AST.
  */
-parseInput = streamFrom \> parseStream;
+parseInput := streamFrom \> parseStream;
 
 }

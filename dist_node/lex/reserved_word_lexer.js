@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/reserved_word_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/reserved_word_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     reservedWordList, reservedWord, label = __o["label"],

@@ -31,7 +31,7 @@ with
     
     import './boolean_lexer' {booleanLiteral},
     import './comment_lexer' {comment},
-    import './identifier_lexer' {identifier, identifierName},
+    import './identifier_lexer' {identifier},
     import './line_terminator_lexer' {lineTerminator},
     import './null_lexer' {nullLiteral},
     import './number_lexer' {numericLiteral},
@@ -65,19 +65,27 @@ var buildToken = \p ->
 /* Lexers
  ******************************************************************************/
 var literalImpl = choice(
-    makeToken(lexToken.StringToken.create, stringLiteral),
-    makeToken(lexToken.RegularExpressionToken.create, regularExpressionLiteral),
-    makeToken(lexToken.BooleanToken.create, booleanLiteral),
-    makeToken(lexToken.NullToken.create, nullLiteral),
-    makeToken(lexToken.NumberToken.create, numericLiteral));
+    makeToken(
+        lexToken.StringToken.create,
+        stringLiteral),
+    makeToken(
+        lexToken.RegularExpressionToken.create,
+        regularExpressionLiteral),
+    makeToken(
+        lexToken.BooleanToken.create,
+        booleanLiteral),
+    makeToken(
+        lexToken.NullToken.create,
+        nullLiteral),
+    makeToken(
+        lexToken.NumberToken.create,
+        numericLiteral));
 
 var tokenImpl = choice(
-    attempt <|
-        makeToken(
-            lexToken.IdentifierToken.create,
-            identifier),
-    attempt <|
-        literalImpl,
+    attempt makeToken(
+        lexToken.IdentifierToken.create,
+        identifier),
+    literalImpl,
     makeToken(
         lexToken.KeywordToken.create,
         reservedWord),
@@ -94,24 +102,48 @@ var tokenImpl = choice(
         punctuator));
 
 var inputElementImpl = choice(
-    makeToken(lexToken.CommentToken.create, comment),
-    makeToken(lexToken.WhitespaceToken.create, whitespace),
-    makeToken(lexToken.LineTerminatorToken.create, lineTerminator),
+    makeToken(
+        lexToken.CommentToken.create,
+        comment),
+    makeToken(
+        lexToken.WhitespaceToken.create,
+        whitespace),
+    makeToken(
+        lexToken.LineTerminatorToken.create,
+        lineTerminator),
     tokenImpl);
 
-literal = buildToken(literalImpl);
+/* Lexers
+ ******************************************************************************/
+/**
+ * Literal lexer
+ */
+literal := buildToken(literalImpl);
 
-token = buildToken(tokenImpl);
+/**
+ * Token lexer.
+ */
+token := buildToken(tokenImpl);
 
+/**
+ * Input element lexer.
+ * 
+ * 
+ */
 inputElement = buildToken(inputElementImpl);
 
+/**
+ * Khepri source lexer.
+ * 
+ * Returns stream of lex tokesn
+ */
 lexer = then(
     many inputElement,
     eof);
 
 /* Running
  ******************************************************************************/
-var initialFilePosition = \file ->
+var initialFilePosition := \file ->
     new SourcePosition(
         SourcePosition.initial.line,
         SourcePosition.initial.column,

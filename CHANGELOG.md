@@ -1,7 +1,10 @@
 # ChangeLog #
 
+## 2.2.0 - May 14, 2014
+* Updated to khepri-ast V4.4
+
 ## 2.1.3 - May 13, 2014
-* Fixed infix operators extending puctuators ators like `->-` lexed incorrectly.
+* Fixed infix operators extending puctuators like `->-` lexed incorrectly.
 
 ## 2.1.2 - May 13, 2014
 * Fixed infix ops `!=` getting lexed as prefix ops.

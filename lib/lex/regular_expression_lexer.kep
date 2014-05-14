@@ -42,7 +42,7 @@ with
     import './line_terminator_lexer' {lineTerminator}
 in {
 
-var join := foldl @ (+) @ '';
+var join := map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/
@@ -53,11 +53,12 @@ regularExpressionNonTerminator =
         not lineTerminator,
         anyToken);
 
-regularExpressionBackslashSequence := next(
-    character '\\',
-    map(
-        (+ '\\'),
-        regularExpressionNonTerminator));
+regularExpressionBackslashSequence :=
+    next(
+        character '\\',
+        map(
+            (+ '\\'),
+            regularExpressionNonTerminator));
 
 // Class
 ////////////////////////////////////////
@@ -69,27 +70,30 @@ regularExpressionClassChar := either(
 
 regularExpressionClassChars := many regularExpressionClassChar;
 
-regularExpressionClass := between(character '[', character ']', 
-    map(
-        \body ->
-            '[' + join body + ']',
-        regularExpressionClassChars));
+regularExpressionClass :=
+    between(character '[', character ']', 
+        map(
+            \body ->
+                '[' + body + ']',
+            join regularExpressionClassChars));
 
 // Characters
 ////////////////////////////////////////
-regularExpressionFirstChar := choice(
-    next(
-        not lineTerminator,
-        noneOf '*\\`['),
-    regularExpressionBackslashSequence,
-    regularExpressionClass);
+regularExpressionFirstChar :=
+    choice(
+        next(
+            not lineTerminator,
+            noneOf '*\\`['),
+        regularExpressionBackslashSequence,
+        regularExpressionClass);
 
-regularExpressionChar := choice(
-    next(
-        not lineTerminator,
-        noneOf '\\`['),
-    regularExpressionBackslashSequence,
-    regularExpressionClass);
+regularExpressionChar :=
+    choice(
+        next(
+            not lineTerminator,
+            noneOf '\\`['),
+        regularExpressionBackslashSequence,
+        regularExpressionClass);
 
 regularExpressionChars := many regularExpressionChar;
 
@@ -97,11 +101,10 @@ regularExpressionChars := many regularExpressionChar;
 ////////////////////////////////////////
 regularExpressionFlags := many identifierPart;
 
-regularExpressionBody := map(
-    join,
+regularExpressionBody :=
     cons(
         regularExpressionFirstChar,
-        regularExpressionChars));
+        regularExpressionChars);
 
 // Literal
 ////////////////////////////////////////
@@ -112,8 +115,8 @@ regularExpressionLiteral := label@'Regular Expression Lexer' <|
     binds(
         enumeration(
             between(character '`', character '`',
-                regularExpressionBody),
-            regularExpressionFlags),
-        \body flags -> always(new RegExp(body, join(flags))));
+                join regularExpressionBody),
+            join regularExpressionFlags),
+        \body flags -> always(new RegExp(body, flags)));
 
 }

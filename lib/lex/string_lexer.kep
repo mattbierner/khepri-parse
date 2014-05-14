@@ -56,83 +56,91 @@ with
         hexDigit}
 in {
 
-var join = foldl @ (+) @ '';
+var join := foldl @ (+) @ '';
 
-var fromCharCode = map @ \x ->
+var fromCharCode := map @ \x ->
     String.fromCharCode(parseInt(join x, 16));
 
 /* Lexers
  ******************************************************************************/
 // Constants
 ////////////////////////////////////////
-doubleQuote = character '"';
+doubleQuote := character '"';
 
-singleQuote = character "'";
+singleQuote := character "'";
 
-escape = character '\\';
+escape := character '\\';
 
-lineContinuation = sequence(
-    escape,
-    lineTerminatorSequence,
-    always '');
+lineContinuation :=
+    sequence(
+        escape,
+        lineTerminatorSequence,
+        always '');
 
 // Escape Character
 ////////////////////////////////////////
-var singleEscapeCharacter = oneOf('"\'\\bfnrtv')
-    .map (., {
-        '"': '"',
-        "'": "'",
-        '\\': '\\',
-        'b': '\u0008',
-        'f': '\u000C',
-        'n': '\u000A',
-        'r': '\u000D',
-        't': '\u0009',
-        'v': '\u000B' });
+var singleEscapeCharacter :=
+    oneOf('"\'\\bfnrtv')
+        .map (., {
+            '"': '"',
+            "'": "'",
+            '\\': '\\',
+            'b': '\u0008',
+            'f': '\u000C',
+            'n': '\u000A',
+            'r': '\u000D',
+            't': '\u0009',
+            'v': '\u000B' });
 
-var escapeCharacter = choice(
-    singleEscapeCharacter,
-    decimalDigit,
-    oneOf 'ux');
+var escapeCharacter :=
+    choice(
+        singleEscapeCharacter,
+        decimalDigit,
+        oneOf 'ux');
 
-var nonEscapeCharacter = sequence(
-    not escapeCharacter,
-    not lineTerminator,
-    anyToken);
+var nonEscapeCharacter :=
+    sequence(
+        not escapeCharacter,
+        not lineTerminator,
+        anyToken);
 
 // Escape Sequence
 ////////////////////////////////////////
-hexEscapeSequence = next(
-    character 'x',
-    hexDigit |> times@2 |> fromCharCode);
+hexEscapeSequence :=
+    next(
+        character 'x',
+        hexDigit |> times@2 |> fromCharCode);
 
-unicodeEscapeSequence = next(
-    character 'u',
-    hexDigit |> times@4 |> fromCharCode);
+unicodeEscapeSequence :=
+    next(
+        character 'u',
+        hexDigit |> times@4 |> fromCharCode);
 
-characterEscapeSequence = either(
-    singleEscapeCharacter,
-    nonEscapeCharacter);
+characterEscapeSequence :=
+    either(
+        singleEscapeCharacter,
+        nonEscapeCharacter);
 
-escapeSequence = choice(
-    characterEscapeSequence,
-    sequence(
-        character '0',
-        either(
-            eof,
-            next(
-                not decimalDigit,
-                anyToken)),
-        always '\u0000'),
-    hexEscapeSequence,
-    unicodeEscapeSequence);
+escapeSequence :=
+    choice(
+        characterEscapeSequence,
+        sequence(
+            character '0',
+            either(
+                eof,
+                next(
+                    not decimalDigit,
+                    anyToken)),
+            always '\u0000'),
+        hexEscapeSequence,
+        unicodeEscapeSequence);
 
 // Single String Literal
 ////////////////////////////////////////
 /**
  * Character in single quoted string.
  */
-singleStringCharacter = label@'Single String Character' <|
+singleStringCharacter := label@'Single String Character' <|
     choice(
         attempt lineContinuation,
         next(escape, escapeSequence),
@@ -143,14 +151,14 @@ singleStringCharacter = label@'Single String Character' <|
 /**
  * Sequence of single string characters.
  */
-singleStringCharacters = many singleStringCharacter;
+singleStringCharacters := many singleStringCharacter;
 
 /**
  * Single quoted string literal.
  * 
  * Returns the value of the string enclosed in the single quoted string literal.
  */
-singleStringLiteral = label@'Single String Literal' <|
+singleStringLiteral := label@'Single String Literal' <|
     between(singleQuote, singleQuote,
         map(join, singleStringCharacters));
 
@@ -159,24 +167,25 @@ singleStringLiteral = label@'Single String Literal' <|
 /**
  * Character in double quoted string.
  */
-doubleStringCharacter = choice(
-    attempt lineContinuation,
-    next(escape, escapeSequence),
-    next(
-        not lineTerminator,
-        noneOf '"\\'));
+doubleStringCharacter :=
+    choice(
+        attempt lineContinuation,
+        next(escape, escapeSequence),
+        next(
+            not lineTerminator,
+            noneOf '"\\'));
 
 /**
  * Sequence of double string characters.
  */
-doubleStringCharacters = many doubleStringCharacter;
+doubleStringCharacters := many doubleStringCharacter;
 
 /**
  * Double quoted string literal.
  * 
  * Returns the value of the string enclosed in the double quoted string literal.
  */
-doubleStringLiteral = label@'Double String Literal' <|
+doubleStringLiteral := label@'Double String Literal' <|
     between(doubleQuote, doubleQuote,
         map(join, doubleStringCharacters));
 
@@ -187,7 +196,7 @@ doubleStringLiteral = label@'Double String Literal' <|
  * 
  * Returns the value of the string enclosed in the string literal.
  */
-stringLiteral = label@'Sting Literal Lexer' <|
+stringLiteral := label@'Sting Literal Lexer' <|
     either(
         singleStringLiteral,
         doubleStringLiteral);

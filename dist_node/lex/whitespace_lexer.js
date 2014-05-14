@@ -4,13 +4,11 @@
 */
 "use strict";
 var __o = require("bennu")["parse"],
-    map = __o["map"],
-    label = __o["label"],
     __o0 = require("bennu")["text"],
+    tab, vt, ff, sp, nbsp, bom, usp, whitespace, label = __o["label"],
     character = __o0["character"],
     oneOf = __o0["oneOf"],
-    match = __o0["match"],
-    tab, vt, ff, sp, nbsp, bom, usp, whitespace;
+    match = __o0["match"];
 (tab = character("\t"));
 (vt = character("\u000b"));
 (ff = character("\f"));

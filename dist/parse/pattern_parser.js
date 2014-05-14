@@ -6,10 +6,10 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     "./token_parser", "./value_parser"
 ], (function(require, exports, __o, __o0, __o1, ast_pattern, __o2, __o3, __o4) {
     "use strict";
-    var attempt = __o["attempt"],
+    var listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, operatorPattern,
+            sinkPattern, ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern,
+            asPattern, attempt = __o["attempt"],
         append = __o["append"],
-        bind = __o["bind"],
-        binds = __o["binds"],
         choice = __o["choice"],
         cons = __o["cons"],
         eager = __o["eager"],
@@ -24,7 +24,6 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         between = __o0["between"],
         sepBy = __o0["sepBy"],
         sepBy1 = __o0["sepBy1"],
-        sepEndBy = __o0["sepEndBy"],
         then = __o0["then"],
         NIL = __o1["NIL"],
         node = __o2["node"],
@@ -34,13 +33,11 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         identifier = __o4["identifier"],
         operator = __o4["operator"],
         stringLiteral = __o4["stringLiteral"],
-        listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, operatorPattern,
-            sinkPattern, ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern,
-            asPattern, sepEndWith1 = (function(sep, end, p) {
-                return rec((function(self) {
-                    return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
-                }));
-            }),
+        sepEndWith1 = (function(sep, end, p) {
+            return rec((function(self) {
+                return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
+            }));
+        }),
         sepEndWith = (function(sep, end, p) {
             return either(enumeration(end), sepEndWith1(sep, end, p));
         }),

@@ -49,49 +49,49 @@ with
     import 'nu-stream::stream' {foldl}
 in {
 
-var join = map @ (foldl @ (+) @ '');
+var join := map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/
 // Constants
 ////////////////////////////////////////
-decimal = character '.';
+decimal := character '.';
 
-negativeSign = character '-';
+negativeSign := character '-';
 
-positiveSign = character '+';
+positiveSign := character '+';
 
-exponentIndicator = oneOf 'eE';
+exponentIndicator := oneOf 'eE';
 
-hexIndicator =
+hexIndicator :=
     either(
         string '0x',
         string '0X');
 
 // Digits
 ////////////////////////////////////////
-decimalDigit = oneOf '0123456789';
+decimalDigit := oneOf '0123456789';
 
-nonZeroDigit = oneOf '123456789';
+nonZeroDigit := oneOf '123456789';
 
-hexDigit = oneOf '0123456789abcdefABCDEF';
+hexDigit := oneOf '0123456789abcdefABCDEF';
 
 // Strings
 ////////////////////////////////////////
-decimalDigits = label('Decimal Digits Lexer',
+decimalDigits := label('Decimal Digits Lexer',
     join <| many1 decimalDigit);
 
-hexDigits = label('Hex Digits Lexer',
+hexDigits := label('Hex Digits Lexer',
     join <| many1 hexDigit);
 
 // Integers
 ////////////////////////////////////////
-unsignedInteger = label@'Unsigned Integer Lexer' <|
+unsignedInteger := label@'Unsigned Integer Lexer' <|
     map(
         parseInt,
         decimalDigits);
 
-signedInteger = label@'Signed Integer Lexer' <|
+signedInteger := label@'Signed Integer Lexer' <|
     either(
         next(
             negativeSign,
@@ -102,26 +102,26 @@ signedInteger = label@'Signed Integer Lexer' <|
             optional positiveSign,
             unsignedInteger));
 
-var hexIntegerLiteralDigits = label@'Hex Integer Literal Digits Lexer' <|
+var hexIntegerLiteralDigits := label@'Hex Integer Literal Digits Lexer' <|
     map(
         \num -> parseInt(num, 16),
         hexDigits);
 
 // Parts
 ////////////////////////////////////////
-exponentPart = label@'Exponent Part Lexer' <|
+exponentPart := label@'Exponent Part Lexer' <|
     next(
         exponentIndicator,
         signedInteger);
 
 // Literals
 ////////////////////////////////////////
-hexIntegerLiteral = label@'Hex Integer Literal Lexer' <|
+hexIntegerLiteral := label@'Hex Integer Literal Lexer' <|
     next(
         hexIndicator,
         hexIntegerLiteralDigits);
 
-decimalIntegerLiteral = label@'Decimal Integer Literal' <|
+decimalIntegerLiteral := label@'Decimal Integer Literal' <|
     map(
         parseInt,
         decimalDigits);
@@ -134,7 +134,7 @@ decimalIntegerLiteral = label@'Decimal Integer Literal' <|
  * 
  * @return Number value of the input.
  */
-decimalLiteral = label@'Decimal Literal Lexer' <|
+decimalLiteral := label@'Decimal Literal Lexer' <|
     binds(
         enumeration(
             binds(
@@ -155,7 +155,7 @@ decimalLiteral = label@'Decimal Literal Lexer' <|
  * 
  * @return Number value of the input.
  */
-numericLiteral = label@'Numeric Literal Lexer' <|
+numericLiteral := label@'Numeric Literal Lexer' <|
     either(
         next(
             attempt hexIndicator,

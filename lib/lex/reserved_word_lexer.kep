@@ -6,9 +6,9 @@ package (
     
     reservedWord)
 with
-   import 'bennu::parse' {
+    import 'bennu::parse' {
         label},
-   import 'bennu::text' {
+    import 'bennu::text' {
         trie}
 in {
 

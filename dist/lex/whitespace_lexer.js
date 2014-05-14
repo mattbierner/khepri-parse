@@ -4,12 +4,10 @@
 */
 define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
-    var map = __o["map"],
-        label = __o["label"],
+    var tab, vt, ff, sp, nbsp, bom, usp, whitespace, label = __o["label"],
         character = __o0["character"],
         oneOf = __o0["oneOf"],
-        match = __o0["match"],
-        tab, vt, ff, sp, nbsp, bom, usp, whitespace;
+        match = __o0["match"];
     (tab = character("\t"));
     (vt = character("\u000b"));
     (ff = character("\f"));

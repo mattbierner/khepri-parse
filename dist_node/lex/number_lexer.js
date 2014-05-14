@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/number_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/number_lexer.kep'
  * DO NOT EDIT
-*/"use strict";
+*/
+"use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     __o1 = require("nu-stream")["stream"],

@@ -394,7 +394,7 @@ applicationExpression = label@'Call Expression' <|
 
 // Unary Expression
 ////////////////////////////////////////
-unaryOperator = label@'Unary Operator' <|
+unaryOperator := label@'Unary Operator' <|
     either(
         keyword('typeof', 'void'),
         tokenParser.unaryOperator);
@@ -410,7 +410,7 @@ in
         enumeration(
             many unaryOperator,
             applicationExpression |> expected@"unary argument"),
-        \ops, expression ->
+        \ops expression ->
             always(foldr(reducer, expression, ops)));
 
 // Binary Expressions
@@ -420,7 +420,7 @@ var createBinary := \loc op l r ->
         ast_value.BinaryOperator.create(op.loc, op.value),
         l,
         r);
-        
+
 var precedenceTable = [
     {
         'sep': prefixedOp('*', '/', '%'),
@@ -436,12 +436,12 @@ var precedenceTable = [
         'node': createBinary
     }, {
         'sep': either(
-            prefixedOp('<', '>', '<=', '>='),
+            prefixedOp('<', '>'),
             keyword 'instanceof'),
         'precedence': 4,
         'node': createBinary
     }, {
-        'sep': prefixedOp('==', '!=', '===', '!=='),
+        'sep': prefixedOp('==', '!='),
         'precedence': 5,
         'node': createBinary
     }, {
@@ -523,7 +523,7 @@ assignmentExpression = label@'Assignment Expression' <| rec\self ->
             enumeration(
                 either(self, expression) |> expected@'expression')),
         \loc left op right ->
-            ast_expression.AssignmentExpression.create(loc, op.value, left, right));
+            ast_expression.AssignmentExpression.create(loc, left, right, op.value === ':='));
 
 // Delete Expression
 ////////////////////////////////////////

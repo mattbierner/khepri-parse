@@ -4,18 +4,16 @@
 */
 "use strict";
 var parse = require("bennu")["parse"],
-    ParserState = parse["ParserState"],
     __o = require("nu-stream")["stream"],
+    __o0 = require("khepri-ast")["position"],
+    __o1 = require("./program_parser"),
+    parserStream, ParserPosition, parseInput, parseStream, ParserState = parse["ParserState"],
     filter = __o["filter"],
     isEmpty = __o["isEmpty"],
     first = __o["first"],
     streamFrom = __o["from"],
-    __o0 = require("khepri-ast")["position"],
-    SourceLocation = __o0["SourceLocation"],
     SourcePosition = __o0["SourcePosition"],
-    __o1 = require("./program_parser"),
-    program = __o1["program"],
-    parserStream, ParserPosition, parseInput, parseStream;
+    program = __o1["program"];
 (parserStream = filter.bind(null, (function(x) {
     switch (x.type) {
         case "Whitespace":
@@ -51,10 +49,9 @@ var parse = require("bennu")["parse"],
 (parseStream = (function(s) {
     return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
 }));
-var x = streamFrom,
-    y = parseStream;
 (parseInput = (function(z) {
-    return y(x(z));
+    var s = streamFrom(z);
+    return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
 }));
 (exports["parserStream"] = parserStream);
 (exports["ParserPosition"] = ParserPosition);

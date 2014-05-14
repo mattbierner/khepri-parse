@@ -4,9 +4,10 @@
 package (
     sourceElement
     sourceElements
+    
     program)
 with
-    import 'bennu::parse' {eager either eof many label late},
+    import 'bennu::parse' {eager either eof many label},
     import 'bennu::lang' {then},
     
     import 'khepri-ast::program' ast_program,
@@ -18,11 +19,11 @@ in {
 
 /* Parsers
  ******************************************************************************/
-sourceElement = statement;
+sourceElement := statement;
 
-sourceElements = eager <| many sourceElement;
+sourceElements := eager <| many sourceElement;
 
-program = label@'Program' <|
+program := label@'Program' <|
     node(
         then(
             either(

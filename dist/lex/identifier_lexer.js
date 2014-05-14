@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/identifier_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/identifier_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
+*/
+define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
     require, exports, __o, __o0, __o1, __o2) {
     "use strict";
     var zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, identifierStart, identifierPart,

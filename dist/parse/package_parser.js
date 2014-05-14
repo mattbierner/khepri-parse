@@ -6,7 +6,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
     "./value_parser", "./statement_parser"
 ], (function(require, exports, __o, __o0, ast_package, __o1, __o2, __o3, __o4) {
     "use strict";
-    var attempt = __o["attempt"],
+    var khepriPackage, attempt = __o["attempt"],
         eager = __o["eager"],
         either = __o["either"],
         enumeration = __o["enumeration"],
@@ -14,7 +14,6 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
         next = __o["next"],
         optional = __o["optional"],
         label = __o["label"],
-        late = __o["late"],
         between = __o0["between"],
         sepBy = __o0["sepBy"],
         node = __o1["node"],
@@ -26,7 +25,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/package",
         operator = __o3["operator"],
         withStatement = __o4["withStatement"],
         blockStatement = __o4["blockStatement"],
-        khepriPackage, symbol = either(identifier, operator),
+        symbol = either(identifier, operator),
         packageExport = label("Package Export", either(node(symbol, ast_package.PackageExport.create), nodea(
             enumeration(stringLiteral, next(punctuator(":"), identifier)), (function(loc, alias, id) {
                 return ast_package.PackageExport.create(loc, id, alias);

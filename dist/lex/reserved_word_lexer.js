@@ -1,7 +1,8 @@
 /*
- * THIS FILE IS AUTO GENERATED from 'lib/lex/reserved_word_lexer.kep'
+ * THIS FILE IS AUTO GENERATED FROM 'lib/lex/reserved_word_lexer.kep'
  * DO NOT EDIT
-*/define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
+*/
+define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, exports, __o, __o0) {
     "use strict";
     var reservedWordList, reservedWord, label = __o["label"],
         trie = __o0["trie"],

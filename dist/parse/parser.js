@@ -5,15 +5,13 @@
 define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/position", "./program_parser"], (function(
     require, exports, parse, __o, __o0, __o1) {
     "use strict";
-    var ParserState = parse["ParserState"],
+    var parserStream, ParserPosition, parseInput, parseStream, ParserState = parse["ParserState"],
         filter = __o["filter"],
         isEmpty = __o["isEmpty"],
         first = __o["first"],
         streamFrom = __o["from"],
-        SourceLocation = __o0["SourceLocation"],
         SourcePosition = __o0["SourcePosition"],
-        program = __o1["program"],
-        parserStream, ParserPosition, parseInput, parseStream;
+        program = __o1["program"];
     (parserStream = filter.bind(null, (function(x) {
         switch (x.type) {
             case "Whitespace":
@@ -51,10 +49,9 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
     (parseStream = (function(s) {
         return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
     }));
-    var x = streamFrom,
-        y = parseStream;
     (parseInput = (function(z) {
-        return y(x(z));
+        var s = streamFrom(z);
+        return parse.runState(program, new(ParserState)(parserStream(s), ParserPosition.initial));
     }));
     (exports["parserStream"] = parserStream);
     (exports["ParserPosition"] = ParserPosition);

@@ -4,11 +4,10 @@
 */
 "use strict";
 var __o = require("bennu")["parse"],
-    always = __o["always"],
+    __o0 = require("bennu")["text"],
+    nullLiteral, always = __o["always"],
     next = __o["next"],
     label = __o["label"],
-    __o0 = require("bennu")["text"],
-    string = __o0["string"],
-    nullLiteral;
+    string = __o0["string"];
 (nullLiteral = label("Null Lexer", next(string("null"), always(null))));
 (exports["nullLiteral"] = nullLiteral);

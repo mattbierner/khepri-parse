@@ -4,10 +4,16 @@
 */
 "use strict";
 var __o = require("bennu")["parse"],
-    attempt = __o["attempt"],
+    __o0 = require("bennu")["lang"],
+    __o1 = require("nu-stream")["stream"],
+    ast_pattern = require("khepri-ast")["pattern"],
+    __o2 = require("./common"),
+    __o3 = require("./token_parser"),
+    __o4 = require("./value_parser"),
+    listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, operatorPattern, sinkPattern,
+        ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern, asPattern, attempt = __o[
+            "attempt"],
     append = __o["append"],
-    bind = __o["bind"],
-    binds = __o["binds"],
     choice = __o["choice"],
     cons = __o["cons"],
     eager = __o["eager"],
@@ -19,32 +25,23 @@ var __o = require("bennu")["parse"],
     rec = __o["rec"],
     label = __o["label"],
     late = __o["late"],
-    __o0 = require("bennu")["lang"],
     between = __o0["between"],
     sepBy = __o0["sepBy"],
     sepBy1 = __o0["sepBy1"],
-    sepEndBy = __o0["sepEndBy"],
     then = __o0["then"],
-    __o1 = require("nu-stream")["stream"],
     NIL = __o1["NIL"],
-    ast_pattern = require("khepri-ast")["pattern"],
-    __o2 = require("./common"),
     node = __o2["node"],
     nodea = __o2["nodea"],
-    __o3 = require("./token_parser"),
     keyword = __o3["keyword"],
     punctuator = __o3["punctuator"],
-    __o4 = require("./value_parser"),
     identifier = __o4["identifier"],
     operator = __o4["operator"],
     stringLiteral = __o4["stringLiteral"],
-    listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, operatorPattern, sinkPattern,
-        ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern, asPattern, sepEndWith1 = (
-            function(sep, end, p) {
-                return rec((function(self) {
-                    return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
-                }));
-            }),
+    sepEndWith1 = (function(sep, end, p) {
+        return rec((function(self) {
+            return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
+        }));
+    }),
     sepEndWith = (function(sep, end, p) {
         return either(enumeration(end), sepEndWith1(sep, end, p));
     }),

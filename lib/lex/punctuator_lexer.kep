@@ -63,15 +63,15 @@ prefixOperator := label @ 'Prefix Operator Lexer' <|
 ////////////////////////////////////////
 infixOperator = label @ 'Infix Operator Lexer' <|
     next(
-        not <| next(
+        not next(
             trie ['->', '-|', '|-'],
             not operatorChar),
         eager enumeration(
             trie [
                 '&&', '||',
                 '<<', '>>', '>>>',
-                '<=', '<', '>=', '>',
-                '===', '!==', '==', '!=',
+                '<', '>',
+                '==', '!=',
                 '&', '|', '^',
                 '+', '-', '*', '/', '%',
                 '|>', '<|',

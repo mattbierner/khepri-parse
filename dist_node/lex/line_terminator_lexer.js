@@ -4,16 +4,14 @@
 */
 "use strict";
 var __o = require("bennu")["parse"],
-    always = __o["always"],
+    __o0 = require("bennu")["text"],
+    lf, cr, ls, ps, lineTerminator, lineTerminatorSequence, always = __o["always"],
     choice = __o["choice"],
     next = __o["next"],
     optional = __o["optional"],
     label = __o["label"],
-    token = __o["token"],
-    __o0 = require("bennu")["text"],
     character = __o0["character"],
-    oneOf = __o0["oneOf"],
-    lf, cr, ls, ps, lineTerminator, lineTerminatorSequence;
+    oneOf = __o0["oneOf"];
 (lf = label("Line Feed Lexer", character("\n")));
 (cr = label("Carriage Return Lexer", character("\r")));
 (ls = label("Line Separator Lexer", character("\u2028")));

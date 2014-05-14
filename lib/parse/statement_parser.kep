@@ -217,7 +217,7 @@ switchStatement = label@'Switch Statement' <| let
             next(
                 punctuator ':',
                 statementList)),
-        \loc, consequent -> ast_clause.SwitchCase.create(loc, null, consequent)),
+        \loc consequent -> ast_clause.SwitchCase.create(loc, null, consequent)),
 
     caseClauses = many caseClause,
 
