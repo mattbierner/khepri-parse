@@ -15,7 +15,6 @@ var __o = require("bennu")["parse"],
     attempt = __o["attempt"],
     choice = __o["choice"],
     either = __o["either"],
-    eof = __o["eof"],
     many = __o["many"],
     map = __o["map"],
     not = __o["not"],
@@ -63,8 +62,8 @@ var singleEscapeCharacter = oneOf("\"'\\bfnrtv")
 (hexEscapeSequence = next(character("x"), fromCharCode(times(2, hexDigit))));
 (unicodeEscapeSequence = next(character("u"), fromCharCode(times(4, hexDigit))));
 (characterEscapeSequence = either(singleEscapeCharacter, nonEscapeCharacter));
-(escapeSequence = choice(characterEscapeSequence, sequence(character("0"), either(eof, next(not(decimalDigit), anyToken)),
-    always("\u0000")), hexEscapeSequence, unicodeEscapeSequence));
+(escapeSequence = choice(characterEscapeSequence, sequence(character("0"), not(decimalDigit), always("\u0000")),
+    hexEscapeSequence, unicodeEscapeSequence));
 (singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape, escapeSequence),
     next(not(lineTerminator), noneOf("'\\")))));
 (singleStringCharacters = many(singleStringCharacter));

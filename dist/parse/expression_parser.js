@@ -134,19 +134,20 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         (a.loc = loc);
         return a;
     }))), args));
-    (accessor = label("Accessor", node(next(punctuator("."), either(identifier.map((function(x) {
+    (accessor = label("Accessor", nodea(enumeration(punctuator(".", ".?"), either(identifier.map((function(x) {
             return [x, false];
         })), between(punctuator("("), punctuator(")"), expected("accessor expression",
             expression))
         .map((function(x) {
             return [x, true];
-        })))), (function(loc, __o5) {
+        })))), (function(loc, op, __o5) {
         var x = __o5[0],
             computed = __o5[1];
         return ({
             "loc": loc,
             "property": x,
-            "computed": computed
+            "computed": computed,
+            "checked": (op.value === ".?")
         });
     }))));
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected(
@@ -156,15 +157,15 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     (memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression),
         many(memo(accessor))), ((x = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c
-            .loc), p, c.property, c.computed);
+            .loc), p, c.property, c.computed, c.checked);
     }))), (function() {
         var args0 = arguments;
         return always(x.apply(null, args0));
     })))));
     var leftHandSideExpression = label("Call Expression", ((reducer = (function(p, c) {
         return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(
-                SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed) : ast_expression
-            .CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
+                SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed, c.checked) :
+            ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
     })), binds(enumeration(memberExpression, many(either(argumentList, accessor))), ((x0 = foldl.bind(
         null, reducer)), (function() {
         var args0 = arguments;
@@ -263,7 +264,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     (leftHandReferenceExpression = label("Left Hand Reference Expression", either(operator, binds(enumeration(
         identifier, many(memo(accessor))), ((x2 = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc,
-            c.loc), p, c.property, c.computed);
+            c.loc), p, c.property, c.computed, c.checked);
     }))), (function() {
         var args0 = arguments;
         return always(x2.apply(null, args0));
@@ -271,7 +272,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(
         memo(accessor))), ((x3 = foldl.bind(null, (function(p, c) {
         return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc),
-            p, c.property, c.computed);
+            p, c.property, c.computed, c.checked);
     }))), (function() {
         var args0 = arguments;
         return always(x3.apply(null, args0));

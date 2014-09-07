@@ -77,19 +77,24 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         }))), node(next(punctuator("..."), optional(identifierPattern)), ast_pattern.EllipsisPattern
         .create))));
     var element, pre, mid, post, sep0;
-    (arrayPattern = label("Array Pattern", ((element = topLevelPattern), node(between(punctuator("["),
-        punctuator("]"), eager(((pre = expected("array pattern element", element)), (mid =
-            ellipsisPattern), (post = expected("non-ellipsis array pattern element",
-            element)), append(((sep0 = sep), either(enumeration(mid), rec((function(
-            self) {
-            return cons(pre, optional(NIL, next(sep0, either(
-                enumeration(mid), self))));
-        })))), next(sep, sepBy(sep, post)))))), ast_pattern.ArrayPattern.create))));
-    (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":"), unpack)), ast_pattern
-        .ObjectPatternElement.create), node(either(asPattern, identifierPattern), ast_pattern.ObjectPatternElement
-        .create)));
-    (objectPattern = label("Object Pattern", node(between(punctuator("{"), punctuator("}"), eager(sepBy1(sep,
-        expected("object pattern element", objectPatternElement)))), ast_pattern.ObjectPattern.create)));
+    (arrayPattern = label("Array Pattern", ((element = topLevelPattern), nodea(enumeration(optional(false,
+        punctuator("?")), between(punctuator("["), punctuator("]"), eager(((pre = expected(
+        "array pattern element", element)), (mid = ellipsisPattern), (post =
+        expected("non-ellipsis array pattern element", element)), append(((sep0 =
+        sep), either(enumeration(mid), rec((function(self) {
+        return cons(pre, optional(NIL, next(sep0, either(
+            enumeration(mid), self))));
+    })))), next(sep, sepBy(sep, post))))))), (function(loc, checked, elements) {
+        return ast_pattern.ArrayPattern.create(loc, elements, checked);
+    })))));
+    (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":", "#"), unpack)),
+        ast_pattern.ObjectPatternElement.create), node(either(asPattern, identifierPattern),
+        ast_pattern.ObjectPatternElement.create)));
+    (objectPattern = label("Object Pattern", nodea(enumeration(optional(false, punctuator("?")), between(
+        punctuator("{"), punctuator("}"), eager(sepBy1(sep, expected("object pattern element",
+            objectPatternElement))))), (function(loc, checked, elements) {
+        return ast_pattern.ObjectPattern.create(loc, elements, checked);
+    }))));
     (asPattern = label("As Pattern", nodea(enumeration(attempt(then(identifierPattern, punctuator("#"))),
             expected("object or array pattern", choice(arrayPattern, objectPattern))), ast_pattern.AsPattern
         .create)));

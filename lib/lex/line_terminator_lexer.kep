@@ -23,26 +23,22 @@ var lfChar = '\u000A',
 /**
  * Line Feed
  */
-lf = label('Line Feed Lexer',
-    character lfChar);
+lf = character lfChar;
 
 /**
  * Carriage Return
  */
-cr = label('Carriage Return Lexer',
-    character crChar);
+cr = character crChar;
 
 /**
  * Line Separator
  */
-ls = label('Line Separator Lexer',
-    character lsChar);
+ls = character lsChar;
 
 /**
  * Paragraph Separator
  */
-ps = label('Paragraph Separator Lexer',
-    character psChar);
+ps = character psChar;
 
 /**
  * A line terminator character.

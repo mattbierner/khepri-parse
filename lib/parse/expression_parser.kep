@@ -295,17 +295,18 @@ var argumentList = label@'Argument List' <|
 // Accessor
 ////////////////////////////////////////
 accessor = label@'Accessor' <|
-    node(
-        next(
-            punctuator '.',
+    nodea(
+        enumeration(
+            punctuator('.', '.?'),
             either(
                 identifier.map \ x -> [x, false],
                 between(punctuator '(', punctuator ')',
                     expression |> expected@"accessor expression").map \x -> [x, true])),
-        \loc [x computed] -> ({
+        \loc op [x computed] -> ({
             'loc': loc,
             'property': x,
-            'computed': computed
+            'computed': computed,
+            'checked': op.value === '.?'
         }));
 
 // New Expression
@@ -329,7 +330,8 @@ var accessorReducer = \p c ->
         SourceLocation.merge(p.loc, c.loc),
         p,
         c.property,
-        c.computed);
+        c.computed,
+        c.checked);
 
 memberExpression = label@'Member Expression' <|
     binds(
@@ -349,7 +351,8 @@ var leftHandSideExpression = label@'Call Expression' <| let
                 SourceLocation.merge(p.loc, c.loc),
                 p,
                 c.property,
-                c.computed)
+                c.computed,
+                c.checked)
             :ast_expression.CallExpression.create(
                 SourceLocation.merge(p.loc, c.loc),
                 p,

@@ -1,5 +1,10 @@
 # ChangeLog #
 
+## 2.3.0 - Sep 7, 2014
+* Passing of checked array and object patterns `\?{a b}`.
+* Parsing of checked member expressions `a.?b` `a.?(1)`.
+* Deprecation of `\{'a':b}` pattern syntax in favor of `\{'a'#b}`.
+
 ## 2.2.0 - May 14, 2014
 * Updated to khepri-ast V4.4
 

@@ -138,13 +138,16 @@ ellipsisPattern = label@'Ellipsis Pattern' <|
 arrayPattern = label@'Array Pattern' <| let
     element = topLevelPattern
 in
-    node(
-        between(punctuator '[', punctuator ']',
-            eager listPattern(
-                element |> expected@"array pattern element",
-                ellipsisPattern,
-                element |> expected@"non-ellipsis array pattern element")),
-            ast_pattern.ArrayPattern.create);
+    nodea(
+        enumeration(
+            optional(false, punctuator '?'),
+            between(punctuator '[', punctuator ']',
+                eager listPattern(
+                    element |> expected@"array pattern element",
+                    ellipsisPattern,
+                    element |> expected@"non-ellipsis array pattern element"))),
+        \loc checked elements ->
+            ast_pattern.ArrayPattern.create(loc, elements, checked));
 
 // Object Pattern
 ////////////////////////////////////////
@@ -153,7 +156,7 @@ objectPatternElement = either(
         enumeration(
             stringLiteral,
             next(
-                punctuator ':',
+                punctuator(':', '#'),
                 unpack)),
         ast_pattern.ObjectPatternElement.create),
     node(
@@ -163,11 +166,14 @@ objectPatternElement = either(
         ast_pattern.ObjectPatternElement.create));
 
 objectPattern = label@'Object Pattern' <|
-    node(
-        between(punctuator '{', punctuator '}',
-            eager sepBy1(sep,
-                objectPatternElement |> expected@"object pattern element")),
-        ast_pattern.ObjectPattern.create);
+    nodea(
+        enumeration(
+            optional(false, punctuator '?'),
+            between(punctuator '{', punctuator '}',
+                eager sepBy1(sep,
+                    objectPatternElement |> expected@"object pattern element"))),
+        \loc checked elements ->
+            ast_pattern.ObjectPattern.create(loc, elements, checked));
 
 // As Pattern
 ////////////////////////////////////////

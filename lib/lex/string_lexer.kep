@@ -126,11 +126,7 @@ escapeSequence :=
         characterEscapeSequence,
         sequence(
             character '0',
-            either(
-                eof,
-                next(
-                    not decimalDigit,
-                    anyToken)),
+            not decimalDigit,
             always '\u0000'),
         hexEscapeSequence,
         unicodeEscapeSequence);

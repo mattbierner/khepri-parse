@@ -11,10 +11,10 @@ define(["require", "exports", "bennu/parse", "bennu/text"], (function(require, e
         label = __o["label"],
         character = __o0["character"],
         oneOf = __o0["oneOf"];
-    (lf = label("Line Feed Lexer", character("\n")));
-    (cr = label("Carriage Return Lexer", character("\r")));
-    (ls = label("Line Separator Lexer", character("\u2028")));
-    (ps = label("Paragraph Separator Lexer", character("\u2029")));
+    (lf = character("\n"));
+    (cr = character("\r"));
+    (ls = character("\u2028"));
+    (ps = character("\u2029"));
     (lineTerminator = label("Line Terminator Lexer", oneOf(["\n", "\r", "\u2028", "\u2029"])));
     (lineTerminatorSequence = label("Line Terminator Sequence Lexer", choice(lf, ls, ps, next(cr, optional("\r",
         next(lf, always("\r\n")))))));

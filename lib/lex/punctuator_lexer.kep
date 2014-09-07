@@ -33,11 +33,13 @@ var join := map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/
+var operatorChar := oneOf '?+-*/%|&^<>=!~@';
+
 // Punctuator
 ////////////////////////////////////////
 var punctuators := [
     '{', '}', '(', ')', '[', ']',
-    ',',  '.', ';', ':',
+    ',',  '.', '.?', ';', ':',
     '?',
     '=', ':=', '=:',
     '@',
@@ -50,8 +52,6 @@ punctuator = label @ 'Punctuator Lexer' <|
 
 // Prefix Operator
 ////////////////////////////////////////
-var operatorChar := oneOf '?+-*/%|&^<>=!~@';
-
 prefixOperator := label @ 'Prefix Operator Lexer' <|
     eager enumeration(
         either(

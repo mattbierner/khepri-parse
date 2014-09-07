@@ -25,11 +25,11 @@ var __o = require("bennu")["parse"],
         return (x + y);
     }),
     join = map.bind(null, foldl.bind(null, __add, "")),
-    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#", "\\", "->",
-        "§", "-|", "|-"
+    operatorChar = oneOf("?+-*/%|&^<>=!~@"),
+    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ".?", ";", ":", "?", "=", ":=", "=:", "@", "...", "#", "\\",
+        "->", "§", "-|", "|-"
     ];
 (punctuator = label("Punctuator Lexer", trie(punctuators)));
-var operatorChar = oneOf("?+-*/%|&^<>=!~@");
 (prefixOperator = label("Prefix Operator Lexer", eager(enumeration(either(trie(["~", "++", "--"]), attempt(then(
     character("!"), not(character("="))))), join(many(operatorChar))))));
 (infixOperator = label("Infix Operator Lexer", next(not(next(trie(["->", "-|", "|-"]), not(operatorChar))), eager(
