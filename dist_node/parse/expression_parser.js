@@ -112,9 +112,9 @@ var unaryOperatorExpression = label("Unary Operator Expression", choice(value.un
         return ast_expression.OperatorExpression.create(op.loc, op);
     }))),
     binaryOperatorExpression = label("Binary Operator Expression", nodea(cons(optional(keyword("_")), either(
-        enumeration(either(keyword("new"), punctuator(".")), optional(next(punctuator(","), expression))),
-        enumeration(choice(keyword("instanceof"), punctuator("@"), tokenParser.binaryOperator), optional(
-            next(optional(punctuator(",")), expression))))), (function(loc, flipped, op, arg0) {
+        enumeration(either(keyword("new"), punctuator(".", ".?")), optional(next(punctuator(","),
+            expression))), enumeration(choice(keyword("instanceof"), punctuator("@"), tokenParser.binaryOperator),
+            optional(next(optional(punctuator(",")), expression))))), (function(loc, flipped, op, arg0) {
         var operator0 = ast_expression.OperatorExpression.create(loc, ast_value.BinaryOperator.create(loc,
             op.value), flipped);
         return (arg0 ? ast_expression.CurryExpression.create(loc, operator0, [arg0]) : operator0);

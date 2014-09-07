@@ -230,7 +230,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                 enumeration(
                     either(
                         keyword 'new',
-                        punctuator '.'),
+                        punctuator('.', '.?')),
                     optional next(punctuator ',', expression)),
                 enumeration(
                     choice(

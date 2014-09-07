@@ -96,10 +96,10 @@ var element, pre, mid, post, sep0;
         return ast_pattern.ObjectPattern.create(loc, elements, checked);
     }))));
 (asPattern = label("As Pattern", nodea(enumeration(attempt(then(identifierPattern, punctuator("#"))), expected(
-    "object or array pattern", choice(arrayPattern, objectPattern))), ast_pattern.AsPattern.create)));
+    "object or array pattern", choice(attempt(arrayPattern), objectPattern))), ast_pattern.AsPattern.create)));
 (importPattern = label("Import Pattern", next(keyword("import"), nodea(enumeration(stringLiteral, topLevelPattern),
     ast_pattern.ImportPattern.create))));
-(unpack = label("Unpack", choice(arrayPattern, objectPattern, asPattern, identifierPattern, operatorPattern)));
+(unpack = label("Unpack", choice(attempt(arrayPattern), objectPattern, asPattern, identifierPattern, operatorPattern)));
 (topLevelPattern = label("Top Level Pattern", choice(sinkPattern, unpack)));
 (exports["listPattern"] = listPattern);
 (exports["listPattern0"] = listPattern0);

@@ -184,7 +184,7 @@ asPattern = label@'As Pattern' <|
                 identifierPattern,
                 punctuator '#'),
             choice(
-                arrayPattern,
+                attempt arrayPattern,
                 objectPattern)
                 |> expected@'object or array pattern'),
         ast_pattern.AsPattern.create);
@@ -206,7 +206,7 @@ importPattern = label@'Import Pattern' <|
 ////////////////////////////////////////
 unpack = label@'Unpack' <|
     choice(
-        arrayPattern,
+        attempt arrayPattern,
         objectPattern,
         asPattern,
         identifierPattern,

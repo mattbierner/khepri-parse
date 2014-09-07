@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 2.3.1 - Sep 7, 2014
+* Fixed checked object expression patterns.
+* Allow `.?` as unary op.
+
 ## 2.3.0 - Sep 7, 2014
 * Passing of checked array and object patterns `\?{a b}`.
 * Parsing of checked member expressions `a.?b` `a.?(1)`.
