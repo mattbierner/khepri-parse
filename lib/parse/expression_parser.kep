@@ -13,6 +13,7 @@ package (
     
     accessor
     memberExpression
+    checkedExpression
     
     newExpression
     curryExpression
@@ -63,7 +64,7 @@ with
         sepBy
         sepBy1
         then},
-    import 'nu-stream::stream' {foldl foldr},
+    import 'nu-stream::stream' {foldl foldr reduce},
     
     import 'khepri-ast::declaration' ast_declaration,
     import 'khepri-ast::expression' ast_expression,
@@ -99,7 +100,13 @@ expression = late\-> { return expression; };
 
 memberExpression = late\-> { return memberExpression; };
 
-curryExpression = late\-> { return memberExpression; };
+checkedExpression = late\-> { return checkedExpression; };
+
+operatorExpression = late\-> { return operatorExpression; };
+
+accessor = late\-> { return accessor; };
+
+curryExpression = late\-> { return curryExpression; };
 
 /* Components
  ******************************************************************************/
@@ -208,6 +215,40 @@ conditionalExpression = label@'Conditional Expression' <|
                     |> expected@"conditional alternate expression"))),
         ast_expression.ConditionalExpression.create);
 
+// ArgumentList
+////////////////////////////////////////
+var argumentList = label@'Argument List' <|
+    either(
+        attempt node(
+            operatorExpression,
+            \loc x -> {
+                var a = [x];
+                a.loc = loc;
+                return a;
+            }),
+        args);
+
+// Dot Expression
+////////////////////////////////////////
+var dotExpression = let
+    reducer = \p c ->
+        ?c.hasOwnProperty('property')
+            :ast_expression.MemberExpression.create(
+                ?p : SourceLocation.merge(p.loc, c.loc) : c.loc,
+                p,
+                c.property,
+                c.computed)
+            :ast_expression.CallExpression.create(
+                ?p : SourceLocation.merge(p.loc, c.loc) : c.loc,
+                p,
+                c)
+in
+    bind(
+        cons(
+            accessor,
+            many <| either(argumentList, accessor)),
+        foldl@(reducer, null) \> always);
+
 // Operators Expression
 ////////////////////////////////////////
 var unaryOperatorExpression = label@'Unary Operator Expression' <|
@@ -217,8 +258,8 @@ var unaryOperatorExpression = label@'Unary Operator Expression' <|
         keyword('typeof', 'void').map \ {loc value} ->
             ast_value.UnaryOperator.create(loc, value),
         
-        attempt <| next(punctuator '.', identifier).map \ {loc name} ->
-            ast_value.UnaryOperator.create(loc, '.' + name))
+        attempt <| dotExpression.map \ expr ->
+            ast_value.UnaryOperator.create(expr.loc, expr))
     .map \ op ->
         ast_expression.OperatorExpression.create(op.loc, op);
 
@@ -230,7 +271,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                 enumeration(
                     either(
                         keyword 'new',
-                        punctuator('.', '.?')),
+                        punctuator('.', '??')),
                     optional next(punctuator ',', expression)),
                 enumeration(
                     choice(
@@ -258,11 +299,15 @@ var ternayOperatorExpression = label@'Ternary Operator Expression' <|
                 ast_value.TernaryOperator.create(loc, value));
 
 operatorExpression = label@'Operator Expression' <|
-    between(punctuator '(', punctuator ')',
-        choice(
-            unaryOperatorExpression,
-            binaryOperatorExpression,
-            ternayOperatorExpression));
+    either(
+        between(punctuator '(', punctuator ')',
+            choice(
+                unaryOperatorExpression,
+                binaryOperatorExpression,
+                ternayOperatorExpression)),
+        
+        dotExpression.map \ expr ->
+            ast_expression.UnaryExpression.create(expr.loc, expr));
 
 // Primary Expression
 ////////////////////////////////////////
@@ -279,34 +324,23 @@ primaryExpression = label@'Primary Expression' <|
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
 
-// ArgumentList
-////////////////////////////////////////
-var argumentList = label@'Argument List' <|
-    either(
-        attempt node(
-            operatorExpression,
-            \loc x -> {
-                var a = [x];
-                a.loc = loc;
-                return a;
-            }),
-        args);
 
 // Accessor
 ////////////////////////////////////////
+var accessorTarget = either(
+    identifier.map \ x -> [x, false],
+    between(punctuator '(', punctuator ')',
+        expression |> expected@"accessor expression").map \x -> [x, true]);
+
 accessor = label@'Accessor' <|
-    nodea(
-        enumeration(
-            punctuator('.', '.?'),
-            either(
-                identifier.map \ x -> [x, false],
-                between(punctuator '(', punctuator ')',
-                    expression |> expected@"accessor expression").map \x -> [x, true])),
-        \loc op [x computed] -> ({
+    node(
+        next(
+            punctuator '.',
+            accessorTarget),
+        \loc [x computed] -> ({
             'loc': loc,
             'property': x,
-            'computed': computed,
-            'checked': op.value === '.?'
+            'computed': computed
         }));
 
 // New Expression
@@ -316,7 +350,7 @@ newExpression = label@'New Expression' <|
         next(
             keyword 'new',
             enumeration(
-                memberExpression |> expected@"member expression",
+                checkedExpression |> expected@"new object",
                 either(
                     args,
                     eager <| enumeration(curryExpression))
@@ -330,8 +364,7 @@ var accessorReducer = \p c ->
         SourceLocation.merge(p.loc, c.loc),
         p,
         c.property,
-        c.computed,
-        c.checked);
+        c.computed);
 
 memberExpression = label@'Member Expression' <|
     binds(
@@ -364,6 +397,19 @@ in
             many <| either(argumentList, accessor)),
         foldl@reducer \>> always);
 
+// Checked Expression
+////////////////////////////////////////
+checkedExpression = label@'Checked Expression' <|
+    chainl1(
+        next(
+            punctuator '??',
+            always \p c ->
+                ast_expression.CheckedExpression.create(
+                    SourceLocation.merge(p.loc, c.loc),
+                    p,
+                    c)),
+        leftHandSideExpression);
+
 // Curry Expression
 ////////////////////////////////////////
 curryExpression = label@'Curry Expression' <| let
@@ -375,12 +421,12 @@ curryExpression = label@'Curry Expression' <| let
 in
     binds(
         enumeration(
-            leftHandSideExpression,
+            checkedExpression,
             many next(
                 punctuator '@',
                 either(
                     argumentList,
-                    leftHandSideExpression)
+                    checkedExpression)
                 |> expected@'curry argument')),
         foldl@reducer \>> always);
 

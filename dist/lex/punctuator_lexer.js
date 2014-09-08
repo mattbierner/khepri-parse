@@ -24,7 +24,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         }),
         join = map.bind(null, foldl.bind(null, __add, "")),
         operatorChar = oneOf("?+-*/%|&^<>=!~@"),
-        punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ".?", ";", ":", "?", "=", ":=", "=:", "@", "...",
+        punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "??", "=", ":=", "=:", "@", "...",
             "#", "\\", "->", "§", "-|", "|-"
         ];
     (punctuator = label("Punctuator Lexer", trie(punctuators)));

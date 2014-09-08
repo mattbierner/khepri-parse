@@ -26,7 +26,7 @@ var __o = require("bennu")["parse"],
     }),
     join = map.bind(null, foldl.bind(null, __add, "")),
     operatorChar = oneOf("?+-*/%|&^<>=!~@"),
-    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ".?", ";", ":", "?", "=", ":=", "=:", "@", "...", "#", "\\",
+    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "??", "=", ":=", "=:", "@", "...", "#", "\\",
         "->", "§", "-|", "|-"
     ];
 (punctuator = label("Punctuator Lexer", trie(punctuators)));
