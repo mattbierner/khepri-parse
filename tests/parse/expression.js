@@ -57,7 +57,7 @@ exports.conditional_expression_conditional_consequent = function(test) {
 };
 
 exports.conditional_expression_with_conditional_test = function(test) {
-    var expr = testParser(lexer.lex("??a :b :c :d :e;"));
+    var expr = testParser(lexer.lex("? ?a :b :c :d :e;"));
     test.equal(expr.type, 'ConditionalExpression');
     test.equal(expr.test.type, 'ConditionalExpression');
     test.equal(expr.test.test.name, 'a');

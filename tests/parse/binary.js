@@ -23,6 +23,17 @@ exports.binary_expression = function(test) {
     test.done();
 };
 
+exports.checked_binary_expression = function(test) {
+    var expr = testParser(lexer.lex("a ?? b;"));
+    
+    test.equal(expr.type, 'BinaryExpression');
+    checkBinaryOp(test, '??', expr.operator);
+    test.equal(expr.left.name, 'a');
+    test.equal(expr.right.name, 'b');
+    
+    test.done();
+};
+
 exports.binary_associativity = function(test) {
     var expr = testParser(lexer.lex("a + b + c;"));
     

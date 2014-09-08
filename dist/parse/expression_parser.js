@@ -9,10 +9,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     value, __o4, _) {
     "use strict";
     var arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor,
-            memberExpression, checkedExpression, newExpression, curryExpression, applicationExpression,
-            unaryOperator, unaryExpression, binaryExpression, conditionalExpression,
-            leftHandReferenceExpression, assignmentExpression, expression, topLevelExpression, always = __o[
-                "always"],
+            memberExpression, newExpression, curryExpression, applicationExpression, unaryOperator,
+            unaryExpression, binaryExpression, conditionalExpression, leftHandReferenceExpression,
+            assignmentExpression, expression, topLevelExpression, always = __o["always"],
         append = __o["append"],
         attempt = __o["attempt"],
         bind = __o["bind"],
@@ -61,9 +60,6 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     })));
     (memberExpression = late((function() {
         return memberExpression;
-    })));
-    (checkedExpression = late((function() {
-        return checkedExpression;
     })));
     (operatorExpression = late((function() {
         return operatorExpression;
@@ -170,7 +166,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         });
     }))));
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected("new object",
-        checkedExpression), expected("argument list", either(args, eager(enumeration(
+        memberExpression), expected("argument list", either(args, eager(enumeration(
         curryExpression)))))), ast_expression.NewExpression.create)));
     var x0;
     (memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression),
@@ -189,21 +185,17 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         null, reducer0)), (function() {
         var args0 = arguments;
         return always(x1.apply(null, args0));
-    })))));
-    (checkedExpression = label("Checked Expression", chainl1(next(punctuator("??"), always((function(p, c) {
-        return ast_expression.CheckedExpression.create(SourceLocation.merge(p.loc, c.loc),
-            p, c);
-    }))), leftHandSideExpression)));
-    var reducer1, x2;
+    }))))),
+        reducer1, x2;
     (curryExpression = label("Curry Expression", ((reducer1 = (function(f, args0) {
         return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args0.loc),
             f, [].concat(args0));
-    })), binds(enumeration(checkedExpression, many(next(punctuator("@"), expected("curry argument",
-        either(argumentList, checkedExpression))))), ((x2 = foldl.bind(null, reducer1)), (
-        function() {
-            var args0 = arguments;
-            return always(x2.apply(null, args0));
-        }))))));
+    })), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected(
+        "curry argument", either(argumentList, leftHandSideExpression))))), ((x2 = foldl.bind(
+        null, reducer1)), (function() {
+        var args0 = arguments;
+        return always(x2.apply(null, args0));
+    }))))));
     (applicationExpression = label("Call Expression", chainl1(always((function(p, c) {
         return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [
             c
@@ -223,6 +215,10 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
             l, r);
     }),
         precedenceTable = [({
+            "sep": punctuator("??"),
+            "precedence": 0,
+            "node": createBinary
+        }), ({
             "sep": prefixedOp("*", "/", "%"),
             "precedence": 1,
             "node": createBinary
@@ -320,7 +316,6 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     (exports["primaryExpression"] = primaryExpression);
     (exports["accessor"] = accessor);
     (exports["memberExpression"] = memberExpression);
-    (exports["checkedExpression"] = checkedExpression);
     (exports["newExpression"] = newExpression);
     (exports["curryExpression"] = curryExpression);
     (exports["applicationExpression"] = applicationExpression);

@@ -13,7 +13,6 @@ package (
     
     accessor
     memberExpression
-    checkedExpression
     
     newExpression
     curryExpression
@@ -99,8 +98,6 @@ var functionExpression = late\-> {
 expression = late\-> { return expression; };
 
 memberExpression = late\-> { return memberExpression; };
-
-checkedExpression = late\-> { return checkedExpression; };
 
 operatorExpression = late\-> { return operatorExpression; };
 
@@ -230,6 +227,9 @@ var argumentList = label@'Argument List' <|
 
 // Dot Expression
 ////////////////////////////////////////
+/**
+ * @TODO: code dup
+ */
 var dotExpression = let
     reducer = \p c ->
         ?c.hasOwnProperty('property')
@@ -350,7 +350,7 @@ newExpression = label@'New Expression' <|
         next(
             keyword 'new',
             enumeration(
-                checkedExpression |> expected@"new object",
+                memberExpression |> expected@"new object",
                 either(
                     args,
                     eager <| enumeration(curryExpression))
@@ -397,23 +397,10 @@ in
             many <| either(argumentList, accessor)),
         foldl@reducer \>> always);
 
-// Checked Expression
-////////////////////////////////////////
-checkedExpression = label@'Checked Expression' <|
-    chainl1(
-        next(
-            punctuator '??',
-            always \p c ->
-                ast_expression.CheckedExpression.create(
-                    SourceLocation.merge(p.loc, c.loc),
-                    p,
-                    c)),
-        leftHandSideExpression);
-
 // Curry Expression
 ////////////////////////////////////////
 curryExpression = label@'Curry Expression' <| let
-    reducer = \f args -> 
+    reducer = \f args ->
         ast_expression.CurryExpression.create(
             SourceLocation.merge(f.loc, args.loc),
             f,
@@ -421,12 +408,12 @@ curryExpression = label@'Curry Expression' <| let
 in
     binds(
         enumeration(
-            checkedExpression,
+            leftHandSideExpression,
             many next(
                 punctuator '@',
                 either(
                     argumentList,
-                    checkedExpression)
+                    leftHandSideExpression)
                 |> expected@'curry argument')),
         foldl@reducer \>> always);
 
@@ -471,6 +458,11 @@ var createBinary := \loc op l r ->
         r);
 
 var precedenceTable = [
+    {
+        'sep': punctuator '??',
+        'precedence': 0,
+        'node': createBinary
+    },
     {
         'sep': prefixedOp('*', '/', '%'),
         'precedence': 1,

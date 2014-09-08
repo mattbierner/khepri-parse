@@ -16,9 +16,9 @@ var __o = require("bennu")["parse"],
     __o4 = require("./pattern_parser"),
     _ = require("./function_parser"),
     arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor, memberExpression,
-        checkedExpression, newExpression, curryExpression, applicationExpression, unaryOperator, unaryExpression,
-        binaryExpression, conditionalExpression, leftHandReferenceExpression, assignmentExpression, expression,
-        topLevelExpression, always = __o["always"],
+        newExpression, curryExpression, applicationExpression, unaryOperator, unaryExpression, binaryExpression,
+        conditionalExpression, leftHandReferenceExpression, assignmentExpression, expression, topLevelExpression,
+        always = __o["always"],
     append = __o["append"],
     attempt = __o["attempt"],
     bind = __o["bind"],
@@ -67,9 +67,6 @@ var __o = require("bennu")["parse"],
 })));
 (memberExpression = late((function() {
     return memberExpression;
-})));
-(checkedExpression = late((function() {
-    return checkedExpression;
 })));
 (operatorExpression = late((function() {
     return operatorExpression;
@@ -168,9 +165,9 @@ var accessorTarget = either(identifier.map((function(x0) {
         "computed": computed
     });
 }))));
-(newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected("new object",
-        checkedExpression), expected("argument list", either(args, eager(enumeration(curryExpression)))))),
-    ast_expression.NewExpression.create)));
+(newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected("new object", memberExpression),
+        expected("argument list", either(args, eager(enumeration(curryExpression)))))), ast_expression.NewExpression
+    .create)));
 var x0;
 (memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression), many(memo(
     accessor))), ((x0 = foldl.bind(null, (function(p, c) {
@@ -188,16 +185,13 @@ var leftHandSideExpression = label("Call Expression", ((reducer0 = (function(p, 
     reducer0)), (function() {
     var args0 = arguments;
     return always(x1.apply(null, args0));
-})))));
-(checkedExpression = label("Checked Expression", chainl1(next(punctuator("??"), always((function(p, c) {
-    return ast_expression.CheckedExpression.create(SourceLocation.merge(p.loc, c.loc), p, c);
-}))), leftHandSideExpression)));
-var reducer1, x2;
+}))))),
+    reducer1, x2;
 (curryExpression = label("Curry Expression", ((reducer1 = (function(f, args0) {
     return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args0.loc), f, [].concat(
         args0));
-})), binds(enumeration(checkedExpression, many(next(punctuator("@"), expected("curry argument", either(
-    argumentList, checkedExpression))))), ((x2 = foldl.bind(null, reducer1)), (function() {
+})), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected("curry argument", either(
+    argumentList, leftHandSideExpression))))), ((x2 = foldl.bind(null, reducer1)), (function() {
     var args0 = arguments;
     return always(x2.apply(null, args0));
 }))))));
@@ -217,6 +211,10 @@ var createBinary = (function(loc, op, l, r) {
     return ast_expression.BinaryExpression.create(loc, ast_value.BinaryOperator.create(op.loc, op.value), l, r);
 }),
     precedenceTable = [({
+        "sep": punctuator("??"),
+        "precedence": 0,
+        "node": createBinary
+    }), ({
         "sep": prefixedOp("*", "/", "%"),
         "precedence": 1,
         "node": createBinary
@@ -313,7 +311,6 @@ var deleteExpression = label("Delete Expression", node(next(keyword("delete"), e
 (exports["primaryExpression"] = primaryExpression);
 (exports["accessor"] = accessor);
 (exports["memberExpression"] = memberExpression);
-(exports["checkedExpression"] = checkedExpression);
 (exports["newExpression"] = newExpression);
 (exports["curryExpression"] = curryExpression);
 (exports["applicationExpression"] = applicationExpression);
