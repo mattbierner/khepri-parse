@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.4.2 - Sep 8, 2014
+* Ensure that `(.x);` and `.x`; are parsed the same way.
+
 ## 2.4.1 - Sep 8, 2014
 * Dot expression as `OperatorExpressions` instead of `UnaryExpressions` which imply
   application.

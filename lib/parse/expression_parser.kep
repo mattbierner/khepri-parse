@@ -258,8 +258,7 @@ var unaryOperatorExpression = label@'Unary Operator Expression' <|
         keyword('typeof', 'void').map \ {loc value} ->
             ast_value.UnaryOperator.create(loc, value),
         
-        attempt <| dotExpression.map \ expr ->
-            ast_value.UnaryOperator.create(expr.loc, expr))
+        attempt  dotExpression)
     .map \ op ->
         ast_expression.OperatorExpression.create(op.loc, op);
 

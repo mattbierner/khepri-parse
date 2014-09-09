@@ -122,9 +122,7 @@ var argumentList = label("Argument List", either(attempt(node(operatorExpression
                 var loc = __o5["loc"],
                     value0 = __o5["value"];
                 return ast_value.UnaryOperator.create(loc, value0);
-            })), attempt(dotExpression.map((function(expr) {
-                return ast_value.UnaryOperator.create(expr.loc, expr);
-            }))))
+            })), attempt(dotExpression))
         .map((function(op) {
             return ast_expression.OperatorExpression.create(op.loc, op);
         }))),
