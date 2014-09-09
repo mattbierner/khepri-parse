@@ -81,8 +81,8 @@ exports.custom_binary_expression = function(test) {
     test.equal(expr.type, 'BinaryExpression');
     $.binaryOp(test, '+|+', expr.operator);
 
-    test.equal(expr.left.name, 'a');
-    test.equal(expr.right.name, 'b');
+    $.id(test, expr.left, 'a');
+    $.id(test, expr.right, 'b');
     
     test.done();
 };
