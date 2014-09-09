@@ -11,7 +11,7 @@ var testParser = function(program) {
 exports.single_non_computed = function(test) {
     var expr = testParser(".x;");
     
-    test.equal(expr.type, 'UnaryExpression');
+    test.equal(expr.type, 'OperatorExpression');
     test.equal(expr.operator.type, 'MemberExpression');
     test.equal(expr.operator.computed, false);
     $.id(test, expr.operator.property, 'x');
@@ -23,7 +23,7 @@ exports.single_non_computed = function(test) {
 exports.single_computed = function(test) {
     var expr = testParser(".(0);");
     
-    test.equal(expr.type, 'UnaryExpression');
+    test.equal(expr.type, 'OperatorExpression');
     test.equal(expr.operator.type, 'MemberExpression');
     test.equal(expr.operator.computed, true);
     test.equal(expr.operator.object, null);
@@ -35,7 +35,7 @@ exports.single_computed = function(test) {
 exports.multi_non_computed = function(test) {
     var expr = testParser(".a.bcd.e;");
     
-    test.equal(expr.type, 'UnaryExpression');
+    test.equal(expr.type, 'OperatorExpression');
     
     test.equal(expr.operator.type, 'MemberExpression');
     test.equal(expr.operator.computed, false);
@@ -56,7 +56,7 @@ exports.multi_non_computed = function(test) {
 exports.multi_computed = function(test) {
     var expr = testParser(".(0).(1 + 2).(3);");
     
-    test.equal(expr.type, 'UnaryExpression');
+    test.equal(expr.type, 'OperatorExpression');
     
     test.equal(expr.operator.type, 'MemberExpression');
     test.equal(expr.operator.computed, true);
@@ -79,7 +79,7 @@ exports.multi_computed = function(test) {
 exports.single_call= function(test) {
     var expr = testParser(".f(0);");
     
-    test.equal(expr.type, 'UnaryExpression');
+    test.equal(expr.type, 'OperatorExpression');
     test.equal(expr.operator.type, 'CallExpression');
     
     test.equal(expr.operator.callee.type, 'MemberExpression');

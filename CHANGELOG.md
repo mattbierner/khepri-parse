@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 2.4.1 - Sep 8, 2014
+* Dot expression as `OperatorExpressions` instead of `UnaryExpressions` which imply
+  application.
+
 ## 2.4.0 - Sep 8, 2014
 * Removed checked object accessor expression in favor of the more
   general `??` operator.

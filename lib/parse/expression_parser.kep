@@ -319,7 +319,7 @@ primaryExpression = label@'Primary Expression' <|
         functionExpression,
         attempt operatorExpression,
         dotExpression.map \ expr ->
-            ast_expression.UnaryExpression.create(expr.loc, expr),
+            ast_expression.OperatorExpression.create(expr.loc, expr),
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
 

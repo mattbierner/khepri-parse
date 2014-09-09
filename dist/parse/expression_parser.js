@@ -147,7 +147,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier,
         literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression),
         dotExpression.map((function(expr) {
-            return ast_expression.UnaryExpression.create(expr.loc, expr);
+            return ast_expression.OperatorExpression.create(expr.loc, expr);
         })), between(punctuator("("), punctuator(")"), expected("expression", expression)))));
     var accessorTarget = either(identifier.map((function(x0) {
             return [x0, false];
