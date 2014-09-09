@@ -1,9 +1,12 @@
-
-exports.number = function(test, expr, value) {
+var literal = function(kind, test, expr, value) {
     test.equal(expr.type, 'Literal');
-    test.equal(expr.kind, 'number');
+    test.equal(expr.kind, kind);
     test.equal(expr.value, value);
 };
+
+exports.number = literal.bind(null, 'number');
+
+exports.string = literal.bind(null, 'string');
 
 exports.id = function(test, expr, name) {
     test.equal(expr.type, 'Identifier');

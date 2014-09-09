@@ -1,5 +1,6 @@
 var lexer = require('../../index').lex.lexer;
 var parser = require('../../index').parse.parser;
+var $ = require('../$');
 
 
 var testParser = function(stream) {
@@ -19,16 +20,16 @@ exports.init_values = function(test) {
     var result = testParser(lexer.lex("({ 'a': 0 , 'b': 1, '9': 2});"));
     test.equal(result.properties.length, 3);
     test.equal(result.properties[0].type, 'ObjectValue');
-    test.equal(result.properties[0].key.value, 'a');
-    test.equal(result.properties[0].value.value, 0);
+    $.string(test, result.properties[0].key, 'a');
+    $.number(test, result.properties[0].value, 0);
     
     test.equal(result.properties[1].type, 'ObjectValue');
-    test.equal(result.properties[1].key.value, 'b');
-    test.equal(result.properties[1].value.value, 1);
+    $.string(test, result.properties[1].key, 'b');
+    $.number(test, result.properties[1].value, 1);
     
     test.equal(result.properties[2].type, 'ObjectValue');
-    test.equal(result.properties[2].key.value, '9');
-    test.equal(result.properties[2].value.value, 2);
+    $.string(test, result.properties[2].key, '9');
+    $.number(test, result.properties[2].value, 2);
     
     test.done();
 };
