@@ -214,8 +214,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         precedenceTable = [({
             "sep": punctuator("??"),
             "precedence": 0,
-            "node": createBinary,
-            "right": true
+            "node": createBinary
         }), ({
             "sep": prefixedOp("*", "/", "%"),
             "precedence": 1,

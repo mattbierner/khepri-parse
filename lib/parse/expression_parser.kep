@@ -459,8 +459,7 @@ var precedenceTable = [
     {
         'sep': punctuator '??',
         'precedence': 0,
-        'node': createBinary,
-        'right': true
+        'node': createBinary
     },
     {
         'sep': prefixedOp('*', '/', '%'),
