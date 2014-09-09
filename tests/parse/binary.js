@@ -1,24 +1,20 @@
 var lexer = require('../../index').lex.lexer;
 var parser = require('../../index').parse.parser;
-
+var $ = require('../$');
 
 var testParser = function(program) {
     var expr = parser.parseStream(lexer.lex(program));
     return expr.body[0].expression;
 };
 
-var checkBinaryOp = function(test, op, value) {
-    test.equal(value.type, 'BinaryOperator');
-    test.equal(value.name, op);
-};
 
 exports.binary_expression = function(test) {
     var expr = testParser("a + b;");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+', expr.operator);
-    test.equal(expr.left.name, 'a');
-    test.equal(expr.right.name, 'b');
+    $.binaryOp(test, '+', expr.operator);
+    $.id(test, expr.left, 'a');
+    $.id(test, expr.right, 'b');
     
     test.done();
 };
@@ -27,9 +23,9 @@ exports.checked_binary_expression = function(test) {
     var expr = testParser("a ?? b;");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '??', expr.operator);
-    test.equal(expr.left.name, 'a');
-    test.equal(expr.right.name, 'b');
+    $.binaryOp(test, '??', expr.operator);
+    $.id(test, expr.left, 'a');
+    $.id(test, expr.right, 'b');
     
     test.done();
 };
@@ -38,13 +34,13 @@ exports.binary_associativity = function(test) {
     var expr = testParser("a + b + c;");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+', expr.operator);
+    $.binaryOp(test, '+', expr.operator);
     
     test.equal(expr.left.type, 'BinaryExpression');
-    test.equal(expr.left.left.name, 'a');
-    test.equal(expr.left.right.name, 'b');
-    checkBinaryOp(test, '+', expr.left.operator);
-    test.equal(expr.right.name, 'c');
+    $.id(test, expr.left.left, 'a');
+    $.id(test, expr.left.right, 'b');
+    $.binaryOp(test, '+', expr.left.operator);
+    $.id(test, expr.right, 'c');
     
     test.done();
 };
@@ -53,13 +49,13 @@ exports.binary_parens = function(test) {
     var expr = testParser("a + (b + c);");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+', expr.operator);
-    test.equal(expr.left.name, 'a');
+    $.binaryOp(test, '+', expr.operator);
+    $.id(test, expr.left, 'a');
     
     test.equal(expr.right.type, 'BinaryExpression');
-    checkBinaryOp(test, '+', expr.right.operator);
-    test.equal(expr.right.left.name, 'b');
-    test.equal(expr.right.right.name, 'c');
+    $.binaryOp(test, '+', expr.right.operator);
+    $.id(test, expr.right.left, 'b');
+    $.id(test, expr.right.right, 'c');
     
     test.done();
 };
@@ -68,13 +64,13 @@ exports.binary_precedence = function(test) {
     var expr = testParser("a + b * c;");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+', expr.operator);
-    test.equal(expr.left.name, 'a');
+    $.binaryOp(test, '+', expr.operator);
+    $.id(test, expr.left, 'a');
     
     test.equal(expr.right.type, 'BinaryExpression');
-    checkBinaryOp(test, '*', expr.right.operator);
-    test.equal(expr.right.left.name, 'b');
-    test.equal(expr.right.right.name, 'c');
+    $.binaryOp(test, '*', expr.right.operator);
+    $.id(test, expr.right.left, 'b');
+    $.id(test, expr.right.right, 'c');
     
     test.done();
 };
@@ -83,7 +79,7 @@ exports.binary_precedence = function(test) {
 exports.custom_binary_expression = function(test) {
     var expr = testParser("a +|+ b;");
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+|+', expr.operator);
+    $.binaryOp(test, '+|+', expr.operator);
 
     test.equal(expr.left.name, 'a');
     test.equal(expr.right.name, 'b');
@@ -95,13 +91,13 @@ exports.custom_binary_precedence = function(test) {
     var expr = testParser("a +? b *? c;");
     
     test.equal(expr.type, 'BinaryExpression');
-    checkBinaryOp(test, '+?', expr.operator);
+    $.binaryOp(test, '+?', expr.operator);
 
-    test.equal(expr.left.name, 'a');
+    $.id(test, expr.left, 'a');
     test.equal(expr.right.type, 'BinaryExpression');
-    checkBinaryOp(test, '*?', expr.right.operator);
-    test.equal(expr.right.left.name, 'b');
-    test.equal(expr.right.right.name, 'c');
+    $.binaryOp(test, '*?', expr.right.operator);
+    $.id(test, expr.right.left, 'b');
+    $.id(test, expr.right.right, 'c');
     
     test.done();
 };

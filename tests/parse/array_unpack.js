@@ -1,6 +1,6 @@
 var lexer = require('../../index').lex.lexer;
 var parser = require('../../index').parse.parser;
-
+var $ = require('../$');
 
 var testParser = function(stream) {
     var result = parser.parseStream(lexer.lex(stream));
@@ -15,8 +15,7 @@ exports.single = function(test) {
     test.equal(result.elements.length, 1);
     test.equal(result.checked, false);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
+    $.idPattern(test, result.elements[0], 'a');
     
     test.done();
 };
@@ -35,8 +34,7 @@ exports.checked = function(test) {
     test.equal(result.elements.length, 1);
     test.equal(result.checked, true);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
+    $.idPattern(test, result.elements[0], 'a');
     
     test.done();
 };
@@ -47,14 +45,9 @@ exports.multi = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
-    
-    test.equal(result.elements[1].type, 'IdentifierPattern');
-    test.equal(result.elements[1].id.name, 'b');
-    
-    test.equal(result.elements[2].type, 'IdentifierPattern');
-    test.equal(result.elements[2].id.name, 'c');
+    $.idPattern(test, result.elements[0], 'a');
+    $.idPattern(test, result.elements[1], 'b');
+    $.idPattern(test, result.elements[2], 'c');
     
     test.done();
 };
@@ -65,18 +58,15 @@ exports.sink = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 5);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
+    $.idPattern(test, result.elements[0], 'a');
     
     test.equal(result.elements[1].type, 'SinkPattern');
     
-    test.equal(result.elements[2].type, 'IdentifierPattern');
-    test.equal(result.elements[2].id.name, 'b');
+    $.idPattern(test, result.elements[2], 'b');
     
     test.equal(result.elements[3].type, 'SinkPattern');
 
-    test.equal(result.elements[4].type, 'IdentifierPattern');
-    test.equal(result.elements[4].id.name, 'c');
+    $.idPattern(test, result.elements[4], 'c');
     
     test.done();
 };
@@ -87,14 +77,12 @@ exports.sub_patterns = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 2);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
+    $.idPattern(test, result.elements[0], 'a');
     
     test.equal(result.elements[1].type, 'ArrayPattern');
     test.equal(result.elements[1].elements.length, 1);
     
-    test.equal(result.elements[1].elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[1].elements[0].id.name, 'b');
+    $.idPattern(test, result.elements[1].elements[0], 'b');
     
     test.done();
 };
@@ -105,8 +93,7 @@ exports.single_ellipsis = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 1);
 
-    test.equal(result.elements[0].type, 'EllipsisPattern');
-    test.equal(result.elements[0].id.id.name, 'a');
+    $.ellipsisPattern(test, result.elements[0], 'a');
     
     test.done();
 };
@@ -117,14 +104,9 @@ exports.ellipsis_with_pre = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
-    
-    test.equal(result.elements[1].type, 'IdentifierPattern');
-    test.equal(result.elements[1].id.name, 'b');
-    
-    test.equal(result.elements[2].type, 'EllipsisPattern');
-    test.equal(result.elements[2].id.id.name, 'c');
+    $.idPattern(test, result.elements[0], 'a');
+    $.idPattern(test, result.elements[1], 'b');
+    $.ellipsisPattern(test, result.elements[2], 'c');
     
     test.done();
 };
@@ -135,14 +117,9 @@ exports.ellipsis_with_post = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
     
-    test.equal(result.elements[0].type, 'EllipsisPattern');
-    test.equal(result.elements[0].id.id.name, 'a');
-    
-    test.equal(result.elements[1].type, 'IdentifierPattern');
-    test.equal(result.elements[1].id.name, 'b');
-    
-    test.equal(result.elements[2].type, 'IdentifierPattern');
-    test.equal(result.elements[2].id.name, 'c');
+    $.ellipsisPattern(test, result.elements[0], 'a');
+    $.idPattern(test, result.elements[1], 'b');
+    $.idPattern(test, result.elements[2], 'c');
     
     test.done();
 };
@@ -152,20 +129,11 @@ exports.ellipsis_with_pre_and_post = function(test) {
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 5);
 
-    test.equal(result.elements[0].type, 'IdentifierPattern');
-    test.equal(result.elements[0].id.name, 'a');
-    
-    test.equal(result.elements[1].type, 'IdentifierPattern');
-    test.equal(result.elements[1].id.name, 'b');
-    
-    test.equal(result.elements[2].type, 'EllipsisPattern');
-    test.equal(result.elements[2].id.id.name, 'c');
-    
-    test.equal(result.elements[3].type, 'IdentifierPattern');
-    test.equal(result.elements[3].id.name, 'd');
-    
-    test.equal(result.elements[4].type, 'IdentifierPattern');
-    test.equal(result.elements[4].id.name, 'e');
+    $.idPattern(test, result.elements[0], 'a');
+    $.idPattern(test, result.elements[1], 'b');
+    $.ellipsisPattern(test, result.elements[2], 'c');
+    $.idPattern(test, result.elements[3], 'd')
+    $.idPattern(test, result.elements[4], 'e');
     
     test.done();
 };
