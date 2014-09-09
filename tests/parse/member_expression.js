@@ -14,13 +14,13 @@ var validateSimpleMemberExpression = function(test, expr, object, property, comp
     test.equal(expr.computed, computed);
 };
 
+
 exports.dot_accessor = function(test) {
     var expr = testParser(lexer.lex("a.b;"));
     validateSimpleMemberExpression(test, expr, 'a', 'b', false);
     
     test.done();
 };
-
 
 exports.dot_accessor_associativity = function(test) {
     var expr = testParser(lexer.lex("a.b.c;"));

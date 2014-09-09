@@ -3,33 +3,46 @@ var parser = require('../../index').parse.parser;
 
 
 var testParser = function(stream) {
-    var result = parser.parseStream(stream);
+    var result = parser.parseStream(lexer.lex(stream));
     return result.body[0].expression.bindings[0].pattern;
 };
 
 
 exports.single = function(test) {
-    var result = testParser(lexer.lex("let [a] = [] in a;"));
+    var result = testParser("let [a] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 1);
+    test.equal(result.checked, false);
 
     test.equal(result.elements[0].type, 'IdentifierPattern');
     test.equal(result.elements[0].id.name, 'a');
-
     
     test.done();
 };
 
 exports.empty_fails = function(test) {
     test.throws(
-        testParser.bind(null, lexer.lex("let [] = [] in a;")));
+        testParser.bind(null, "let [] = [] in a;"));
+    
+    test.done();
+};
+
+exports.checked = function(test) {
+    var result = testParser("let ?[a] = [] in a;");
+    
+    test.equal(result.type, 'ArrayPattern');
+    test.equal(result.elements.length, 1);
+    test.equal(result.checked, true);
+
+    test.equal(result.elements[0].type, 'IdentifierPattern');
+    test.equal(result.elements[0].id.name, 'a');
     
     test.done();
 };
 
 exports.multi = function(test) {
-    var result = testParser(lexer.lex("let [a b c] = [] in a;"));
+    var result = testParser("let [a b c] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
@@ -47,7 +60,7 @@ exports.multi = function(test) {
 };
 
 exports.sink = function(test) {
-    var result = testParser(lexer.lex("let [a _ b _ c] = [] in a;"));
+    var result = testParser("let [a _ b _ c] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 5);
@@ -69,7 +82,7 @@ exports.sink = function(test) {
 };
 
 exports.sub_patterns = function(test) {
-    var result = testParser(lexer.lex("let [a [b]] = [] in a;"));
+    var result = testParser("let [a [b]] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 2);
@@ -87,7 +100,7 @@ exports.sub_patterns = function(test) {
 };
 
 exports.single_ellipsis = function(test) {
-    var result = testParser(lexer.lex("let [...a] = [] in a;"));
+    var result = testParser("let [...a] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 1);
@@ -99,7 +112,7 @@ exports.single_ellipsis = function(test) {
 };
 
 exports.ellipsis_with_pre = function(test) {
-    var result = testParser(lexer.lex("let [a b ...c] = [] in a;"));
+    var result = testParser("let [a b ...c] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
@@ -117,7 +130,7 @@ exports.ellipsis_with_pre = function(test) {
 };
 
 exports.ellipsis_with_post = function(test) {
-    var result = testParser(lexer.lex("let [...a b c] = [] in a;"));
+    var result = testParser("let [...a b c] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 3);
@@ -134,7 +147,7 @@ exports.ellipsis_with_post = function(test) {
     test.done();
 };
 exports.ellipsis_with_pre_and_post = function(test) {
-    var result = testParser(lexer.lex("let [a b ...c d e] = [] in a;"));
+    var result = testParser("let [a b ...c d e] = [] in a;");
     
     test.equal(result.type, 'ArrayPattern');
     test.equal(result.elements.length, 5);
@@ -159,7 +172,7 @@ exports.ellipsis_with_pre_and_post = function(test) {
 
 exports.many_ellipsis_throws = function(test) {
     test.throws(
-        testParser.bind(null, lexer.lex("let [...a ...b] = [] in a;")));
+        testParser.bind(null, "let [...a ...b] = [] in a;"));
     
     test.done();
 };

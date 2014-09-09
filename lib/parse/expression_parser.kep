@@ -299,15 +299,12 @@ var ternayOperatorExpression = label@'Ternary Operator Expression' <|
                 ast_value.TernaryOperator.create(loc, value));
 
 operatorExpression = label@'Operator Expression' <|
-    either(
-        between(punctuator '(', punctuator ')',
-            choice(
-                unaryOperatorExpression,
-                binaryOperatorExpression,
-                ternayOperatorExpression)),
-        
-        dotExpression.map \ expr ->
-            ast_expression.UnaryExpression.create(expr.loc, expr));
+    between(punctuator '(', punctuator ')',
+        choice(
+            unaryOperatorExpression,
+            binaryOperatorExpression,
+            ternayOperatorExpression));
+
 
 // Primary Expression
 ////////////////////////////////////////
@@ -321,6 +318,8 @@ primaryExpression = label@'Primary Expression' <|
         objectLiteral,
         functionExpression,
         attempt operatorExpression,
+        dotExpression.map \ expr ->
+            ast_expression.UnaryExpression.create(expr.loc, expr),
         between(punctuator '(', punctuator ')',
             expression |> expected@"expression"));
 

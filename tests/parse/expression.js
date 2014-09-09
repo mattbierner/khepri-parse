@@ -1,17 +1,17 @@
 var lexer = require('../../index').lex.lexer;
 var parser = require('../../index').parse.parser;
 
-
 var testParser = function(stream) {
-    var expr = parser.parseStream(stream);
+    var expr = parser.parseStream(lexer.lex(stream));
     return expr.body[0].expression;
 };
 
+
 exports.assignment_expression = function(test) {
-    var expr = testParser(lexer.lex("a = b + 3;"));
+    var expr = testParser("a = b + 3;");
+    
     test.equal(expr.type, 'AssignmentExpression');
     
-    // Check Associativity
     test.equal(expr.left.name, 'a');
     test.equal(expr.right.type, 'BinaryExpression');
     test.equal(expr.right.left.name, 'b');
@@ -21,7 +21,8 @@ exports.assignment_expression = function(test) {
 };
 
 exports.conditional_expression = function(test) {
-    var expr = testParser(lexer.lex("?a :b :c;"));
+    var expr = testParser("?a :b :c;");
+    
     test.equal(expr.type, 'ConditionalExpression');
     test.equal(expr.test.name, 'a');
     test.equal(expr.consequent.name, 'b');
@@ -31,7 +32,8 @@ exports.conditional_expression = function(test) {
 };
 
 exports.conditional_expression_conditional_alternate = function(test) {
-    var expr = testParser(lexer.lex("?a :b :?c :d :e;"));
+    var expr = testParser("?a :b :?c :d :e;");
+    
     test.equal(expr.type, 'ConditionalExpression');
     test.equal(expr.test.name, 'a');
     test.equal(expr.consequent.name, 'b');
@@ -44,7 +46,8 @@ exports.conditional_expression_conditional_alternate = function(test) {
 };
 
 exports.conditional_expression_conditional_consequent = function(test) {
-    var expr = testParser(lexer.lex("?a :?b :c :d :e;"));
+    var expr = testParser("?a :?b :c :d :e;");
+    
     test.equal(expr.type, 'ConditionalExpression');
     test.equal(expr.test.name, 'a');
     test.equal(expr.consequent.type, 'ConditionalExpression');
@@ -57,8 +60,9 @@ exports.conditional_expression_conditional_consequent = function(test) {
 };
 
 exports.conditional_expression_with_conditional_test = function(test) {
-    var expr = testParser(lexer.lex("? ?a :b :c :d :e;"));
+    var expr = testParser("? ?a :b :c :d :e;");
     test.equal(expr.type, 'ConditionalExpression');
+    
     test.equal(expr.test.type, 'ConditionalExpression');
     test.equal(expr.test.test.name, 'a');
     test.equal(expr.test.consequent.name, 'b');
@@ -70,7 +74,8 @@ exports.conditional_expression_with_conditional_test = function(test) {
 };
 
 exports.new_expression = function(test) {
-    var expr = testParser(lexer.lex("new a();"));
+    var expr = testParser("new a();");
+    
     test.equal(expr.type, 'NewExpression');
     test.equal(expr.callee.name, 'a');
     test.equal(expr.args.length, 0);
@@ -79,7 +84,8 @@ exports.new_expression = function(test) {
 };
 
 exports.new_expression_associativity = function(test) {
-    var expr = testParser(lexer.lex("new new a()();"));
+    var expr = testParser("new new a()();");
+    
     test.equal(expr.type, 'NewExpression');
     test.equal(expr.callee.type, 'NewExpression');
     test.equal(expr.callee.callee.name, 'a');
@@ -90,7 +96,7 @@ exports.new_expression_associativity = function(test) {
 };
 
 exports.new_expression_args = function(test) {
-    var expr = testParser(lexer.lex("new a(1);"));
+    var expr = testParser("new a(1);");
     test.equal(expr.type, 'NewExpression');
     test.equal(expr.callee.name, 'a');
     test.equal(expr.args.length, 1);
@@ -100,7 +106,7 @@ exports.new_expression_args = function(test) {
 };
 
 exports.new_expression_with_args_associativity = function(test) {
-    var expr = testParser(lexer.lex("new new a(1)(2);"));
+    var expr = testParser("new new a(1)(2);");
     test.equal(expr.type, 'NewExpression');
     test.equal(expr.callee.type, 'NewExpression');
     test.equal(expr.callee.callee.name, 'a');
@@ -113,7 +119,8 @@ exports.new_expression_with_args_associativity = function(test) {
 };
 
 exports.empty_call_expression = function(test) {
-    var expr = testParser(lexer.lex("a();"));
+    var expr = testParser("a();");
+    
     test.equal(expr.type, 'CallExpression');
     test.equal(expr.callee.name, 'a');
     test.equal(expr.args.length, 0);
@@ -122,7 +129,8 @@ exports.empty_call_expression = function(test) {
 };
 
 exports.call_expression_args = function(test) {
-    var expr = testParser(lexer.lex("a(b);"));
+    var expr = testParser("a(b);");
+    
     test.equal(expr.type, 'CallExpression');
     test.equal(expr.callee.name, 'a');
     test.equal(expr.args.length, 1);
@@ -132,7 +140,8 @@ exports.call_expression_args = function(test) {
 };
 
 exports.call_expression_associativity = function(test) {
-    var expr = testParser(lexer.lex("a(b)(c);"));
+    var expr = testParser("a(b)(c);");
+    
     test.equal(expr.type, 'CallExpression');
     test.equal(expr.callee.type, 'CallExpression');
     test.equal(expr.callee.callee.name, 'a');
@@ -143,4 +152,3 @@ exports.call_expression_associativity = function(test) {
     
     test.done();
 };
-

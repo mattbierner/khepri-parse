@@ -142,14 +142,13 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
                 return ast_expression.OperatorExpression.create(loc, ast_value.TernaryOperator.create(
                     loc, value0));
             })));
-    (operatorExpression = label("Operator Expression", either(between(punctuator("("), punctuator(")"), choice(
-            unaryOperatorExpression, binaryOperatorExpression, ternayOperatorExpression)),
+    (operatorExpression = label("Operator Expression", between(punctuator("("), punctuator(")"), choice(
+        unaryOperatorExpression, binaryOperatorExpression, ternayOperatorExpression))));
+    (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier,
+        literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression),
         dotExpression.map((function(expr) {
             return ast_expression.UnaryExpression.create(expr.loc, expr);
-        })))));
-    (primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier,
-        literal, arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), between(
-            punctuator("("), punctuator(")"), expected("expression", expression)))));
+        })), between(punctuator("("), punctuator(")"), expected("expression", expression)))));
     var accessorTarget = either(identifier.map((function(x0) {
             return [x0, false];
         })), between(punctuator("("), punctuator(")"), expected("accessor expression", expression))

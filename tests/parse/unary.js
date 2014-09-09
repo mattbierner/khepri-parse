@@ -57,7 +57,7 @@ exports.custom_unary = function(test) {
     test.done();
 };
 
-exports.custom_unary_does_not_capture_parans = function(test) {
+exports.custom_unary_does_not_capture_parens = function(test) {
     var expr = testParser(lexer.lex("~|(a);"));
     
     test.equal(expr.type, 'UnaryExpression');

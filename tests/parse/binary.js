@@ -2,8 +2,8 @@ var lexer = require('../../index').lex.lexer;
 var parser = require('../../index').parse.parser;
 
 
-var testParser = function(stream) {
-    var expr = parser.parseStream(stream);
+var testParser = function(program) {
+    var expr = parser.parseStream(lexer.lex(program));
     return expr.body[0].expression;
 };
 
@@ -13,7 +13,7 @@ var checkBinaryOp = function(test, op, value) {
 };
 
 exports.binary_expression = function(test) {
-    var expr = testParser(lexer.lex("a + b;"));
+    var expr = testParser("a + b;");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+', expr.operator);
@@ -24,7 +24,7 @@ exports.binary_expression = function(test) {
 };
 
 exports.checked_binary_expression = function(test) {
-    var expr = testParser(lexer.lex("a ?? b;"));
+    var expr = testParser("a ?? b;");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '??', expr.operator);
@@ -35,7 +35,7 @@ exports.checked_binary_expression = function(test) {
 };
 
 exports.binary_associativity = function(test) {
-    var expr = testParser(lexer.lex("a + b + c;"));
+    var expr = testParser("a + b + c;");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+', expr.operator);
@@ -50,7 +50,7 @@ exports.binary_associativity = function(test) {
 };
 
 exports.binary_parens = function(test) {
-    var expr = testParser(lexer.lex("a + (b + c);"));
+    var expr = testParser("a + (b + c);");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+', expr.operator);
@@ -65,7 +65,7 @@ exports.binary_parens = function(test) {
 };
 
 exports.binary_precedence = function(test) {
-    var expr = testParser(lexer.lex("a + b * c;"));
+    var expr = testParser("a + b * c;");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+', expr.operator);
@@ -81,7 +81,7 @@ exports.binary_precedence = function(test) {
 
 
 exports.custom_binary_expression = function(test) {
-    var expr = testParser(lexer.lex("a +|+ b;"));
+    var expr = testParser("a +|+ b;");
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+|+', expr.operator);
 
@@ -92,7 +92,7 @@ exports.custom_binary_expression = function(test) {
 };
 
 exports.custom_binary_precedence = function(test) {
-    var expr = testParser(lexer.lex("a +? b *? c;"));
+    var expr = testParser("a +? b *? c;");
     
     test.equal(expr.type, 'BinaryExpression');
     checkBinaryOp(test, '+?', expr.operator);

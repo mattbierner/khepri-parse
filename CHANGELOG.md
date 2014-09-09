@@ -1,5 +1,11 @@
 # ChangeLog #
 
+## 2.4.0 - Sep 8, 2014
+* Removed checked object accessor expression in favor of the more
+  general `??` operator.
+* Added support for dot expressions.
+** `.a.b.c` is a unary function that does `x.a.b.c`.
+
 ## 2.3.1 - Sep 7, 2014
 * Fixed checked object expression patterns.
 * Allow `.?` as unary op.
