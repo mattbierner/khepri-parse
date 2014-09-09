@@ -210,7 +210,8 @@ var createBinary = (function(loc, op, l, r) {
     precedenceTable = [({
         "sep": punctuator("??"),
         "precedence": 0,
-        "node": createBinary
+        "node": createBinary,
+        "right": true
     }), ({
         "sep": prefixedOp("*", "/", "%"),
         "precedence": 1,

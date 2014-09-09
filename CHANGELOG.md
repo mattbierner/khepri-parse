@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.4.3 - Sep 8, 2014
+* Made `??` right associative.
+
 ## 2.4.2 - Sep 8, 2014
 * Ensure that `(.x);` and `.x`; are parsed the same way.
 
