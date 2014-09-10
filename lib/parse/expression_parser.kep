@@ -270,7 +270,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                 enumeration(
                     either(
                         keyword 'new',
-                        punctuator('.', '??')),
+                        punctuator '.'),
                     optional next(punctuator ',', expression)),
                 enumeration(
                     choice(
@@ -457,7 +457,7 @@ var createBinary := \loc op l r ->
 
 var precedenceTable = [
     {
-        'sep': punctuator '??',
+        'sep': prefixedOp '??',
         'precedence': 0,
         'node': createBinary
     },

@@ -1,5 +1,9 @@
 # ChangeLog #
 
+## 2.4.5 - Sep 9, 2014
+* Fixed `??` lexed as puctuator instead of operator.
+* Fixed `(??, 1)` needing comma.
+
 ## 2.4.2 - Sep 8, 2014
 * Ensure that `(.x);` and `.x`; are parsed the same way.
 

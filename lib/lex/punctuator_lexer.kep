@@ -40,7 +40,7 @@ var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 var punctuators := [
     '{', '}', '(', ')', '[', ']',
     ',',  '.', ';', ':',
-    '?', '??',
+    '?',
     '=', ':=', '=:',
     '@',
     '...', '#',
@@ -68,7 +68,7 @@ infixOperator = label @ 'Infix Operator Lexer' <|
             not operatorChar),
         eager enumeration(
             trie [
-                '&&', '||',
+                '&&', '||', '??',
                 '<<', '>>', '>>>',
                 '<', '>',
                 '==', '!=',
