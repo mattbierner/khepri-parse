@@ -13,7 +13,8 @@ var __o = require("bennu")["parse"],
     __o3 = require("./value_parser"),
     __o4 = require("./pattern_parser"),
     _ = require("./expression_parser"),
-    argumentList, namedArgumentList, argumentsPattern, functionExpression, eager = __o["eager"],
+    argumentList, namedArgumentList, argumentsPattern, functionExpression, choice = __o["choice"],
+    eager = __o["eager"],
     either = __o["either"],
     enumeration = __o["enumeration"],
     expected = __o["expected"],
@@ -38,6 +39,16 @@ var __o = require("bennu")["parse"],
             blockStatement0 = __o5["blockStatement"];
         return blockStatement0;
     })),
+    withStatement = late((function() {
+        var __o5 = require("./statement_parser"),
+            withStatement0 = __o5["withStatement"];
+        return withStatement0;
+    })),
+    tryStatement = late((function() {
+        var __o5 = require("./statement_parser"),
+            tryStatement0 = __o5["tryStatement"];
+        return tryStatement0;
+    })),
     expression = late((function() {
         var __o5 = require("./expression_parser"),
             expression0 = __o5["expression"];
@@ -50,15 +61,17 @@ var __o = require("bennu")["parse"],
     elements, self) {
     return ast_pattern.ArgumentsPattern.create(loc, null, elements, self);
 }))));
-(namedArgumentList = label("Named Argument List", nodea(next(infixOperator("-"), enumeration(optional(identifierPattern),
-        between(punctuator("("), punctuator(")"), argumentElements), optional(selfPattern))), ast_pattern.ArgumentsPattern
-    .create)));
+var elements;
+(namedArgumentList = label("Named Argument List", ((elements = between(punctuator("("), punctuator(")"),
+    argumentElements)), nodea(next(infixOperator("-"), enumeration(optional(identifierPattern), elements,
+    optional(selfPattern))), ast_pattern.ArgumentsPattern.create))));
 (argumentsPattern = label("Arguments Pattern", either(namedArgumentList, argumentList)));
 var functionName, functionBody;
 (functionExpression = label("Function Expression", ((functionName = optional(next(keyword("function"), optional(
-        identifier)))), (functionBody = either(blockStatement, then(expression, optional(punctuator("§"))))),
-    nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern), next(punctuator("->"), expected(
-        "function body", functionBody))), ast_expression.FunctionExpression.create))));
+    identifier)))), (functionBody = choice(blockStatement, withStatement, tryStatement, then(expression,
+    optional(punctuator("§"))))), nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern),
+        next(punctuator("->"), expected("function body", functionBody))), ast_expression.FunctionExpression
+    .create))));
 (exports["argumentList"] = argumentList);
 (exports["namedArgumentList"] = namedArgumentList);
 (exports["argumentsPattern"] = argumentsPattern);

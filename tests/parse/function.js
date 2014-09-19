@@ -92,3 +92,16 @@ exports.named_function = function(test) {
     
     test.done();
 };
+
+exports.with_statement_body = function(test) {
+    var result = testParser(lexer.lex("\\ -> with x = 1 in { return x; };"));
+    
+    test.equal(result.type, 'FunctionExpression');
+    test.equal(result.name, null);
+    test.equal(result.params.elements.length, 0);
+    
+    test.equal(result.body.type, 'WithStatement');
+    test.equal(result.body.body.body[0].type, 'ReturnStatement');
+
+    test.done();
+};

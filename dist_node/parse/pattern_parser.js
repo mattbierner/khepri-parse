@@ -5,49 +5,36 @@
 "use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["lang"],
-    __o1 = require("nu-stream")["stream"],
     ast_pattern = require("khepri-ast")["pattern"],
-    __o2 = require("./common"),
-    __o3 = require("./token_parser"),
-    __o4 = require("./value_parser"),
+    __o1 = require("./common"),
+    __o2 = require("./token_parser"),
+    __o3 = require("./value_parser"),
     listPattern, listPattern0, pattern, unpack, topLevelPattern, identifierPattern, operatorPattern, sinkPattern,
         ellipsisPattern, importPattern, arrayPattern, objectPatternElement, objectPattern, asPattern, attempt = __o[
             "attempt"],
     append = __o["append"],
     choice = __o["choice"],
-    cons = __o["cons"],
     eager = __o["eager"],
     either = __o["either"],
     expected = __o["expected"],
     enumeration = __o["enumeration"],
     next = __o["next"],
     optional = __o["optional"],
-    rec = __o["rec"],
     label = __o["label"],
     late = __o["late"],
     between = __o0["between"],
     sepBy = __o0["sepBy"],
     sepBy1 = __o0["sepBy1"],
     then = __o0["then"],
-    NIL = __o1["NIL"],
-    node = __o2["node"],
-    nodea = __o2["nodea"],
-    keyword = __o3["keyword"],
-    punctuator = __o3["punctuator"],
-    identifier = __o4["identifier"],
-    operator = __o4["operator"],
-    stringLiteral = __o4["stringLiteral"],
-    sepEndWith1 = (function(sep, end, p) {
-        return rec((function(self) {
-            return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
-        }));
-    }),
-    sepEndWith = (function(sep, end, p) {
-        return either(enumeration(end), sepEndWith1(sep, end, p));
-    }),
-    sepEndWith0 = (function(sep, end, p) {
-        return optional(NIL, sepEndWith(sep, end, p));
-    });
+    node = __o1["node"],
+    nodea = __o1["nodea"],
+    sepEndWith = __o1["sepEndWith"],
+    sepEndWith0 = __o1["sepEndWith0"],
+    keyword = __o2["keyword"],
+    punctuator = __o2["punctuator"],
+    identifier = __o3["identifier"],
+    operator = __o3["operator"],
+    stringLiteral = __o3["stringLiteral"];
 (topLevelPattern = late((function() {
     return topLevelPattern;
 })));
@@ -78,16 +65,13 @@ var sep = optional(punctuator(","));
     .map((function(x) {
         return ast_pattern.EllipsisPattern.create(x.loc, null);
     }))), node(next(punctuator("..."), optional(identifierPattern)), ast_pattern.EllipsisPattern.create))));
-var element, pre, mid, post, sep0;
+var element;
 (arrayPattern = label("Array Pattern", ((element = topLevelPattern), nodea(enumeration(optional(false, punctuator("?")),
-    between(punctuator("["), punctuator("]"), eager(((pre = expected("array pattern element", element)), (
-        mid = ellipsisPattern), (post = expected("non-ellipsis array pattern element",
-        element)), append(((sep0 = sep), either(enumeration(mid), rec((function(self) {
-        return cons(pre, optional(NIL, next(sep0, either(enumeration(
-            mid), self))));
-    })))), next(sep, sepBy(sep, post))))))), (function(loc, checked, elements) {
-    return ast_pattern.ArrayPattern.create(loc, elements, checked);
-})))));
+    between(punctuator("["), punctuator("]"), eager(listPattern(expected("array pattern element",
+        element), ellipsisPattern, expected("non-ellipsis array pattern element", element))))), (
+    function(loc, checked, elements) {
+        return ast_pattern.ArrayPattern.create(loc, elements, checked);
+    })))));
 (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":", "#"), unpack)), ast_pattern.ObjectPatternElement
     .create), node(either(asPattern, identifierPattern), ast_pattern.ObjectPatternElement.create)));
 (objectPattern = label("Object Pattern", nodea(enumeration(optional(false, punctuator("?")), between(punctuator("{"),

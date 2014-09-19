@@ -75,11 +75,10 @@ binaryOperator := label@'Binary Operator' <|
         ast_value.BinaryOperator.create(x.loc, x.value);
 
 operator = between(token.punctuator '(', token.punctuator ')',
-    choice(
+    either(
         unaryOperator,
         binaryOperator));
 
 symbol := either(identifier, operator);
-
 
 }

@@ -26,52 +26,35 @@ with
         attempt
         append
         bind
-        binds
         choice
-        cons
         eager
         either
         expected
         enumeration
         next
         optional
-        rec
         label
         late},
     import 'bennu::lang' {
         between
         sepBy
         sepBy1
-        sepEndBy
         then},
-    
-    import 'nu-stream::stream' {NIL},
     
     import 'khepri-ast::pattern' ast_pattern,
     
-    import './common' {node nodea},
+    import './common' {
+        node
+        nodea
+        sepEndWith1
+        sepEndWith
+        sepEndWith0},
     import './token_parser' {keyword punctuator},
     import './value_parser' {
         identifier
         operator
         stringLiteral}
 in {
-
-var sepEndWith1 = \sep end p ->
-    rec\self ->
-        cons(
-            p,
-            optional(NIL,
-                next(sep,
-                    either(enumeration(end), self))));
-
-var sepEndWith = \sep end p ->
-    either(
-        enumeration(end),
-        sepEndWith1(sep, end, p));
-
-var sepEndWith0 = \sep end p ->
-    optional(NIL, sepEndWith(sep, end, p));
 
 /* Forward
  ******************************************************************************/
@@ -85,7 +68,7 @@ asPattern = late\-> { return asPattern; };
  ******************************************************************************/
 var sep = optional (punctuator ',');
 
-/* Parts
+/* Helpers
  ******************************************************************************/
 listPattern = \pre mid post  ->
     append(
@@ -99,28 +82,20 @@ listPattern0 = \pre mid post  ->
 
 /* Base Patterns
  ******************************************************************************/
-// Identifier Pattern
-////////////////////////////////////////
 identifierPattern = label@'Identifier Pattern' <|
     identifier
         .map\x -> ast_pattern.IdentifierPattern.create(x.loc, x);
 
-// Identifier Pattern
-////////////////////////////////////////
 operatorPattern = label@'Operator Pattern' <|
     operator
         .map\x -> ast_pattern.IdentifierPattern.create(x.loc, x);
 
-// Sink Pattern
-////////////////////////////////////////
 sinkPattern = label@'Sink Pattern' <|
     keyword('_')
         .map\x -> ast_pattern.SinkPattern.create(x.loc);
 
-/* Unpacks
+/* Ellipsis Pattern
  ******************************************************************************/
-// Ellipsis Pattern
-////////////////////////////////////////
 ellipsisPattern = label@'Ellipsis Pattern' <|
     either(
         attempt <| between(punctuator '(', punctuator ')',
@@ -133,8 +108,8 @@ ellipsisPattern = label@'Ellipsis Pattern' <|
                 optional identifierPattern),
             ast_pattern.EllipsisPattern.create));
 
-// Array Pattern
-////////////////////////////////////////
+/* Array Pattern
+ ******************************************************************************/
 arrayPattern = label@'Array Pattern' <| let
     element = topLevelPattern
 in
@@ -149,8 +124,8 @@ in
         \loc checked elements ->
             ast_pattern.ArrayPattern.create(loc, elements, checked));
 
-// Object Pattern
-////////////////////////////////////////
+/* Object Pattern
+ ******************************************************************************/
 objectPatternElement = either(
     nodea(
         enumeration(
@@ -175,8 +150,8 @@ objectPattern = label@'Object Pattern' <|
         \loc checked elements ->
             ast_pattern.ObjectPattern.create(loc, elements, checked));
 
-// As Pattern
-////////////////////////////////////////
+/* As Pattern
+ ******************************************************************************/
 asPattern = label@'As Pattern' <|
     nodea(
         enumeration(
@@ -189,8 +164,8 @@ asPattern = label@'As Pattern' <|
                 |> expected@'object or array pattern'),
         ast_pattern.AsPattern.create);
 
-// Import Pattern
-////////////////////////////////////////
+/* Import Pattern
+ ******************************************************************************/
 importPattern = label@'Import Pattern' <|
     next(
         keyword 'import',
@@ -202,8 +177,6 @@ importPattern = label@'Import Pattern' <|
 
 /* Patterns
  ******************************************************************************/
-// Unpack
-////////////////////////////////////////
 unpack = label@'Unpack' <|
     choice(
         attempt arrayPattern,
@@ -212,8 +185,6 @@ unpack = label@'Unpack' <|
         identifierPattern,
         operatorPattern);
 
-// Top Level Pattern
-////////////////////////////////////////
 topLevelPattern = label@'Top Level Pattern' <|
     choice(
         sinkPattern,

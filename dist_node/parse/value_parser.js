@@ -43,7 +43,7 @@ var p3;
 (binaryOperator = label("Binary Operator", token.binaryOperator.map((function(x) {
     return ast_value.BinaryOperator.create(x.loc, x.value);
 }))));
-(operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
+(operator = between(token.punctuator("("), token.punctuator(")"), either(unaryOperator, binaryOperator)));
 (symbol = either(identifier, operator));
 (exports["literal"] = literal);
 (exports["nullLiteral"] = nullLiteral);

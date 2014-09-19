@@ -54,6 +54,18 @@ var blockStatement = late\-> {
     }
 };
 
+var withStatement = late\-> {
+    with import './statement_parser' {withStatement} in {
+        return withStatement;
+    }
+};
+
+var tryStatement = late\-> {
+    with import './statement_parser' {tryStatement} in {
+        return tryStatement;
+    }
+};
+
 var expression = late\-> {
     with import './expression_parser' {expression} in {
         return expression;
@@ -83,14 +95,17 @@ argumentList = label@'Argument List' <|
         \loc elements self ->
             ast_pattern.ArgumentsPattern.create(loc, null, elements, self));
 
-namedArgumentList = label@'Named Argument List' <|
+namedArgumentList = label@'Named Argument List' <| let
+    elements =
+        between(punctuator '(', punctuator ')',
+            argumentElements)
+in
     nodea(
         next(
             infixOperator '-',
             enumeration(
                 optional identifierPattern,
-                between(punctuator '(', punctuator ')',
-                    argumentElements),
+                elements,
                 optional selfPattern)),
         ast_pattern.ArgumentsPattern.create);
 
@@ -108,8 +123,10 @@ functionExpression = label@'Function Expression' <| let
             optional identifier),
     
     functionBody =
-        either(
+        choice(
             blockStatement,
+            withStatement,
+            tryStatement,
             then(
                 expression,
                 optional (punctuator '§')))
@@ -125,5 +142,4 @@ in
                 functionBody |> expected@"function body")),
         ast_expression.FunctionExpression.create);
 
-    
 }

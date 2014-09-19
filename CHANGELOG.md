@@ -4,6 +4,8 @@
 * Improved unicode support for identifiers and whitespace.
 * Package exports can use `#` to alias exports.
 * Package export aliases may be identifies.
+* Functions may use `with` or `try` statements as their body.
+** `\x -> with import 'math' add in { return x + add(1, 2); }`
 
 ## 2.4.5 - Sep 9, 2014
 * Fixed `??` lexed as puctuator instead of operator.

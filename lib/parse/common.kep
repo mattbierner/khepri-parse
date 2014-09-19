@@ -2,24 +2,51 @@
  * @fileOverview 
  */
 package (
-    precedence,
-    node,
-    nodea,
+    sepEndWith1
+    sepEndWith
+    sepEndWith0
+        
+    precedence
+    node
+    nodea
     positionParser)
 with
     import 'bennu::parse' parse#{
         always
         bind
         binds
-        extract
+        cons
+        either
         enumeration
+        extract
         eager
-        optional},
+        optional
+        next
+        rec},
     import 'nu-stream::stream' stream#{NIL},
 
     import 'khepri-ast::position' {SourceLocation}
 in {
 
+/* Parser Combinators
+ ******************************************************************************/
+sepEndWith1 := \sep end p ->
+    rec\self ->
+        cons(
+            p,
+            optional(NIL,
+                next(sep,
+                    either(enumeration(end), self))));
+
+sepEndWith := \sep end p ->
+    either(
+        enumeration(end),
+        sepEndWith1(sep, end, p));
+
+sepEndWith0 := sepEndWith \>> optional@NIL;
+
+/* 
+ ******************************************************************************/
 var pres := \list -> {
     var stack = [],
         out = [];
