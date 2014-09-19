@@ -1,6 +1,6 @@
 {
     "name": "khepri-parse",
-    "version": "2.4.5",
+    "version": "2.5.0",
     "description": "Khepri language lexer and parser",
     "author": "Matt Bierner",
     "license": "MIT",
@@ -36,6 +36,8 @@
         "nu-stream": ">=3.2.0",
         "bennu": "17.2.x",
         "khepri-ast": "4.7.x",
+        
+        "xregexp": "2.0.x",
         
         "require-directory": "1.2.x"
     },

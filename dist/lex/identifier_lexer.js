@@ -2,8 +2,8 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/identifier_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "./reserved_word_lexer"], (function(
-    require, exports, __o, __o0, __o1, __o2) {
+define(["require", "exports", "bennu/parse", "bennu/text", "./common", "./reserved_word_lexer"], (function(require,
+    exports, __o, __o0, __o1, __o2) {
     "use strict";
     var zwnj, zwj, unicodeLetter, unicodeDigit, unicodeConnectorPunctuation, identifierStart, identifierPart,
             identifierParts, identifierName, identifier, always = __o["always"],
@@ -16,26 +16,22 @@ define(["require", "exports", "bennu/parse", "bennu/text", "nu-stream/stream", "
         label = __o["label"],
         character = __o0["character"],
         oneOf = __o0["oneOf"],
-        digit = __o0["digit"],
-        letter = __o0["letter"],
-        foldl = __o1["foldl"],
-        reservedWordList = __o2["reservedWordList"],
-        __add = (function(x, y) {
-            return (x + y);
-        }),
-        join = foldl.bind(null, __add, "");
+        join = __o1["join"],
+        match = __o1["match"],
+        reservedWordList = __o2["reservedWordList"];
     (zwnj = character("‌"));
     (zwj = character("‍"));
-    (unicodeLetter = letter);
-    (unicodeDigit = digit);
-    (unicodeConnectorPunctuation = oneOf(["_", "‿", "⁀", "⁔", "︳", "︴", "﹍", "﹎", "﹏", "＿"]));
-    (identifierStart = either(letter, oneOf("$_")));
-    (identifierPart = choice(identifierStart, digit, unicodeConnectorPunctuation, zwnj, zwj));
+    (unicodeLetter = match(
+        "   \\p{Lu}            (?#Uppercase letter)    |   \\p{Ll}            (?#Lowercase letter)    |   \\p{Lt}            (?#Titlecase letter)    |   \\p{Lm}            (?#Modifier letter)    |   \\p{Lo}            (?#Other letter)    |   \\p{Nl}            (?#Letter number)    "
+    ));
+    (unicodeDigit = match("\\p{Nd}(?#Number digit)"));
+    (unicodeConnectorPunctuation = match("\\p{Pc}(?#Connector Punctuation)"));
+    (identifierStart = either(unicodeLetter, oneOf("$_")));
+    (identifierPart = choice(identifierStart, unicodeDigit, unicodeConnectorPunctuation, zwnj, zwj));
     (identifierParts = many(identifierPart));
     (identifierName = cons(identifierStart, identifierParts));
-    (identifier = label("Identifier Lexer", bind(identifierName, (function(name) {
-        var n = join(name);
-        return ((reservedWordList.indexOf(n) >= 0) ? fail() : always(n));
+    (identifier = label("Identifier Lexer", bind(join(identifierName), (function(name) {
+        return ((reservedWordList.indexOf(name) >= 0) ? fail() : always(name));
     }))));
     (exports["zwnj"] = zwnj);
     (exports["zwj"] = zwj);

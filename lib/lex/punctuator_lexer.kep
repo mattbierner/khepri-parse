@@ -16,7 +16,6 @@ with
         eager
         either
         enumeration
-        map
         many
         next
         not},
@@ -26,17 +25,14 @@ with
         oneOf},
     import 'bennu::lang' {
         then},
-    import 'nu-stream::stream' {foldl}
+        
+    import './common' {join}
 in {
 
-var join := map @ (foldl @ (+) @ '');
-
-/* Lexers
- ******************************************************************************/
 var operatorChar := oneOf '?+-*/%|&^<>=!~@';
 
-// Punctuator
-////////////////////////////////////////
+/* Punctuator
+ ******************************************************************************/
 var punctuators := [
     '{', '}', '(', ')', '[', ']',
     ',',  '.', ';', ':',
@@ -50,8 +46,8 @@ var punctuators := [
 punctuator = label @ 'Punctuator Lexer' <|
     trie punctuators;
 
-// Prefix Operator
-////////////////////////////////////////
+/* Prefix Operator
+ ******************************************************************************/
 prefixOperator := label @ 'Prefix Operator Lexer' <|
     eager enumeration(
         either(
@@ -59,8 +55,8 @@ prefixOperator := label @ 'Prefix Operator Lexer' <|
             attempt then(character '!', not (character '='))),
         join <| many operatorChar);
 
-// Infix Operator
-////////////////////////////////////////
+/* Infix Operator
+ ******************************************************************************/
 infixOperator = label @ 'Infix Operator Lexer' <|
     next(
         not next(
@@ -78,9 +74,9 @@ infixOperator = label @ 'Infix Operator Lexer' <|
                 '\\>', '\\>>', '<\\', '<<\\'],
             join <| many operatorChar));
 
-// Operator
-////////////////////////////////////////
-operator = label @ 'Prefix Operator Lexer' <|
+/* Operator
+ ******************************************************************************/
+operator = label @ 'Operator Lexer' <|
     either(
         prefixOperator,
         infixOperator);

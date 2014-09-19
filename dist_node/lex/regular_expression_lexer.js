@@ -6,7 +6,7 @@
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["lang"],
     __o1 = require("bennu")["text"],
-    __o2 = require("nu-stream")["stream"],
+    __o2 = require("./common"),
     __o3 = require("./identifier_lexer"),
     __o4 = require("./line_terminator_lexer"),
     regularExpressionNonTerminator, regularExpressionBackslashSequence, regularExpressionClassChar,
@@ -27,13 +27,9 @@ var __o = require("bennu")["parse"],
     between = __o0["between"],
     character = __o1["character"],
     noneOf = __o1["noneOf"],
-    foldl = __o2["foldl"],
+    join = __o2["join"],
     identifierPart = __o3["identifierPart"],
-    lineTerminator = __o4["lineTerminator"],
-    __add = (function(x, y) {
-        return (x + y);
-    }),
-    join = map.bind(null, foldl.bind(null, __add, ""));
+    lineTerminator = __o4["lineTerminator"];
 (regularExpressionNonTerminator = next(not(lineTerminator), anyToken));
 (regularExpressionBackslashSequence = next(character("\\"), map((function(y) {
     return ("\\" + y);

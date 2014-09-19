@@ -26,6 +26,7 @@ with
         fail
         many
         next
+        token
         label},
     import 'bennu::text' {
         character
@@ -33,16 +34,15 @@ with
         digit
         letter
         string},
-    import 'nu-stream::stream' {foldl},
+    
+    import './common' {
+        join
+        match},
     import './reserved_word_lexer' {reservedWordList}
 in {
 
-var join := foldl@ (+) @ '';
-
-/* Lexers
+/* Characters
  ******************************************************************************/
-// Characters
-////////////////////////////////////////
 /**
  * Zero Width non-joiner
  */
@@ -53,49 +53,21 @@ zwnj := character '\u200c';
  */
 zwj := character '\u200d';
 
-/**
- * Lexer for a unicode letter character.
- * 
- * Any character in any of the Unicode categories:
- * - Uppercase letter (Lu)
- * - Lowercase letter (Ll)
- * - Titlecase letter (Lt)
- * - Modifier letter (Lm)
- * - Other letter (Lo)
- * - Letter number (Nl)
- * 
- * @TODO Implement for unicode based on spec.
- */
-unicodeLetter := letter;
+unicodeLetter := match
+    '   \\p{Lu}            (?#Uppercase letter)\
+    |   \\p{Ll}            (?#Lowercase letter)\
+    |   \\p{Lt}            (?#Titlecase letter)\
+    |   \\p{Lm}            (?#Modifier letter)\
+    |   \\p{Lo}            (?#Other letter)\
+    |   \\p{Nl}            (?#Letter number)\
+    ';
 
-/**
- * Lexer for a Unicode digit character.
- * 
- * Any character in the Unicode category Decimal number (Nd).
- * 
- * @TODO Implement for unicode based on spec.
- */
-unicodeDigit := digit;
+unicodeDigit := match '\\p{Nd}(?#Number digit)';
 
-/**
- * Lexer for a Unicode connector punctuation character.
- * 
- * Any character in the Unicode category Connector Punctuation (Pc).
- */
-unicodeConnectorPunctuation := oneOf [
-    '\u005F',
-    '\u203F',
-    '\u2040',
-    '\u2054',
-    '\uFE33',
-    '\uFE34',
-    '\uFE4D',
-    '\uFE4E',
-    '\uFE4F',
-    '\uFF3F'];
+unicodeConnectorPunctuation := match '\\p{Pc}(?#Connector Punctuation)';
 
-// Parts
-////////////////////////////////////////
+/* Parts
+ ******************************************************************************/
 identifierStart :=
     either(
         unicodeLetter,
@@ -118,16 +90,16 @@ identifierParts := many identifierPart;
  */
 identifierName := cons(identifierStart, identifierParts);
 
-// Identifier
-////////////////////////////////////////
+/* Identifier
+ ******************************************************************************/
 /**
  * Lexer for an identifier.
  * 
  * Checks to make sure returned identifier is not a keyword.
  */
 identifier := label@'Identifier Lexer' <|
-    bind(identifierName, \name ->
-        let n = join name in
+    bind(join identifierName, \name ->
+        let n = name in
             ?reservedWordList.indexOf(n) >= 0
                 :fail()
                 :always n);

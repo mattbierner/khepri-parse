@@ -2,8 +2,8 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/string_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer",
-    "./number_lexer"
+define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "./line_terminator_lexer", "./number_lexer",
+    "./common"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
     var doubleQuote, escape, singleQuote, lineContinuation, unicodeEscapeSequence, hexEscapeSequence,
@@ -25,17 +25,13 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         noneOf = __o0["noneOf"],
         between = __o1["between"],
         times = __o1["times"],
-        foldl = __o2["foldl"],
-        lineTerminatorSequence = __o3["lineTerminatorSequence"],
-        lineTerminator = __o3["lineTerminator"],
-        decimalDigit = __o4["decimalDigit"],
-        hexDigit = __o4["hexDigit"],
-        x, __add = (function(x, y) {
-            return (x + y);
-        }),
-        join = foldl.bind(null, __add, ""),
-        fromCharCode = map.bind(null, (function(x) {
-            return String.fromCharCode(parseInt(join(x), 16));
+        lineTerminatorSequence = __o2["lineTerminatorSequence"],
+        lineTerminator = __o2["lineTerminator"],
+        decimalDigit = __o3["decimalDigit"],
+        hexDigit = __o3["hexDigit"],
+        join = __o4["join"],
+        x, fromCharCode = map.bind(null, (function(x) {
+            return String.fromCharCode(parseInt(x, 16));
         }));
     (doubleQuote = character("\""));
     (singleQuote = character("'"));
@@ -57,20 +53,20 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         }))),
         escapeCharacter = choice(singleEscapeCharacter, decimalDigit, oneOf("ux")),
         nonEscapeCharacter = sequence(not(escapeCharacter), not(lineTerminator), anyToken);
-    (hexEscapeSequence = next(character("x"), fromCharCode(times(2, hexDigit))));
-    (unicodeEscapeSequence = next(character("u"), fromCharCode(times(4, hexDigit))));
+    (hexEscapeSequence = next(character("x"), fromCharCode(join(times(2, hexDigit)))));
+    (unicodeEscapeSequence = next(character("u"), fromCharCode(join(times(4, hexDigit)))));
     (characterEscapeSequence = either(singleEscapeCharacter, nonEscapeCharacter));
     (escapeSequence = choice(characterEscapeSequence, sequence(character("0"), not(decimalDigit), always(
         "\u0000")), hexEscapeSequence, unicodeEscapeSequence));
     (singleStringCharacter = label("Single String Character", choice(attempt(lineContinuation), next(escape,
         escapeSequence), next(not(lineTerminator), noneOf("'\\")))));
     (singleStringCharacters = many(singleStringCharacter));
-    (singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, map(join,
+    (singleStringLiteral = label("Single String Literal", between(singleQuote, singleQuote, join(
         singleStringCharacters))));
     (doubleStringCharacter = choice(attempt(lineContinuation), next(escape, escapeSequence), next(not(
         lineTerminator), noneOf("\"\\"))));
     (doubleStringCharacters = many(doubleStringCharacter));
-    (doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, map(join,
+    (doubleStringLiteral = label("Double String Literal", between(doubleQuote, doubleQuote, join(
         doubleStringCharacters))));
     (stringLiteral = label("Sting Literal Lexer", either(singleStringLiteral, doubleStringLiteral)));
     (exports["doubleQuote"] = doubleQuote);

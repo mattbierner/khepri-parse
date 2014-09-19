@@ -25,6 +25,7 @@ package (
 with
     import 'bennu::parse' {
         ExpectError
+        either
         token}
 in {
 

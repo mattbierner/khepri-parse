@@ -5,7 +5,7 @@
 "use strict";
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
-    __o1 = require("nu-stream")["stream"],
+    __o1 = require("./common"),
     decimal, negativeSign, positiveSign, exponentIndicator, hexIndicator, decimalDigit, nonZeroDigit, hexDigit,
         decimalDigits, hexDigits, unsignedInteger, signedInteger, exponentPart, hexIntegerLiteral,
         decimalIntegerLiteral, decimalLiteral, numericLiteral, always = __o["always"],
@@ -22,14 +22,10 @@ var __o = require("bennu")["parse"],
     character = __o0["character"],
     oneOf = __o0["oneOf"],
     string = __o0["string"],
-    foldl = __o1["foldl"],
+    join = __o1["join"],
     __minus = (function(x) {
         return (-x);
-    }),
-    __add = (function(x, y) {
-        return (x + y);
-    }),
-    join = map.bind(null, foldl.bind(null, __add, ""));
+    });
 (decimal = character("."));
 (negativeSign = character("-"));
 (positiveSign = character("+"));

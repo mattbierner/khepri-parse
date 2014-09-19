@@ -6,7 +6,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
     exports, __o, __o0, ast_value, token) {
     "use strict";
     var literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
-            identifier, operator, unaryOperator, binaryOperator, choice = __o["choice"],
+            identifier, operator, unaryOperator, binaryOperator, symbol, choice = __o["choice"],
+        either = __o["either"],
         label = __o["label"],
         between = __o0["between"],
         p;
@@ -42,6 +43,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
         return ast_value.BinaryOperator.create(x.loc, x.value);
     }))));
     (operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
+    (symbol = either(identifier, operator));
     (exports["literal"] = literal);
     (exports["nullLiteral"] = nullLiteral);
     (exports["booleanLiteral"] = booleanLiteral);
@@ -52,4 +54,5 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
     (exports["operator"] = operator);
     (exports["unaryOperator"] = unaryOperator);
     (exports["binaryOperator"] = binaryOperator);
+    (exports["symbol"] = symbol);
 }));

@@ -46,25 +46,22 @@ with
         oneOf
         noneOf},
     import 'bennu::lang' {between times},
-    import 'nu-stream::stream' {foldl},
     
     import './line_terminator_lexer' {
         lineTerminatorSequence
         lineTerminator},
     import './number_lexer' {
         decimalDigit
-        hexDigit}
+        hexDigit},
+    
+    import './common' {join} 
 in {
 
-var join := foldl @ (+) @ '';
-
 var fromCharCode := map @ \x ->
-    String.fromCharCode(parseInt(join x, 16));
+    String.fromCharCode(parseInt(x, 16));
 
-/* Lexers
+/* Constants
  ******************************************************************************/
-// Constants
-////////////////////////////////////////
 doubleQuote := character '"';
 
 singleQuote := character "'";
@@ -77,8 +74,8 @@ lineContinuation :=
         lineTerminatorSequence,
         always '');
 
-// Escape Character
-////////////////////////////////////////
+/* Escape Character
+ ******************************************************************************/
 var singleEscapeCharacter :=
     oneOf('"\'\\bfnrtv')
         .map (., {
@@ -104,17 +101,17 @@ var nonEscapeCharacter :=
         not lineTerminator,
         anyToken);
 
-// Escape Sequence
-////////////////////////////////////////
+/* Escape Sequence
+ ******************************************************************************/
 hexEscapeSequence :=
     next(
         character 'x',
-        hexDigit |> times@2 |> fromCharCode);
+        hexDigit |> times@2 |> join |> fromCharCode);
 
 unicodeEscapeSequence :=
     next(
         character 'u',
-        hexDigit |> times@4 |> fromCharCode);
+        hexDigit |> times@4 |> join |> fromCharCode);
 
 characterEscapeSequence :=
     either(
@@ -131,11 +128,8 @@ escapeSequence :=
         hexEscapeSequence,
         unicodeEscapeSequence);
 
-// Single String Literal
-////////////////////////////////////////
-/**
- * Character in single quoted string.
- */
+/* Single String Literal
+ ******************************************************************************/
 singleStringCharacter := label@'Single String Character' <|
     choice(
         attempt lineContinuation,
@@ -144,25 +138,19 @@ singleStringCharacter := label@'Single String Character' <|
             not lineTerminator,
             noneOf "'\\"));
 
-/**
- * Sequence of single string characters.
- */
 singleStringCharacters := many singleStringCharacter;
 
 /**
  * Single quoted string literal.
  * 
- * Returns the value of the string enclosed in the single quoted string literal.
+ * @return Text enclosed in the single quoted string literal.
  */
 singleStringLiteral := label@'Single String Literal' <|
     between(singleQuote, singleQuote,
-        map(join, singleStringCharacters));
+        join singleStringCharacters);
 
-// Double String Literal
-////////////////////////////////////////
-/**
- * Character in double quoted string.
- */
+/* Double String Literal
+ ******************************************************************************/
 doubleStringCharacter :=
     choice(
         attempt lineContinuation,
@@ -171,26 +159,23 @@ doubleStringCharacter :=
             not lineTerminator,
             noneOf '"\\'));
 
-/**
- * Sequence of double string characters.
- */
 doubleStringCharacters := many doubleStringCharacter;
 
 /**
  * Double quoted string literal.
  * 
- * Returns the value of the string enclosed in the double quoted string literal.
+ * @return Text enclosed in the double quoted string literal.
  */
 doubleStringLiteral := label@'Double String Literal' <|
     between(doubleQuote, doubleQuote,
-        map(join, doubleStringCharacters));
+        join doubleStringCharacters);
 
-// String Literal
-////////////////////////////////////////
+/* String Literal
+ ******************************************************************************/
 /**
  * String literal.
  * 
- * Returns the value of the string enclosed in the string literal.
+ * @return Text enclosed in the string literal.
  */
 stringLiteral := label@'Sting Literal Lexer' <|
     either(

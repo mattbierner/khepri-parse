@@ -6,13 +6,12 @@
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     __o1 = require("bennu")["lang"],
-    __o2 = require("nu-stream")["stream"],
+    __o2 = require("./common"),
     punctuator, prefixOperator, infixOperator, operator, attempt = __o["attempt"],
     label = __o["label"],
     eager = __o["eager"],
     either = __o["either"],
     enumeration = __o["enumeration"],
-    map = __o["map"],
     many = __o["many"],
     next = __o["next"],
     not = __o["not"],
@@ -20,11 +19,7 @@ var __o = require("bennu")["parse"],
     character = __o0["character"],
     oneOf = __o0["oneOf"],
     then = __o1["then"],
-    foldl = __o2["foldl"],
-    __add = (function(x, y) {
-        return (x + y);
-    }),
-    join = map.bind(null, foldl.bind(null, __add, "")),
+    join = __o2["join"],
     operatorChar = oneOf("?+-*/%|&^<>=!~@"),
     punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#", "\\", "->",
         "§", "-|", "|-"
@@ -36,7 +31,7 @@ var __o = require("bennu")["parse"],
     enumeration(trie(["&&", "||", "??", "<<", ">>", ">>>", "<", ">", "==", "!=", "&", "|", "^", "+", "-",
         "*", "/", "%", "|>", "<|", "\\>", "\\>>", "<\\", "<<\\"
     ]), join(many(operatorChar)))))));
-(operator = label("Prefix Operator Lexer", either(prefixOperator, infixOperator)));
+(operator = label("Operator Lexer", either(prefixOperator, infixOperator)));
 (exports["punctuator"] = punctuator);
 (exports["prefixOperator"] = prefixOperator);
 (exports["infixOperator"] = infixOperator);

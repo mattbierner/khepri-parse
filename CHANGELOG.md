@@ -1,5 +1,10 @@
 # ChangeLog #
 
+## 2.5.0 - Sep 18, 2014
+* Improved unicode support for identifiers and whitespace.
+* Package exports can use `#` to alias exports.
+* Package export aliases may be identifies.
+
 ## 2.4.5 - Sep 9, 2014
 * Fixed `??` lexed as puctuator instead of operator.
 * Fixed `(??, 1)` needing comma.

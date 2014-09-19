@@ -2,7 +2,7 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/regular_expression_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-stream/stream", "./identifier_lexer",
+define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "./common", "./identifier_lexer",
     "./line_terminator_lexer"
 ], (function(require, exports, __o, __o0, __o1, __o2, __o3, __o4) {
     "use strict";
@@ -24,13 +24,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "bennu/text", "nu-str
         between = __o0["between"],
         character = __o1["character"],
         noneOf = __o1["noneOf"],
-        foldl = __o2["foldl"],
+        join = __o2["join"],
         identifierPart = __o3["identifierPart"],
-        lineTerminator = __o4["lineTerminator"],
-        __add = (function(x, y) {
-            return (x + y);
-        }),
-        join = map.bind(null, foldl.bind(null, __add, ""));
+        lineTerminator = __o4["lineTerminator"];
     (regularExpressionNonTerminator = next(not(lineTerminator), anyToken));
     (regularExpressionBackslashSequence = next(character("\\"), map((function(y) {
         return ("\\" + y);

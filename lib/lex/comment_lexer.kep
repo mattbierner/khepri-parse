@@ -18,7 +18,6 @@ with
         anyToken
         either
         many
-        map
         next
         not
         label},
@@ -26,18 +25,13 @@ with
         string},
     import 'bennu::lang' {
         between},
-    import 'nu-stream::stream' {
-        foldl},
     
+    import './common' {join},
     import './line_terminator_lexer' {lineTerminator}
 in {
 
-var join := map @ (foldl @ (+) @ '');
-
-/* Lexers
+/* Single Line Comment
  ******************************************************************************/
-// Single Line Comment
-////////////////////////////////////////
 singleLineCommentMarker := string '//';
 
 singleLineCommentChar := next(not lineTerminator, anyToken);
@@ -54,8 +48,8 @@ singleLineComment := label@'Single Line Comment Lexer' <|
         singleLineCommentMarker,
         join singleLineCommentChars);
 
-// Multi Line Comment
-////////////////////////////////////////
+/* Multi Line Comment
+ ******************************************************************************/
 multiLineCommentStartMarker := string '/*';
 
 multiLineCommentEndMarker := string '*/';
@@ -74,8 +68,8 @@ multiLineComment := label@'Multi Line Comment Lexer' <|
     between(multiLineCommentStartMarker, multiLineCommentEndMarker,
         join multiLineCommentChars);
 
-// Comment
-////////////////////////////////////////
+/* Comment
+ ******************************************************************************/
 comment := label@'Comment Lexer' <|
     either(
         singleLineComment,

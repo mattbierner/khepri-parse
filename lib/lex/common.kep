@@ -1,0 +1,31 @@
+/**
+ * @fileOverview Common parser combinators used during lexing.
+ */
+package (
+    join
+    match)
+with
+    import 'XRegExp' XRP,
+    
+    import 'bennu::parse' {
+        map
+        token},
+    import 'nu-stream::stream' {
+        foldl}
+in {
+
+var XRegExp := XRP.XRegExp || XRP;
+
+
+/**
+ * Parser that joins its stream results into a string.
+ */
+join := map @ (foldl @ (+) @ '');
+
+/**
+ * Parser that matches a character using XRegExp.
+ */
+match := \pattern flags ->
+    token (XRegExp().test.bind(XRegExp(pattern, (flags || '') + 'x')));
+
+}

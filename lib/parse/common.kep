@@ -91,28 +91,34 @@ in
 
 // State Interaction
 ////////////////////////////////////////
-positionParser = extract \{position} -> position.sourcePosition;
+positionParser := extract (.position.sourcePosition);
 
-var prevEnd = extract \{position} -> position.prevEnd;
+var prevEnd := extract (.position.prevEnd);
+
+var loc := \p ->
+    enumeration(
+        positionParser,
+        p,
+        prevEnd);
 
 // Ast Node
 ////////////////////////////////////////
-node = \p, f ->
+/**
+ * Helper function that parses `p` and its location, calling `f` with loc and
+ * result of `p`.
+ */
+node := \p f ->
     binds(
-        enumeration(
-            positionParser,
-            p,
-            prevEnd),
-        \o, x, c ->
+        loc p,
+        \o x c ->
             always <| f(new SourceLocation(o, c), x));
 
-nodea = \p, f ->
-    binds(
-        enumeration(
-            positionParser,
-            p,
-            prevEnd),
-        \o, x, c ->
-            always <| f.apply(undefined, stream.toArray(stream.cons(new SourceLocation(o , c), x))));
+/**
+ * Helper function that parses stream parser `p` and its location, calling
+ * `f` with loc and results of `p`.
+ */
+nodea := \p f ->
+    node(p, \loc x ->
+        f.apply(undefined, stream.toArray <| stream.cons(loc, x)));
 
 }

@@ -13,7 +13,9 @@ package (
     whitespace)
 with
     import 'bennu::parse' {map label},
-    import 'bennu::text' {character oneOf match}
+    import 'bennu::text' {character oneOf},
+    
+    import './common' {match}
 in {
 
 var tabChar = '\u0009',
@@ -23,10 +25,8 @@ var tabChar = '\u0009',
     nbspChar = '\u00A0',
     bomChar = '\uFEFF';
 
-/* Lexers
+/* Characters
  ******************************************************************************/
-// Constants
-////////////////////////////////////////
 /**
  * Tab
  */
@@ -60,10 +60,10 @@ bom = character bomChar;
 /**
  * Any Unicode space separator
  */
-usp = match `^\s$`;
+usp = match '\\p{Zs}(?#Space separator)';
 
-// Whitespace
-////////////////////////////////////////
+/* Whitespace
+ ******************************************************************************/
 /**
  * Any whitespace character.
  */

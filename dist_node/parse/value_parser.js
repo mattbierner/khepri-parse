@@ -8,7 +8,8 @@ var __o = require("bennu")["parse"],
     ast_value = require("khepri-ast")["value"],
     token = require("./token_parser"),
     literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, identifier, operator,
-        unaryOperator, binaryOperator, choice = __o["choice"],
+        unaryOperator, binaryOperator, symbol, choice = __o["choice"],
+    either = __o["either"],
     label = __o["label"],
     between = __o0["between"],
     p;
@@ -43,6 +44,7 @@ var p3;
     return ast_value.BinaryOperator.create(x.loc, x.value);
 }))));
 (operator = between(token.punctuator("("), token.punctuator(")"), choice(unaryOperator, binaryOperator)));
+(symbol = either(identifier, operator));
 (exports["literal"] = literal);
 (exports["nullLiteral"] = nullLiteral);
 (exports["booleanLiteral"] = booleanLiteral);
@@ -53,3 +55,4 @@ var p3;
 (exports["operator"] = operator);
 (exports["unaryOperator"] = unaryOperator);
 (exports["binaryOperator"] = binaryOperator);
+(exports["symbol"] = symbol);

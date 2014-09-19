@@ -7,6 +7,8 @@ requirejs.config({
         'bennu': 'dependencies/bennu/dist',
         'nu-stream': 'dependencies/nu/dist',
         'seshet': 'dependencies/seshet/dist/seshet',
+        
+        'XRegExp': 'dependencies/XRegExp/xregexp-all',
 
         'khepri-ast': 'dependencies/khepri-ast/dist',
     }

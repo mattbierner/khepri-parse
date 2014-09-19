@@ -2,6 +2,11 @@
  * @fileOverview Package parsers.
  */
 package (
+    packageExport
+    packageExports
+    
+    packageBody
+    
     khepriPackage)
 with
     import 'bennu::parse' {
@@ -26,50 +31,56 @@ with
     import './value_parser' {
         identifier
         stringLiteral
-        operator},
-    import './statement_parser' {withStatement blockStatement}
+        operator
+        symbol},
+    import './statement_parser' {withStatement blockStatement},
+    import './pattern_parser' {identifierPattern}
+
 in {
 
-var symbol := either(
-    identifier,
-    operator);
-
-/* labels
+/* Package Exports
  ******************************************************************************/
-var packageExport = label@'Package Export' <|
-    either(
-        node(
-            symbol,
-            ast_package.PackageExport.create),
-        nodea(
-            enumeration(
-                stringLiteral,
-                next(
-                    punctuator ':',
-                    identifier)),
-            \loc alias id ->
-                ast_package.PackageExport.create(loc, id, alias)));
+var simplePackageExport :=
+    node(
+        symbol,
+        ast_package.PackageExport.create);
 
-var packageExportList = label@'Package Export List' <|
+var aliasedPackageExport :=
+    nodea(
+        enumeration(
+            either(
+                stringLiteral,
+                identifierPattern),
+            next(
+                punctuator (':', '#'),
+                identifier)),
+        \loc alias id ->
+            ast_package.PackageExport.create(loc, id, alias));
+
+packageExport := label@'Package Export' <|
+    either(
+        attempt aliasedPackageExport,
+        simplePackageExport);
+
+var packageExportList := label@'Package Export List' <|
     node(
         between(punctuator '(', punctuator ')', 
-            eager <| sepBy(optional (punctuator ','),
-                packageExport)),
+            eager sepBy(optional (punctuator ','), packageExport)),
         ast_package.PackageExports.create);
 
-var packageExports = label@'Package Exports' <|
+packageExports := label@'Package Exports' <|
     either(
-        node(
-            attempt symbol,
-            ast_package.PackageExport.create),
+        attempt simplePackageExport,
         packageExportList);
 
-var packageBody = label@'Package Body' <|
+/* Package
+ ******************************************************************************/
+packageBody := label@'Package Body' <|
     either(
         withStatement,
         blockStatement);
 
-khepriPackage = label@'Package' <|
+khepriPackage := label@'Package' <|
     nodea(
         next(
             keyword 'package',

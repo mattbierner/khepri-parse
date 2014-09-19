@@ -6,25 +6,20 @@
 var __o = require("bennu")["parse"],
     __o0 = require("bennu")["text"],
     __o1 = require("bennu")["lang"],
-    __o2 = require("nu-stream")["stream"],
+    __o2 = require("./common"),
     __o3 = require("./line_terminator_lexer"),
     singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,
         multiLineCommentStartMarker, multiLineCommentEndMarker, multiLineCommentChars, multiLineComment, comment,
         anyToken = __o["anyToken"],
     either = __o["either"],
     many = __o["many"],
-    map = __o["map"],
     next = __o["next"],
     not = __o["not"],
     label = __o["label"],
     string = __o0["string"],
     between = __o1["between"],
-    foldl = __o2["foldl"],
-    lineTerminator = __o3["lineTerminator"],
-    __add = (function(x, y) {
-        return (x + y);
-    }),
-    join = map.bind(null, foldl.bind(null, __add, ""));
+    join = __o2["join"],
+    lineTerminator = __o3["lineTerminator"];
 (singleLineCommentMarker = string("//"));
 (singleLineCommentChar = next(not(lineTerminator), anyToken));
 (singleLineCommentChars = many(singleLineCommentChar));

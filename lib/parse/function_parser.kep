@@ -1,3 +1,6 @@
+/**
+ * @fileOverview Khepri function parser.
+ */
 package (
     argumentList
     namedArgumentList
@@ -57,10 +60,8 @@ var expression = late\-> {
     }
 };
 
-/* Parser
+/* Arguments Pattern
  ******************************************************************************/
-// Arguments Pattern
-////////////////////////////////////////
 var argumentElements = let
     element = topLevelPattern
 in
@@ -69,9 +70,10 @@ in
         ellipsisPattern,
         element |> expected@"non-ellipsis pattern");
 
-var selfPattern = next(
-    punctuator '=',
-    unpack);
+var selfPattern :=
+    next(
+        punctuator '=',
+        unpack);
 
 argumentList = label@'Argument List' <|
     nodea(
@@ -97,8 +99,8 @@ argumentsPattern = label@'Arguments Pattern' <|
         namedArgumentList,
         argumentList);
 
-// Function Expression
-////////////////////////////////////////
+/* Function Expression
+ ******************************************************************************/
 functionExpression = label@'Function Expression' <| let
     functionName =
         optional next(

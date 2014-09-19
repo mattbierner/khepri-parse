@@ -73,7 +73,7 @@ var statementList = eager <| many statement;
 
 // Block Statement
 ////////////////////////////////////////
-blockStatement = label@'Block Statement' <|
+blockStatement := label@'Block Statement' <|
     node(
         between(punctuator '{', punctuator '}', 
             statementList),
@@ -81,14 +81,14 @@ blockStatement = label@'Block Statement' <|
 
 // Empty Statement
 ////////////////////////////////////////
-emptyStatement = label@'Empty Statement' <|
+emptyStatement := label@'Empty Statement' <|
     node(
         logicalSemiColon,
         ast_statement.EmptyStatement.create);
 
 // Debugger Statement
 ////////////////////////////////////////
-debuggerStatement = label@'Debugger Statement' <|
+debuggerStatement := label@'Debugger Statement' <|
     node(
         next(
             keyword 'debugger',
@@ -97,7 +97,7 @@ debuggerStatement = label@'Debugger Statement' <|
 
 // Expression Statement
 ////////////////////////////////////////
-expressionStatement = label@'Expression Statement' <|
+expressionStatement := label@'Expression Statement' <|
     node(
         then(
             topLevelExpression,
@@ -106,7 +106,7 @@ expressionStatement = label@'Expression Statement' <|
 
 // Static Declaration Statement
 ////////////////////////////////////////
-staticStatement = label@'Static Statement' <| let
+staticStatement := label@'Static Statement' <| let
     staticDeclaration = node(
         identifier,
         ast_declaration.StaticDeclarator.create),
@@ -123,13 +123,15 @@ in
 // Variable Declaration Statement
 ////////////////////////////////////////
 var variableDeclarationList = let
-    declaratorId = either(
-        identifier,
-        operator),
+    declaratorId =
+        either(
+            identifier,
+            operator),
     
-    initializer = enumeration(
-        punctuator('=', ':=', '=:'),
-        expression |> expected@"variable initilizer"),
+    initializer =
+        enumeration(
+            punctuator('=', ':=', '=:'),
+            expression |> expected@"variable initilizer"),
 
     variableDeclaration = nodea(
         cons(
@@ -146,7 +148,7 @@ in
     eager sepBy1(punctuator ',',
         variableDeclaration);
 
-variableStatement = label@'Variable Statement' <|
+variableStatement := label@'Variable Statement' <|
     node(
         between(keyword 'var', logicalSemiColon,
             variableDeclarationList),
@@ -154,7 +156,7 @@ variableStatement = label@'Variable Statement' <|
 
 // With Statement
 ////////////////////////////////////////
-withStatement = label@'With Statement' <| let
+withStatement := label@'With Statement' <| let
     withIdentifier = topLevelPattern |> expected@"pattern",
 
     withBinding = either(
@@ -183,7 +185,7 @@ in
 
 // If Statement
 ////////////////////////////////////////
-ifStatement = label@'If Statement' <| let
+ifStatement := label@'If Statement' <| let
     test =
         between(punctuator '(', punctuator ')',
             expression |> expected@"if condition"),
@@ -203,7 +205,7 @@ in
 
 // Switch Statement
 ////////////////////////////////////////
-switchStatement = label@'Switch Statement' <| let
+switchStatement := label@'Switch Statement' <| let
     caseClause = nodea(
         enumeration(
             between(keyword 'case', punctuator ':',
@@ -237,7 +239,7 @@ in
 
 // Iteration Statement
 ////////////////////////////////////////
-var whileStatement = label@'While Statement' <| let
+var whileStatement := label@'While Statement' <| let
     condition =
         between(punctuator '(', punctuator ')',
             expression)
@@ -250,7 +252,7 @@ in
                 statement)),
         ast_statement.WhileStatement.create);
 
-var doWhileStatement = label@'Do While Statement' <| let
+var doWhileStatement := label@'Do While Statement' <| let
     condition =
         between(punctuator '(', punctuator ')',
             expression)
@@ -264,7 +266,7 @@ in
                     condition))),
         ast_statement.DoWhileStatement.create);
 
-var forStatement = label@'For Statement' <| let
+var forStatement := label@'For Statement' <| let
     forInitExpression = either(
         node(
             next(
@@ -295,7 +297,7 @@ in
                     statement))),
         ast_statement.ForStatement.create);
 
-iterationStatement = label@'Iteration Statement' <|
+iterationStatement := label@'Iteration Statement' <|
     choice(
         doWhileStatement,
         whileStatement,
@@ -303,7 +305,7 @@ iterationStatement = label@'Iteration Statement' <|
 
 // Continue Statement
 ////////////////////////////////////////
-continueStatement = label@'Continue Statement' <|
+continueStatement := label@'Continue Statement' <|
     node(
         next(
             keyword 'continue',
@@ -312,7 +314,7 @@ continueStatement = label@'Continue Statement' <|
 
 // Break Statement
 ////////////////////////////////////////
-breakStatement = label@'Break Statement' <|
+breakStatement := label@'Break Statement' <|
     node(
         next(
             keyword 'break',
@@ -321,7 +323,7 @@ breakStatement = label@'Break Statement' <|
 
 // Return Statement
 ////////////////////////////////////////
-returnStatement = label@'Return Statement' <|
+returnStatement := label@'Return Statement' <|
     node(
         between(keyword 'return', logicalSemiColon,
             optional expression),
@@ -329,7 +331,7 @@ returnStatement = label@'Return Statement' <|
 
 // Throw Statement
 ////////////////////////////////////////
-throwStatement = label@'Throw Statement'  <|
+throwStatement := label@'Throw Statement'  <|
     node(
         between(keyword 'throw', logicalSemiColon,
             expression),
@@ -337,7 +339,7 @@ throwStatement = label@'Throw Statement'  <|
 
 // Try Statement
 ////////////////////////////////////////
-tryStatement = label@'Try Statement'  <| let
+tryStatement := label@'Try Statement'  <| let
     catchBlock = nodea(
         next(
             keyword 'catch',
@@ -362,7 +364,7 @@ in
 
 // Statement
 ////////////////////////////////////////
-statement = label@'Statement' <|
+statement := label@'Statement' <|
     choice(
         blockStatement,
         staticStatement,

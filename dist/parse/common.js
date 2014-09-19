@@ -60,13 +60,11 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
         })))
             .map(pres);
     }));
-    (positionParser = extract((function(__o0) {
-        var position = __o0["position"];
-        return position.sourcePosition;
+    (positionParser = extract((function(x) {
+        return x.position.sourcePosition;
     })));
-    var prevEnd = extract((function(__o0) {
-        var position = __o0["position"];
-        return position.prevEnd;
+    var prevEnd = extract((function(x) {
+        return x.position.prevEnd;
     }));
     (node = (function(p, f) {
         return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
@@ -75,8 +73,9 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
     }));
     (nodea = (function(p, f) {
         return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
-            return always(f.apply(undefined, stream.toArray(stream.cons(new(SourceLocation)(o,
-                c), x))));
+            var loc;
+            return always(((loc = new(SourceLocation)(o, c)), f.apply(undefined, stream.toArray(
+                stream.cons(loc, x)))));
         }));
     }));
     (exports["precedence"] = precedence);

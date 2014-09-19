@@ -37,12 +37,11 @@ with
         label},
     import 'bennu::lang' {between},
     import 'bennu::text' {character noneOf},
-    import 'nu-stream::stream' {foldl},
+    
+    import './common' {join},
     import './identifier_lexer' {identifierPart},
     import './line_terminator_lexer' {lineTerminator}
 in {
-
-var join := map @ (foldl @ (+) @ '');
 
 /* Lexers
  ******************************************************************************/

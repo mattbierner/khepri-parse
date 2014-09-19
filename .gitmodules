@@ -10,3 +10,6 @@
 [submodule "dependencies/khepri-ast"]
 	path = dependencies/khepri-ast
 	url = https://github.com/mattbierner/khepri-ast.git
+[submodule "dependencies/xregexp"]
+	path = dependencies/xregexp
+	url = https://github.com/mattbierner/xregexp.git

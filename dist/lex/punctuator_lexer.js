@@ -2,15 +2,14 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/punctuator_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream"], (function(require,
-    exports, __o, __o0, __o1, __o2) {
+define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "./common"], (function(require, exports, __o,
+    __o0, __o1, __o2) {
     "use strict";
     var punctuator, prefixOperator, infixOperator, operator, attempt = __o["attempt"],
         label = __o["label"],
         eager = __o["eager"],
         either = __o["either"],
         enumeration = __o["enumeration"],
-        map = __o["map"],
         many = __o["many"],
         next = __o["next"],
         not = __o["not"],
@@ -18,11 +17,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         character = __o0["character"],
         oneOf = __o0["oneOf"],
         then = __o1["then"],
-        foldl = __o2["foldl"],
-        __add = (function(x, y) {
-            return (x + y);
-        }),
-        join = map.bind(null, foldl.bind(null, __add, "")),
+        join = __o2["join"],
         operatorChar = oneOf("?+-*/%|&^<>=!~@"),
         punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#",
             "\\", "->", "§", "-|", "|-"
@@ -34,7 +29,7 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
         eager(enumeration(trie(["&&", "||", "??", "<<", ">>", ">>>", "<", ">", "==", "!=", "&", "|",
             "^", "+", "-", "*", "/", "%", "|>", "<|", "\\>", "\\>>", "<\\", "<<\\"
         ]), join(many(operatorChar)))))));
-    (operator = label("Prefix Operator Lexer", either(prefixOperator, infixOperator)));
+    (operator = label("Operator Lexer", either(prefixOperator, infixOperator)));
     (exports["punctuator"] = punctuator);
     (exports["prefixOperator"] = prefixOperator);
     (exports["infixOperator"] = infixOperator);

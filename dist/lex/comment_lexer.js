@@ -2,7 +2,7 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/comment_lexer.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-stream/stream", "./line_terminator_lexer"], (
+define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "./common", "./line_terminator_lexer"], (
     function(require, exports, __o, __o0, __o1, __o2, __o3) {
         "use strict";
         var singleLineCommentMarker, singleLineCommentChar, singleLineCommentChars, singleLineComment,
@@ -10,18 +10,13 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "nu-str
                 comment, anyToken = __o["anyToken"],
             either = __o["either"],
             many = __o["many"],
-            map = __o["map"],
             next = __o["next"],
             not = __o["not"],
             label = __o["label"],
             string = __o0["string"],
             between = __o1["between"],
-            foldl = __o2["foldl"],
-            lineTerminator = __o3["lineTerminator"],
-            __add = (function(x, y) {
-                return (x + y);
-            }),
-            join = map.bind(null, foldl.bind(null, __add, ""));
+            join = __o2["join"],
+            lineTerminator = __o3["lineTerminator"];
         (singleLineCommentMarker = string("//"));
         (singleLineCommentChar = next(not(lineTerminator), anyToken));
         (singleLineCommentChars = many(singleLineCommentChar));

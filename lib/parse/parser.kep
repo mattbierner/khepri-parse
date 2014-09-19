@@ -3,20 +3,20 @@
  */
 package (
     parserStream
-    ParserPosition
     
     parseInput
     parseStream)
 with
-    import 'bennu::parse' parse#{ParserState},
+    import 'bennu::parse' {
+        ParserState
+        runState},
+    
     import 'nu-stream::stream' {
         filter
-        isEmpty
-        first
-        'from': streamFrom},
+        'from'#streamFrom},
     
-    import 'khepri-ast::position' {SourceLocation SourcePosition},
-    import './program_parser' {program}
+    import './program_parser' {program},
+    import './parser_position' ParserPosition
 in {
 
 /* Stream
@@ -39,35 +39,6 @@ parserStream := filter @ \x -> {
     }
 };
 
-/* Position
- ******************************************************************************/
-ParserPosition := function \tokenPosition sourcePosition prevEnd =self-> {
-    self.tokenPosition := tokenPosition;
-    self.sourcePosition := sourcePosition;
-    self.prevEnd := prevEnd;
-};
-ParserPosition.prototype = new parse.Position();
-ParserPosition.prototype.constructor = ParserPosition;
-
-ParserPosition.initial = new ParserPosition(
-    parse.Position.initial,
-    SourcePosition.initial,
-    parse.Position.initial);
-
-ParserPosition.prototype.increment = \tok r =self->
-    new ParserPosition(
-        self.tokenPosition.increment(tok),
-        ?isEmpty r
-            :tok.loc.end
-            :first(r).loc.start,
-        tok.loc.end);
-
-ParserPosition.prototype.toString = \ =self->
-    '' + self.sourcePosition;
-
-ParserPosition.prototype.compare = \pos =self->
-    self.tokenPosition.compare(pos.tokenPosition);
-
 /* Running
  ******************************************************************************/
 /**
@@ -80,7 +51,7 @@ ParserPosition.prototype.compare = \pos =self->
  * @return AST.
  */
 parseStream := \s -> 
-    parse.runState(
+    runState(
         program,
         new ParserState(
             parserStream s,

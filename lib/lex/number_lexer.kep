@@ -46,15 +46,13 @@ with
         character
         oneOf
         string},
-    import 'nu-stream::stream' {foldl}
+    
+    import './common' {join}
+
 in {
 
-var join := map @ (foldl @ (+) @ '');
-
-/* Lexers
+/* Constants
  ******************************************************************************/
-// Constants
-////////////////////////////////////////
 decimal := character '.';
 
 negativeSign := character '-';
@@ -68,24 +66,24 @@ hexIndicator :=
         string '0x',
         string '0X');
 
-// Digits
-////////////////////////////////////////
+/* Digits
+ ******************************************************************************/
 decimalDigit := oneOf '0123456789';
 
 nonZeroDigit := oneOf '123456789';
 
 hexDigit := oneOf '0123456789abcdefABCDEF';
 
-// Strings
-////////////////////////////////////////
-decimalDigits := label('Decimal Digits Lexer',
-    join <| many1 decimalDigit);
+/* Strings
+ ******************************************************************************/
+decimalDigits := label@'Decimal Digits Lexer' <|
+    join <| many1 decimalDigit;
 
-hexDigits := label('Hex Digits Lexer',
-    join <| many1 hexDigit);
+hexDigits := label@'Hex Digits Lexer' <|
+    join <| many1 hexDigit;
 
-// Integers
-////////////////////////////////////////
+/* Integers
+ ******************************************************************************/
 unsignedInteger := label@'Unsigned Integer Lexer' <|
     map(
         parseInt,
@@ -107,15 +105,15 @@ var hexIntegerLiteralDigits := label@'Hex Integer Literal Digits Lexer' <|
         \num -> parseInt(num, 16),
         hexDigits);
 
-// Parts
-////////////////////////////////////////
+/* Parts
+ ******************************************************************************/
 exponentPart := label@'Exponent Part Lexer' <|
     next(
         exponentIndicator,
         signedInteger);
 
-// Literals
-////////////////////////////////////////
+/* Literals
+ ******************************************************************************/
 hexIntegerLiteral := label@'Hex Integer Literal Lexer' <|
     next(
         hexIndicator,
@@ -141,13 +139,13 @@ decimalLiteral := label@'Decimal Literal Lexer' <|
                 enumeration(
                     decimalDigits,
                     optional(0,
-                        attempt <| next(
+                        attempt next(
                             decimal,
                             decimalDigits))),
                 \whole fractional ->
                     always(parseFloat(whole + '.' + fractional))),
             optional(0, exponentPart)),
-        \num, exp ->
+        \num exp ->
             always(num * Math.pow(10, parseInt(exp))));
 
 /**
