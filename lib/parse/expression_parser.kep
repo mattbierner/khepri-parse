@@ -505,11 +505,11 @@ var precedenceTable = [
         'precedence': 9,
         'node': createBinary
     }, {
-        'sep': prefixedOp '|>',
+        'sep': prefixedOp('|>', '|>>'),
         'precedence': 10,
         'node': createBinary
     }, {
-        'sep': prefixedOp '<|',
+        'sep': prefixedOp('<|', '<<|')
         'precedence': 10,
         'right': true,
         'node': createBinary

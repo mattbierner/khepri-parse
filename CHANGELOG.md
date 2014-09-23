@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.6.0 - Sep 22, 2014
+* Added `<<|` and `|>>` ops.
+
 ## 2.5.0 - Sep 18, 2014
 * Improved unicode support for identifiers and whitespace.
 * Package exports can use `#` to alias exports.

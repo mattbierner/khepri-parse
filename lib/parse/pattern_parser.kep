@@ -49,7 +49,10 @@ with
         sepEndWith1
         sepEndWith
         sepEndWith0},
-    import './token_parser' {keyword punctuator},
+    import './token_parser' {
+        keyword
+        punctuator
+        binaryOperator},
     import './value_parser' {
         identifier
         operator
