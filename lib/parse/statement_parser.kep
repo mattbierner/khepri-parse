@@ -63,7 +63,7 @@ in {
 
 /* Forward declarations
  ******************************************************************************/
-statement = late\-> { return statement; };
+statement = late \-> { return statement; };
 
 /* Statement Parsers
  ******************************************************************************/

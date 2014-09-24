@@ -48,29 +48,25 @@ in {
 
 /* Circular Declarations 
  ******************************************************************************/
-var blockStatement = late\-> {
+var blockStatement = late \->
     with import './statement_parser' {blockStatement} in {
         return blockStatement;
-    }
-};
+    };
 
-var withStatement = late\-> {
+var withStatement = late \->
     with import './statement_parser' {withStatement} in {
         return withStatement;
-    }
-};
+    };
 
-var tryStatement = late\-> {
+var tryStatement = late \->
     with import './statement_parser' {tryStatement} in {
         return tryStatement;
-    }
-};
+    };
 
-var expression = late\-> {
+var expression = late \->
     with import './expression_parser' {expression} in {
         return expression;
-    }
-};
+    };
 
 /* Arguments Pattern
  ******************************************************************************/

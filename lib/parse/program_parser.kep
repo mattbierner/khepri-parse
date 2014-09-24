@@ -1,5 +1,5 @@
 /**
- * @fileOverview Program parsers.
+ * @fileOverview Parser for a Khepri program.
  */
 package (
     sourceElement
@@ -17,12 +17,13 @@ with
     import './statement_parser' {statement}
 in {
 
-/* Parsers
- ******************************************************************************/
 sourceElement := statement;
 
 sourceElements := eager <| many sourceElement;
 
+/**
+ * Khepri program parser.
+ */
 program := label@'Program' <|
     node(
         then(

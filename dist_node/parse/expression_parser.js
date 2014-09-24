@@ -57,11 +57,12 @@ var __o = require("bennu")["parse"],
     stringLiteral = value["stringLiteral"],
     numericLiteral = value["numericLiteral"],
     topLevelPattern = __o4["topLevelPattern"],
-    arg, reducer, x, reducer0, x1, x4, functionExpression = late((function() {
-        var __o5 = require("./function_parser"),
-            functionExpression0 = __o5["functionExpression"];
-        return functionExpression0;
-    }));
+    y1, y0, x, arg, y, y8, x4, y9, x3, y7, x10, y16, reducer, y17, x11, x12, y18, x13, y19, x14, y20, x18, y24, y33,
+        x26, x25, reducer0, y32, y44, x37, x36, y43, y47, x39, y46, functionExpression = late((function() {
+            var __o5 = require("./function_parser"),
+                functionExpression0 = __o5["functionExpression"];
+            return functionExpression0;
+        }));
 (expression = late((function() {
     return expression;
 })));
@@ -77,47 +78,59 @@ var __o = require("bennu")["parse"],
 (curryExpression = late((function() {
     return curryExpression;
 })));
-var args = label("Arguments", ((arg = expression), node(between(punctuator("("), punctuator(")"), eager(sepBy(
-    punctuator(","), expected("argument", arg)))), (function(loc, x) {
-    (x.loc = loc);
-    return x;
-})))),
-    arrayElement, arrayElements;
-(arrayLiteral = label("Array Literal", ((arrayElement = expression), (arrayElements = sepBy(punctuator(","), expected(
-    "array element", arrayElement))), node(between(punctuator("["), punctuator("]"), eager(arrayElements)),
-    ast_expression.ArrayExpression.create))));
-var propertyName, propertyInitializer, objectProperties;
-(objectLiteral = label("Object Literal", ((propertyName = choice(stringLiteral, numericLiteral, identifier)), (
-    propertyInitializer = label("Property Initializer", nodea(enumeration(then(propertyName, punctuator(":")),
-        expression), ast_value.ObjectValue.create))), (objectProperties = sepBy(punctuator(","), expected(
-    "object property", propertyInitializer))), node(between(punctuator("{"), punctuator("}"), eager(
-    objectProperties)), ast_expression.ObjectExpression.create))));
-var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", topLevelPattern), punctuator("=", "=:",
-    ":="), expected("bound value", expression)), (function(loc, pattern, rec0, expr) {
+var args = ((x = label.bind(null, "Arguments")), (arg = expression), (y = node(between(punctuator("("), punctuator(")"), (
+    (y0 = sepBy(punctuator(","), ((y1 = expected.bind(null, "argument")), y1(arg)))), eager(y0))), (
+    function(loc, x0) {
+        (x0.loc = loc);
+        return x0;
+    }))), x(y)),
+    y2, x0 = label.bind(null, "Array Literal"),
+    arrayElement = expression,
+    arrayElements = sepBy(punctuator(","), ((y2 = expected.bind(null, "array element")), y2(arrayElement))),
+    y3 = node(between(punctuator("["), punctuator("]"), eager(arrayElements)), ast_expression.ArrayExpression.create);
+(arrayLiteral = x0(y3));
+var y5, x1 = label.bind(null, "Object Literal"),
+    propertyName = choice(stringLiteral, numericLiteral, identifier),
+    x2 = label.bind(null, "Property Initializer"),
+    y4 = nodea(enumeration(then(propertyName, punctuator(":")), expression), ast_value.ObjectValue.create),
+    propertyInitializer = x2(y4),
+    objectProperties = sepBy(punctuator(","), ((y5 = expected.bind(null, "object property")), y5(propertyInitializer))),
+    y6 = node(between(punctuator("{"), punctuator("}"), eager(objectProperties)), ast_expression.ObjectExpression.create);
+(objectLiteral = x1(y6));
+var letBinding = ((x3 = label.bind(null, "Let Binding")), (y7 = nodea(enumeration(((y8 = expected.bind(null, "pattern")),
+    y8(topLevelPattern)), punctuator("=", "=:", ":="), ((x4 = expression), (y9 = expected.bind(null,
+    "bound value")), y9(x4))), (function(loc, pattern, rec0, expr) {
     return ast_declaration.Binding.create(loc, pattern, expr, (rec0.value === ":="));
-}))),
-    letBindings, letBody;
-(letExpression = label("Let Expression", ((letBindings = sepBy1(punctuator(","), letBinding)), (letBody = expression),
-    nodea(next(keyword("let"), enumeration(expected("let bindings", eager(letBindings)), next(keyword("in"),
-        expected("let body expression", letBody)))), ast_expression.LetExpression.create))));
-(conditionalExpression = label("Conditional Expression", nodea(next(punctuator("?"), enumeration(expression, next(
-        punctuator(":"), expected("conditional consequent expression", expression)), next(punctuator(
-        ":"), expected("conditional alternate expression", expression)))), ast_expression.ConditionalExpression
-    .create)));
-var argumentList = label("Argument List", either(attempt(node(operatorExpression, (function(loc, x) {
-    var a = [x];
+}))), x3(y7)),
+    x6, y11, y12, x5 = label.bind(null, "Let Expression"),
+    letBindings = sepBy1(punctuator(","), letBinding),
+    letBody = expression,
+    y10 = nodea(next(keyword("let"), enumeration(((x6 = eager(letBindings)), (y11 = expected.bind(null, "let bindings")),
+            y11(x6)), next(keyword("in"), ((y12 = expected.bind(null, "let body expression")), y12(letBody))))),
+        ast_expression.LetExpression.create);
+(letExpression = x5(y10));
+var x8, y14, x9, y15, x7 = label.bind(null, "Conditional Expression"),
+    y13 = nodea(next(punctuator("?"), enumeration(expression, next(punctuator(":"), ((x8 = expression), (y14 = expected
+            .bind(null, "conditional consequent expression")), y14(x8))), next(punctuator(":"), ((x9 =
+            expression), (y15 = expected.bind(null, "conditional alternate expression")), y15(x9))))), ast_expression.ConditionalExpression
+        .create);
+(conditionalExpression = x7(y13));
+var argumentList = ((x10 = label.bind(null, "Argument List")), (y16 = either(attempt(node(operatorExpression, (function(
+    loc, x11) {
+    var a = [x11];
     (a.loc = loc);
     return a;
-}))), args)),
+}))), args)), x10(y16)),
     dotExpression = ((reducer = (function(p, c) {
         return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create((p ? SourceLocation.merge(
             p.loc, c.loc) : c.loc), p, c.property, c.computed) : ast_expression.CallExpression.create((
             p ? SourceLocation.merge(p.loc, c.loc) : c.loc), p, c));
-    })), bind(cons(accessor, many(either(argumentList, accessor))), ((x = foldl.bind(null, reducer, null)), (
-        function(z) {
-            return always(x(z));
-        })))),
-    unaryOperatorExpression = label("Unary Operator Expression", choice(value.unaryOperator, keyword("typeof", "void")
+    })), bind(cons(accessor, ((y17 = either(argumentList, accessor)), many(y17))), ((x11 = foldl.bind(null, reducer,
+        null)), (function(z) {
+        return always(x11(z));
+    })))),
+    unaryOperatorExpression = ((x12 = label.bind(null, "Unary Operator Expression")), (y18 = choice(value.unaryOperator,
+            keyword("typeof", "void")
             .map((function(__o5) {
                 var loc = __o5["loc"],
                     value0 = __o5["value"];
@@ -125,85 +138,105 @@ var argumentList = label("Argument List", either(attempt(node(operatorExpression
             })), attempt(dotExpression))
         .map((function(op) {
             return ast_expression.OperatorExpression.create(op.loc, op);
-        }))),
-    binaryOperatorExpression = label("Binary Operator Expression", nodea(cons(optional(keyword("_")), either(
-        enumeration(either(keyword("new"), punctuator(".")), optional(next(punctuator(","), expression))),
-        enumeration(choice(keyword("instanceof"), punctuator("@"), tokenParser.binaryOperator), optional(
-            next(optional(punctuator(",")), expression))))), (function(loc, flipped, op, arg0) {
-        var operator0 = ast_expression.OperatorExpression.create(loc, ast_value.BinaryOperator.create(loc,
-            op.value), flipped);
+        }))), x12(y18)),
+    binaryOperatorExpression = ((x13 = label.bind(null, "Binary Operator Expression")), (y19 = nodea(cons(optional(
+        keyword("_")), either(enumeration(either(keyword("new"), punctuator(".")), optional(next(
+        punctuator(","), expression))), enumeration(choice(keyword("instanceof"), punctuator("@"),
+        tokenParser.binaryOperator), optional(next(optional(punctuator(",")), expression))))), (function(
+        loc, flipped, op, arg0) {
+        var operator0 = ast_expression.OperatorExpression.create(loc, ast_value.BinaryOperator.create(
+            loc, op.value), flipped);
         return (arg0 ? ast_expression.CurryExpression.create(loc, operator0, [arg0]) : operator0);
-    }))),
-    ternayOperatorExpression = label("Ternary Operator Expression", punctuator("?")
+    }))), x13(y19)),
+    ternayOperatorExpression = ((x14 = label.bind(null, "Ternary Operator Expression")), (y20 = punctuator("?")
         .map((function(__o5) {
             var loc = __o5["loc"],
                 value0 = __o5["value"];
-            return ast_expression.OperatorExpression.create(loc, ast_value.TernaryOperator.create(loc, value0));
-        })));
-(operatorExpression = label("Operator Expression", between(punctuator("("), punctuator(")"), choice(
-    unaryOperatorExpression, binaryOperatorExpression, ternayOperatorExpression))));
-(primaryExpression = label("Primary Expression", choice(letExpression, conditionalExpression, identifier, literal,
-    arrayLiteral, objectLiteral, functionExpression, attempt(operatorExpression), dotExpression.map((function(
-        expr) {
-        return ast_expression.OperatorExpression.create(expr.loc, expr);
-    })), between(punctuator("("), punctuator(")"), expected("expression", expression)))));
-var accessorTarget = either(identifier.map((function(x0) {
-        return [x0, false];
-    })), between(punctuator("("), punctuator(")"), expected("accessor expression", expression))
-    .map((function(x0) {
-        return [x0, true];
+            return ast_expression.OperatorExpression.create(loc, ast_value.TernaryOperator.create(loc,
+                value0));
+        }))), x14(y20)),
+    x15 = label.bind(null, "Operator Expression"),
+    y21 = between(punctuator("("), punctuator(")"), choice(unaryOperatorExpression, binaryOperatorExpression,
+        ternayOperatorExpression));
+(operatorExpression = x15(y21));
+var x17, y23, x16 = label.bind(null, "Primary Expression"),
+    y22 = choice(letExpression, conditionalExpression, identifier, literal, arrayLiteral, objectLiteral,
+        functionExpression, attempt(operatorExpression), dotExpression.map((function(expr) {
+            return ast_expression.OperatorExpression.create(expr.loc, expr);
+        })), between(punctuator("("), punctuator(")"), ((x17 = expression), (y23 = expected.bind(null, "expression")),
+            y23(x17))));
+(primaryExpression = x16(y22));
+var accessorTarget = either(identifier.map((function(x18) {
+        return [x18, false];
+    })), between(punctuator("("), punctuator(")"), ((x18 = expression), (y24 = expected.bind(null,
+        "accessor expression")), y24(x18)))
+    .map((function(x19) {
+        return [x19, true];
+    }))),
+    x19 = label.bind(null, "Accessor"),
+    y25 = node(next(punctuator("."), accessorTarget), (function(loc, __o5) {
+        var x20 = __o5[0],
+            computed = __o5[1];
+        return ({
+            "loc": loc,
+            "property": x20,
+            "computed": computed
+        });
+    }));
+(accessor = x19(y25));
+var x21, y27, y28, x22, y29, x20 = label.bind(null, "New Expression"),
+    y26 = nodea(next(keyword("new"), enumeration(((x21 = memberExpression), (y27 = expected.bind(null, "new object")),
+        y27(x21)), ((x22 = either(args, ((y28 = enumeration(curryExpression)), eager(y28)))), (y29 =
+        expected.bind(null, "argument list")), y29(x22)))), ast_expression.NewExpression.create);
+(newExpression = x20(y26));
+var accessorReducer = (function(p, c) {
+    return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed);
+}),
+    y31, x24, x23 = label.bind(null, "Member Expression"),
+    y30 = binds(enumeration(either(primaryExpression, newExpression), ((y31 = memo(accessor)), many(y31))), ((x24 =
+        foldl.bind(null, accessorReducer)), (function() {
+        var args0 = arguments;
+        return always(x24.apply(null, args0));
     })));
-(accessor = label("Accessor", node(next(punctuator("."), accessorTarget), (function(loc, __o5) {
-    var x0 = __o5[0],
-        computed = __o5[1];
-    return ({
-        "loc": loc,
-        "property": x0,
-        "computed": computed
-    });
-}))));
-(newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected("new object", memberExpression),
-        expected("argument list", either(args, eager(enumeration(curryExpression)))))), ast_expression.NewExpression
-    .create)));
-var x0;
-(memberExpression = label("Member Expression", binds(enumeration(either(primaryExpression, newExpression), many(memo(
-    accessor))), ((x0 = foldl.bind(null, (function(p, c) {
-    return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property,
-        c.computed);
-}))), (function() {
-    var args0 = arguments;
-    return always(x0.apply(null, args0));
-})))));
-var leftHandSideExpression = label("Call Expression", ((reducer0 = (function(p, c) {
-    return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(SourceLocation.merge(
-        p.loc, c.loc), p, c.property, c.computed, c.checked) : ast_expression.CallExpression.create(
+(memberExpression = x23(y30));
+var leftHandSideExpression = ((x25 = label.bind(null, "Call Expression")), (reducer0 = (function(p, c) {
+    return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(SourceLocation.merge(p.loc,
+        c.loc), p, c.property, c.computed, c.checked) : ast_expression.CallExpression.create(
         SourceLocation.merge(p.loc, c.loc), p, c));
-})), binds(enumeration(memberExpression, many(either(argumentList, accessor))), ((x1 = foldl.bind(null,
-    reducer0)), (function() {
+})), (y32 = binds(enumeration(memberExpression, ((y33 = either(argumentList, accessor)), many(y33))), ((x26 = foldl
+    .bind(null, reducer0)), (function() {
     var args0 = arguments;
-    return always(x1.apply(null, args0));
-}))))),
-    reducer1, x2;
-(curryExpression = label("Curry Expression", ((reducer1 = (function(f, args0) {
-    return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args0.loc), f, [].concat(
-        args0));
-})), binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), expected("curry argument", either(
-    argumentList, leftHandSideExpression))))), ((x2 = foldl.bind(null, reducer1)), (function() {
-    var args0 = arguments;
-    return always(x2.apply(null, args0));
-}))))));
-(applicationExpression = label("Call Expression", chainl1(always((function(p, c) {
-    return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [c]);
-})), curryExpression)));
-(unaryOperator = label("Unary Operator", either(keyword("typeof", "void"), tokenParser.unaryOperator)));
-var reducer2;
-(unaryExpression = label("Unary Expression", ((reducer2 = (function(argument, op) {
-    return ast_expression.UnaryExpression.create(SourceLocation.merge(op.loc, argument.loc),
-        ast_value.UnaryOperator.create(op.loc, op.value), argument);
-})), binds(enumeration(many(unaryOperator), expected("unary argument", applicationExpression)), (function(
-    ops, expression0) {
-    return always(foldr(reducer2, expression0, ops));
-})))));
+    return always(x26.apply(null, args0));
+})))), x25(y32)),
+    x28, y35, x29, x27 = label.bind(null, "Curry Expression"),
+    reducer1 = (function(f, args0) {
+        return ast_expression.CurryExpression.create(SourceLocation.merge(f.loc, args0.loc), f, [].concat(args0));
+    }),
+    y34 = binds(enumeration(leftHandSideExpression, many(next(punctuator("@"), ((x28 = either(argumentList,
+        leftHandSideExpression)), (y35 = expected.bind(null, "curry argument")), y35(x28))))), ((x29 = foldl.bind(
+        null, reducer1)), (function() {
+        var args0 = arguments;
+        return always(x29.apply(null, args0));
+    })));
+(curryExpression = x27(y34));
+var x30 = label.bind(null, "Call Expression"),
+    y36 = chainl1(always((function(p, c) {
+        return ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, [c]);
+    })), curryExpression);
+(applicationExpression = x30(y36));
+var x31 = label.bind(null, "Unary Operator"),
+    y37 = either(keyword("typeof", "void"), tokenParser.unaryOperator);
+(unaryOperator = x31(y37));
+var y39, x32 = label.bind(null, "Unary Expression"),
+    reducer2 = (function(argument, op) {
+        return ast_expression.UnaryExpression.create(SourceLocation.merge(op.loc, argument.loc), ast_value.UnaryOperator
+            .create(op.loc, op.value), argument);
+    }),
+    y38 = binds(enumeration(many(unaryOperator), ((y39 = expected.bind(null, "unary argument")), y39(
+        applicationExpression))), (function(ops, expression0) {
+        return always(foldr(reducer2, expression0, ops));
+    }));
+(unaryExpression = x32(y38));
 var createBinary = (function(loc, op, l, r) {
     return ast_expression.BinaryExpression.create(loc, ast_value.BinaryOperator.create(op.loc, op.value), l, r);
 }),
@@ -253,11 +286,11 @@ var createBinary = (function(loc, op, l, r) {
         "precedence": 9,
         "node": createBinary
     }), ({
-        "sep": prefixedOp("|>"),
+        "sep": prefixedOp("|>", "|>>"),
         "precedence": 10,
         "node": createBinary
     }), ({
-        "sep": prefixedOp("<|"),
+        "sep": prefixedOp("<|", "<<|"),
         "precedence": 10,
         "right": true,
         "node": createBinary
@@ -269,38 +302,40 @@ var createBinary = (function(loc, op, l, r) {
         "sep": prefixedOp("&&"),
         "precedence": 12,
         "node": createBinary
-    })];
-(binaryExpression = label("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
+    })],
+    x33 = label.bind(null, "Binary Expression"),
+    y40 = precedence(memo(unaryExpression), precedenceTable);
+(binaryExpression = x33(y40));
 (expression = binaryExpression);
-var x3;
-(leftHandReferenceExpression = label("Left Hand Reference Expression", either(operator, binds(enumeration(identifier,
-    many(memo(accessor))), ((x3 = foldl.bind(null, (function(p, c) {
-    return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p,
-        c.property, c.computed);
-}))), (function() {
-    var args0 = arguments;
-    return always(x3.apply(null, args0));
-}))))));
-var leftHandMemberReference = label("Left Hand Reference Expression", binds(enumeration(identifier, many1(memo(accessor))), (
-    (x4 = foldl.bind(null, (function(p, c) {
-        return ast_expression.MemberExpression.create(SourceLocation.merge(p.loc, c.loc), p, c.property,
-            c.computed);
-    }))), (function() {
+var y42, x35, x34 = label.bind(null, "Left Hand Reference Expression"),
+    y41 = either(operator, binds(enumeration(identifier, ((y42 = memo(accessor)), many(y42))), ((x35 = foldl.bind(null,
+        accessorReducer)), (function() {
         var args0 = arguments;
-        return always(x4.apply(null, args0));
+        return always(x35.apply(null, args0));
     }))));
-(assignmentExpression = label("Assignment Expression", rec((function(self) {
-    return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=", ":="))),
-        enumeration(expected("expression", either(self, expression)))), (function(loc, left, op,
-        right) {
-        return ast_expression.AssignmentExpression.create(loc, left, right, (op.value === ":="));
+(leftHandReferenceExpression = x34(y41));
+var leftHandMemberReference = ((x36 = label.bind(null, "Left Hand Reference Expression")), (y43 = binds(enumeration(
+    identifier, ((y44 = memo(accessor)), many1(y44))), ((x37 = foldl.bind(null, accessorReducer)), (
+    function() {
+        var args0 = arguments;
+        return always(x37.apply(null, args0));
+    })))), x36(y43)),
+    x38 = label.bind(null, "Assignment Expression"),
+    y45 = rec((function(self) {
+        var x39, y46;
+        return nodea(append(attempt(enumeration(leftHandReferenceExpression, punctuator("=", ":="))),
+            enumeration(((x39 = either(self, binaryExpression)), (y46 = expected.bind(null, "expression")),
+                y46(x39)))), (function(loc, left, op, right) {
+            return ast_expression.AssignmentExpression.create(loc, left, right, (op.value === ":="));
+        }));
     }));
-}))));
-var deleteExpression = label("Delete Expression", node(next(keyword("delete"), expected("reference expression",
-    leftHandMemberReference)), (function(loc, expression0) {
+(assignmentExpression = x38(y45));
+var deleteExpression = ((x39 = label.bind(null, "Delete Expression")), (y46 = node(next(keyword("delete"), ((y47 =
+    expected.bind(null, "reference expression")), y47(leftHandMemberReference))), (function(loc,
+    expression0) {
     return ast_expression.UnaryExpression.create(loc, "delete", expression0);
-})));
-(topLevelExpression = choice(deleteExpression, assignmentExpression, expression));
+}))), x39(y46));
+(topLevelExpression = choice(deleteExpression, assignmentExpression, binaryExpression));
 (exports["arrayLiteral"] = arrayLiteral);
 (exports["objectLiteral"] = objectLiteral);
 (exports["operatorExpression"] = operatorExpression);

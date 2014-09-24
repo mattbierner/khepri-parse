@@ -146,6 +146,6 @@ node := \p f ->
  */
 nodea := \p f ->
     node(p, \loc x ->
-        f.apply(undefined, stream.toArray <| stream.cons(loc, x)));
+        f <<| stream.toArray(stream.cons(loc, x)));
 
 }

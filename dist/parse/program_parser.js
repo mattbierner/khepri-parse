@@ -16,8 +16,11 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/program",
         khepriPackage = __o2["khepriPackage"],
         statement = __o3["statement"];
     (sourceElement = statement);
-    (sourceElements = eager(many(statement)));
-    (program = label("Program", node(then(either(khepriPackage, sourceElements), eof), ast_program.Program.create)));
+    var y = many(statement);
+    (sourceElements = eager(y));
+    var x = label.bind(null, "Program"),
+        y0 = node(then(either(khepriPackage, sourceElements), eof), ast_program.Program.create);
+    (program = x(y0));
     (exports["sourceElement"] = sourceElement);
     (exports["sourceElements"] = sourceElements);
     (exports["program"] = program);

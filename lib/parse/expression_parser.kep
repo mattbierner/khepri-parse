@@ -87,37 +87,37 @@ in {
 
 /* Circular Declarations 
  ******************************************************************************/
-var functionExpression = late\-> {
+var functionExpression := late \->
     with import './function_parser' {functionExpression} in {
         return functionExpression;
-    }
-};
+    };
+
 
 /* Forward Declarations
  ******************************************************************************/
-expression = late\-> { return expression; };
+expression = late \-> { return expression; };
 
-memberExpression = late\-> { return memberExpression; };
+memberExpression = late \-> { return memberExpression; };
 
-operatorExpression = late\-> { return operatorExpression; };
+operatorExpression = late \-> { return operatorExpression; };
 
-accessor = late\-> { return accessor; };
+accessor = late \-> { return accessor; };
 
-curryExpression = late\-> { return curryExpression; };
+curryExpression = late \-> { return curryExpression; };
 
 /* Components
  ******************************************************************************/
 // args
 ////////////////////////////////////////
-var args = label@'Arguments' <| let
-    arg = expression
+var args := label@'Arguments' <| let
+    arg := expression
 in
     node(
         between(punctuator '(', punctuator ')',
             eager <| sepBy(punctuator ',',
                 arg |> expected@"argument")),
         \loc x -> {
-            x.loc = loc;
+            x.loc := loc;
             return x;
         });
 
@@ -125,8 +125,8 @@ in
  ******************************************************************************/
 // Array Literal
 ////////////////////////////////////////
-arrayLiteral = label@'Array Literal' <| let
-    arrayElement = expression,
+arrayLiteral := label@'Array Literal' <| let
+    arrayElement := expression,
     
     arrayElements =
         sepBy(punctuator ',',
@@ -139,13 +139,13 @@ in
 
 // Object Literal
 ////////////////////////////////////////
-objectLiteral = label@'Object Literal' <| let
-    propertyName = choice(
+objectLiteral := label@'Object Literal' <| let
+    propertyName := choice(
         stringLiteral,
         numericLiteral,
         identifier),
     
-    propertyInitializer = label@'Property Initializer' <|
+    propertyInitializer := label@'Property Initializer' <|
         nodea(
             enumeration(
                 then(
@@ -165,7 +165,7 @@ in
 
 // Let Expression
 ////////////////////////////////////////
-var letBinding = label@'Let Binding' <|
+var letBinding := label@'Let Binding' <|
     nodea(
         enumeration(
             topLevelPattern |> expected@'pattern',
@@ -177,12 +177,12 @@ var letBinding = label@'Let Binding' <|
                 expr,
                 (rec.value === ':=')));
 
-letExpression = label@'Let Expression' <| let
+letExpression := label@'Let Expression' <| let
     letBindings =
         sepBy1(punctuator ',',
             letBinding),
     
-    letBody = expression
+    letBody := expression
 in
     nodea(
         next(
@@ -196,7 +196,7 @@ in
 
 // Conditional Expression
 ////////////////////////////////////////
-conditionalExpression = label@'Conditional Expression' <|
+conditionalExpression := label@'Conditional Expression' <|
     nodea(
         next(
             punctuator '?',
@@ -214,13 +214,13 @@ conditionalExpression = label@'Conditional Expression' <|
 
 // ArgumentList
 ////////////////////////////////////////
-var argumentList = label@'Argument List' <|
+var argumentList := label@'Argument List' <|
     either(
         attempt node(
             operatorExpression,
             \loc x -> {
-                var a = [x];
-                a.loc = loc;
+                var a := [x];
+                a.loc := loc;
                 return a;
             }),
         args);
@@ -230,8 +230,8 @@ var argumentList = label@'Argument List' <|
 /**
  * @TODO: code dup
  */
-var dotExpression = let
-    reducer = \p c ->
+var dotExpression := let
+    reducer := \p c ->
         ?c.hasOwnProperty('property')
             :ast_expression.MemberExpression.create(
                 ?p : SourceLocation.merge(p.loc, c.loc) : c.loc,
@@ -251,7 +251,7 @@ in
 
 // Operators Expression
 ////////////////////////////////////////
-var unaryOperatorExpression = label@'Unary Operator Expression' <|
+var unaryOperatorExpression := label@'Unary Operator Expression' <|
     choice(
         value.unaryOperator,
         
@@ -262,7 +262,7 @@ var unaryOperatorExpression = label@'Unary Operator Expression' <|
     .map \ op ->
         ast_expression.OperatorExpression.create(op.loc, op);
 
-var binaryOperatorExpression = label@'Binary Operator Expression' <|
+var binaryOperatorExpression := label@'Binary Operator Expression' <|
     nodea(
         cons(
             optional keyword('_'),
@@ -281,7 +281,7 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                         optional punctuator(','),
                         expression)))),
         \loc flipped op arg -> let
-            operator = ast_expression.OperatorExpression.create(loc,
+            operator := ast_expression.OperatorExpression.create(loc,
                 ast_value.BinaryOperator.create(loc, op.value),
                 flipped)
         in
@@ -291,13 +291,13 @@ var binaryOperatorExpression = label@'Binary Operator Expression' <|
                     [arg])
                 :operator);
 
-var ternayOperatorExpression = label@'Ternary Operator Expression' <|
+var ternayOperatorExpression := label@'Ternary Operator Expression' <|
     punctuator('?')
         .map \ {loc value} ->
             ast_expression.OperatorExpression.create(loc,
                 ast_value.TernaryOperator.create(loc, value));
 
-operatorExpression = label@'Operator Expression' <|
+operatorExpression := label@'Operator Expression' <|
     between(punctuator '(', punctuator ')',
         choice(
             unaryOperatorExpression,
@@ -307,7 +307,7 @@ operatorExpression = label@'Operator Expression' <|
 
 // Primary Expression
 ////////////////////////////////////////
-primaryExpression = label@'Primary Expression' <|
+primaryExpression := label@'Primary Expression' <|
     choice(
         letExpression,
         conditionalExpression,
@@ -325,12 +325,12 @@ primaryExpression = label@'Primary Expression' <|
 
 // Accessor
 ////////////////////////////////////////
-var accessorTarget = either(
+var accessorTarget := either(
     identifier.map \ x -> [x, false],
     between(punctuator '(', punctuator ')',
         expression |> expected@"accessor expression").map \x -> [x, true]);
 
-accessor = label@'Accessor' <|
+accessor := label@'Accessor' <|
     node(
         next(
             punctuator '.',
@@ -343,7 +343,7 @@ accessor = label@'Accessor' <|
 
 // New Expression
 ////////////////////////////////////////
-newExpression = label@'New Expression' <|
+newExpression := label@'New Expression' <|
     nodea(
         next(
             keyword 'new',
@@ -357,14 +357,14 @@ newExpression = label@'New Expression' <|
 
 // Member Expression
 ////////////////////////////////////////
-var accessorReducer = \p c -> 
+var accessorReducer := \p c -> 
     ast_expression.MemberExpression.create(
         SourceLocation.merge(p.loc, c.loc),
         p,
         c.property,
         c.computed);
 
-memberExpression = label@'Member Expression' <|
+memberExpression := label@'Member Expression' <|
     binds(
         enumeration(
             either(
@@ -375,8 +375,8 @@ memberExpression = label@'Member Expression' <|
 
 // Lefthand side Expression
 ////////////////////////////////////////
-var leftHandSideExpression = label@'Call Expression' <| let
-    reducer = \p c ->
+var leftHandSideExpression := label@'Call Expression' <| let
+    reducer := \p c ->
         ?c.hasOwnProperty('property')
             :ast_expression.MemberExpression.create(
                 SourceLocation.merge(p.loc, c.loc),
@@ -397,8 +397,8 @@ in
 
 // Curry Expression
 ////////////////////////////////////////
-curryExpression = label@'Curry Expression' <| let
-    reducer = \f args ->
+curryExpression := label@'Curry Expression' <| let
+    reducer := \f args ->
         ast_expression.CurryExpression.create(
             SourceLocation.merge(f.loc, args.loc),
             f,
@@ -417,7 +417,7 @@ in
 
 // Application Expression
 ////////////////////////////////////////
-applicationExpression = label@'Call Expression' <|
+applicationExpression := label@'Call Expression' <|
     chainl1(
         always \p c ->
             ast_expression.CallExpression.create(
@@ -433,8 +433,8 @@ unaryOperator := label@'Unary Operator' <|
         keyword('typeof', 'void'),
         tokenParser.unaryOperator);
 
-unaryExpression = label@'Unary Expression' <| let
-    reducer = \argument op -> 
+unaryExpression := label@'Unary Expression' <| let
+    reducer := \argument op -> 
         ast_expression.UnaryExpression.create(
             SourceLocation.merge(op.loc, argument.loc),
             ast_value.UnaryOperator.create(op.loc, op.value),
@@ -455,7 +455,7 @@ var createBinary := \loc op l r ->
         l,
         r);
 
-var precedenceTable = [
+var precedenceTable := [
     {
         'sep': prefixedOp '??',
         'precedence': 0,
@@ -509,7 +509,7 @@ var precedenceTable = [
         'precedence': 10,
         'node': createBinary
     }, {
-        'sep': prefixedOp('<|', '<<|')
+        'sep': prefixedOp('<|', '<<|'),
         'precedence': 10,
         'right': true,
         'node': createBinary
@@ -524,18 +524,18 @@ var precedenceTable = [
     }
 ];
 
-binaryExpression = label@'Binary Expression' <|
+binaryExpression := label@'Binary Expression' <|
     precedence(
         memo unaryExpression,
         precedenceTable);
 
 // Expression
 ////////////////////////////////////////
-expression = binaryExpression;
+expression := binaryExpression;
 
 // Left Hand Reference Expression
 ////////////////////////////////////////
-leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
+leftHandReferenceExpression := label@'Left Hand Reference Expression' <|
     either(
         operator,
         binds(
@@ -544,7 +544,7 @@ leftHandReferenceExpression = label@'Left Hand Reference Expression' <|
                 many <| memo accessor),
             foldl@accessorReducer \>> always));
 
-var leftHandMemberReference = label@'Left Hand Reference Expression' <|
+var leftHandMemberReference := label@'Left Hand Reference Expression' <|
     binds(
         enumeration(
             identifier,
@@ -553,7 +553,7 @@ var leftHandMemberReference = label@'Left Hand Reference Expression' <|
 
 // Assignment Expression
 ////////////////////////////////////////
-assignmentExpression = label@'Assignment Expression' <| rec\self ->
+assignmentExpression := label@'Assignment Expression' <| rec\self ->
     nodea(
         append(
             attempt enumeration(
@@ -566,7 +566,7 @@ assignmentExpression = label@'Assignment Expression' <| rec\self ->
 
 // Delete Expression
 ////////////////////////////////////////
-var deleteExpression = label@'Delete Expression' <|
+var deleteExpression := label@'Delete Expression' <|
     node(
         next(
             keyword 'delete',
@@ -576,7 +576,7 @@ var deleteExpression = label@'Delete Expression' <|
 
 // Top Level Expression
 ////////////////////////////////////////
-topLevelExpression = choice(
+topLevelExpression := choice(
     deleteExpression,
     assignmentExpression,
     expression);

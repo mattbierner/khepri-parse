@@ -34,7 +34,7 @@ var indexOf = Function.prototype.call.bind(Array.prototype.indexOf);
 var join = Function.prototype.call.bind(Array.prototype.join);
 
 var expectError = \msg ->
-    \pos, tok ->
+    \pos tok ->
         new ExpectError(pos, msg, ?tok : tok.value : "end of input");
 
 var typeParser = \type, msg ->
