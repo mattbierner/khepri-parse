@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.7.0 - Sep 30, 2014
+* Delete expressions parsed to `DeleteExpression` instead of `UnaryExpressions`.
+
 ## 2.6.0 - Sep 22, 2014
 * Added `<<|` and `|>>` ops.
 
