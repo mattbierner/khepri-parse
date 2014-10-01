@@ -331,10 +331,8 @@ var leftHandMemberReference = ((x36 = label.bind(null, "Left Hand Reference Expr
     }));
 (assignmentExpression = x38(y45));
 var deleteExpression = ((x39 = label.bind(null, "Delete Expression")), (y46 = node(next(keyword("delete"), ((y47 =
-    expected.bind(null, "reference expression")), y47(leftHandMemberReference))), (function(loc,
-    expression0) {
-    return ast_expression.UnaryExpression.create(loc, "delete", expression0);
-}))), x39(y46));
+        expected.bind(null, "reference expression")), y47(leftHandMemberReference))), ast_expression.DeleteExpression
+    .create)), x39(y46));
 (topLevelExpression = choice(deleteExpression, assignmentExpression, binaryExpression));
 (exports["arrayLiteral"] = arrayLiteral);
 (exports["objectLiteral"] = objectLiteral);

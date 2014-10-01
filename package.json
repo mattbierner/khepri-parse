@@ -35,7 +35,7 @@
     "dependencies": {
         "nu-stream": ">=3.2.0",
         "bennu": "17.2.x",
-        "khepri-ast": "4.7.x",
+        "khepri-ast": "4.8.x",
         
         "xregexp": "2.0.x",
         

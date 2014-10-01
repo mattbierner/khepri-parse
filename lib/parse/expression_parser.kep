@@ -571,8 +571,7 @@ var deleteExpression := label@'Delete Expression' <|
         next(
             keyword 'delete',
             leftHandMemberReference |> expected@'reference expression'),
-        \loc expression ->
-            ast_expression.UnaryExpression.create(loc, 'delete', expression));
+        ast_expression.DeleteExpression.create);
 
 // Top Level Expression
 ////////////////////////////////////////
