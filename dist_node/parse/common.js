@@ -28,11 +28,10 @@ var parse = require("bennu")["parse"],
         return cons(p, optional(NIL, next(sep, either(enumeration(end), self))));
     })));
 }));
-var x = sepEndWith,
-    y = optional.bind(null, NIL);
+var y = optional.bind(null, NIL);
 (sepEndWith0 = (function() {
     var args = arguments;
-    return y(x.apply(null, args));
+    return y(sepEndWith.apply(null, args));
 }));
 var pres = (function(list) {
     var stack = [],
@@ -65,7 +64,7 @@ var pres = (function(list) {
     return out.pop();
 });
 (precedence = (function(p, table) {
-    var x0 = parse.choicea,
+    var x = parse.choicea,
         y0 = table.map((function(entry) {
             return entry.sep.map((function(value) {
                 return ({
@@ -76,29 +75,29 @@ var pres = (function(list) {
                 });
             }));
         })),
-        sep = x0(y0);
+        sep = x(y0);
     return eager(parse.rec((function(self) {
         return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected("binary expression", self))));
     })))
         .map(pres);
 }));
-(positionParser = extract((function(x0) {
-    return x0.position.sourcePosition;
+(positionParser = extract((function(x) {
+    return x.position.sourcePosition;
 })));
-var prevEnd = extract((function(x0) {
-    return x0.position.prevEnd;
+var prevEnd = extract((function(x) {
+    return x.position.prevEnd;
 }));
 (node = (function(p, f) {
-    return binds(enumeration(positionParser, p, prevEnd), (function(o, x0, c) {
-        var y0 = f(new(SourceLocation)(o, c), x0);
+    return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
+        var y0 = f(new(SourceLocation)(o, c), x);
         return always(y0);
     }));
 }));
 (nodea = (function(p, f) {
-    return binds(enumeration(positionParser, p, prevEnd), (function(o, x0, c) {
+    return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
         var loc = new(SourceLocation)(o, c),
-            y0 = stream.toArray(stream.cons(loc, x0)),
-            y1 = x1.apply(null, y0);
+            y0 = stream.toArray(stream.cons(loc, x)),
+            y1 = f.apply(null, y0);
         return always(y1);
     }));
 }));
