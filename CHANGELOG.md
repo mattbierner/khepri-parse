@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.7.1 - December 2, 2014
+* Fixed xregexp path on systems with case sensitive file names. (Thanks @geluspeculum)
+
 ## 2.7.0 - Sep 30, 2014
 * Delete expressions parsed to `DeleteExpression` instead of `UnaryExpressions`.
 
