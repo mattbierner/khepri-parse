@@ -2,7 +2,7 @@
  * THIS FILE IS AUTO GENERATED FROM 'lib/lex/common.kep'
  * DO NOT EDIT
 */
-define(["require", "exports", "XRegExp", "bennu/parse", "nu-stream/stream"], (function(require, exports, XRP, __o, __o0) {
+define(["require", "exports", "xregexp", "bennu/parse", "nu-stream/stream"], (function(require, exports, XRP, __o, __o0) {
     "use strict";
     var join, match, map = __o["map"],
         token = __o["token"],

@@ -64,18 +64,16 @@ var pres = (function(list) {
     return out.pop();
 });
 (precedence = (function(p, table) {
-    var x = parse.choicea,
-        y0 = table.map((function(entry) {
-            return entry.sep.map((function(value) {
-                return ({
-                    value: value,
-                    node: entry.node,
-                    precedence: entry.precedence,
-                    right: entry.right
-                });
-            }));
-        })),
-        sep = x(y0);
+    var sep = parse.choicea(table.map((function(entry) {
+        return entry.sep.map((function(value) {
+            return ({
+                value: value,
+                node: entry.node,
+                precedence: entry.precedence,
+                right: entry.right
+            });
+        }));
+    })));
     return eager(parse.rec((function(self) {
         return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected("binary expression", self))));
     })))
@@ -89,16 +87,14 @@ var prevEnd = extract((function(x) {
 }));
 (node = (function(p, f) {
     return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
-        var y0 = f(new(SourceLocation)(o, c), x);
-        return always(y0);
+        return always(f(new(SourceLocation)(o, c), x));
     }));
 }));
 (nodea = (function(p, f) {
     return binds(enumeration(positionParser, p, prevEnd), (function(o, x, c) {
-        var loc = new(SourceLocation)(o, c),
-            y0 = stream.toArray(stream.cons(loc, x)),
-            y1 = f.apply(null, y0);
-        return always(y1);
+        var loc, y0;
+        return always(((loc = new(SourceLocation)(o, c)), (y0 = stream.toArray(stream.cons(loc, x))), f
+            .apply(null, y0)));
     }));
 }));
 (exports["sepEndWith1"] = sepEndWith1);

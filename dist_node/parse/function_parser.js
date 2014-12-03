@@ -34,7 +34,7 @@ var __o = require("bennu")["parse"],
     ellipsisPattern = __o4["ellipsisPattern"],
     unpack = __o4["unpack"],
     identifierPattern = __o4["identifierPattern"],
-    y, y0, blockStatement = late((function() {
+    blockStatement = late((function() {
         var __o5 = require("./statement_parser"),
             blockStatement0 = __o5["blockStatement"];
         return blockStatement0;
@@ -54,28 +54,24 @@ var __o = require("bennu")["parse"],
             expression0 = __o5["expression"];
         return expression0;
     })),
-    argumentElements = eager(listPattern0(((y = expected.bind(null, "pattern")), y(topLevelPattern)), ellipsisPattern, (
-        (y0 = expected.bind(null, "non-ellipsis pattern")), y0(topLevelPattern)))),
-    selfPattern = next(punctuator("="), unpack),
-    x = label.bind(null, "Argument List"),
-    y1 = nodea(enumeration(argumentElements, optional(selfPattern)), (function(loc, elements, self) {
-        return ast_pattern.ArgumentsPattern.create(loc, null, elements, self);
-    }));
-(argumentList = x(y1));
-var x0 = label.bind(null, "Named Argument List"),
-    elements = between(punctuator("("), punctuator(")"), argumentElements),
-    y2 = nodea(next(infixOperator("-"), enumeration(optional(identifierPattern), elements, optional(selfPattern))),
-        ast_pattern.ArgumentsPattern.create);
-(namedArgumentList = x0(y2));
-var x1 = label.bind(null, "Arguments Pattern"),
-    y3 = either(namedArgumentList, argumentList);
-(argumentsPattern = x1(y3));
-var y5, x2 = label.bind(null, "Function Expression"),
-    functionName = optional(next(keyword("function"), optional(identifier))),
-    functionBody = choice(blockStatement, withStatement, tryStatement, then(expression, optional(punctuator("§")))),
-    y4 = nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern), next(punctuator("->"), ((y5 =
-        expected.bind(null, "function body")), y5(functionBody)))), ast_expression.FunctionExpression.create);
-(functionExpression = x2(y4));
+    argumentElements = eager(listPattern0(expected("pattern", topLevelPattern), ellipsisPattern, expected(
+        "non-ellipsis pattern", topLevelPattern))),
+    selfPattern = next(punctuator("="), unpack);
+(argumentList = label("Argument List", nodea(enumeration(argumentElements, optional(selfPattern)), (function(loc,
+    elements, self) {
+    return ast_pattern.ArgumentsPattern.create(loc, null, elements, self);
+}))));
+var elements;
+(namedArgumentList = label("Named Argument List", ((elements = between(punctuator("("), punctuator(")"),
+    argumentElements)), nodea(next(infixOperator("-"), enumeration(optional(identifierPattern), elements,
+    optional(selfPattern))), ast_pattern.ArgumentsPattern.create))));
+(argumentsPattern = label("Arguments Pattern", either(namedArgumentList, argumentList)));
+var functionName, functionBody;
+(functionExpression = label("Function Expression", ((functionName = optional(next(keyword("function"), optional(
+    identifier)))), (functionBody = choice(blockStatement, withStatement, tryStatement, then(expression,
+    optional(punctuator("§"))))), nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern),
+        next(punctuator("->"), expected("function body", functionBody))), ast_expression.FunctionExpression
+    .create))));
 (exports["argumentList"] = argumentList);
 (exports["namedArgumentList"] = namedArgumentList);
 (exports["argumentsPattern"] = argumentsPattern);
