@@ -3,7 +3,7 @@
  * DO NOT EDIT
 */
 "use strict";
-var XRP = require("XRegExp"),
+var XRP = require("xregexp"),
     __o = require("bennu")["parse"],
     __o0 = require("nu-stream")["stream"],
     join, match, map = __o["map"],
