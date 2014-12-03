@@ -47,43 +47,37 @@ sepEndWith0 := sepEndWith \>> optional@NIL;
 
 /* 
  ******************************************************************************/
-var SepData := function \value metadata =self-> {
-    self.value = value;
-    self.metadata = metadata;
-};
-
 var pres := \list -> {
     var stack = [],
         out = [];
     
     while (list.length > 0) {
         var tok = list.shift();
-        if (tok instanceof SepData) {
+        if (tok.type) {
+            out.push(tok);
+        } else {
             while (stack.length > 0)
             with
                 o2 = stack.(stack.length - 1)
             in {
-                if ((!tok.metadata.right && o2.metadata.precedence === tok.metadata.precedence) ||
-                  (o2.metadata.precedence < tok.metadata.precedence)) {
+                if ((!tok.right && o2.precedence === tok.precedence) ||
+                  (o2.precedence < tok.precedence)) {
                     stack.pop();
                     with
                         rt = out.pop(),
                         lf = out.pop()
                     in {
-                        out.push(
-                            o2.metadata.node(
-                                SourceLocation.merge(lf.loc, rt.loc),
-                                o2.value,
-                                lf,
-                                rt));
+                        out.push(o2.node(
+                            SourceLocation.merge(lf.loc, rt.loc),
+                            o2.value,
+                            lf,
+                            rt));
                     }
                 } else {
                     break;
                 }
             }
             stack.push(tok);
-        } else {
-            out.push(tok);
         }
     }
     
@@ -93,35 +87,33 @@ var pres := \list -> {
         rt = out.pop(),
         lf = out.pop()
     in {
-        out.push(
-            o.metadata.node(
-                SourceLocation.merge(lf.loc, rt.loc),
-                o.value,
-                lf,
-                rt));
+        out.push(o.node(
+            SourceLocation.merge(lf.loc, rt.loc),
+            o.value,
+            lf,
+            rt));
     }
     return out.pop();
 };
 
 // Operator Precedence
 ////////////////////////////////////////
-precedence = \first p table -> let
+precedence = \p table -> let
     sep =
-        parse.choice <<|
+        parse.choicea <|
             table.map \ entry ->
-                entry.sep.map \ value ->
-                    new SepData(value, entry)
+                entry.sep.map \ value -> ({
+                    value: value,
+                    node: entry.node,
+                    precedence: entry.precedence,
+                    right: entry.right
+                })
 in
-    eager(
-        cons(first,
+    eager(parse.rec\self ->
+        parse.cons(p,
             optional(NIL,
-                cons(sep,
-                    parse.expected("binary expression",
-                        rec \ self ->
-                            parse.cons(p,
-                                optional(NIL,
-                                    parse.cons(sep,
-                                        parse.expected("binary expression", self)))))))))
+                parse.cons(sep,
+                    parse.expected("binary expression", self)))))
             .map(pres);
 
 // State Interaction

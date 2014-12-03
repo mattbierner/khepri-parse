@@ -32,56 +32,51 @@ define(["require", "exports", "bennu/parse", "nu-stream/stream", "khepri-ast/pos
         var args = arguments;
         return y(sepEndWith.apply(null, args));
     }));
-    var SepData = (function(value, metadata) {
-        var self = this;
-        (self.value = value);
-        (self.metadata = metadata);
-    }),
-        pres = (function(list) {
-            var stack = [],
-                out = [];
-            while ((list.length > 0)) {
-                var tok = list.shift();
-                if ((tok instanceof SepData)) {
-                    while ((stack.length > 0)) {
-                        var o2 = stack[(stack.length - 1)];
-                        if ((((!tok.metadata.right) && (o2.metadata.precedence === tok.metadata.precedence)) ||
-                            (o2.metadata.precedence < tok.metadata.precedence))) {
-                            stack.pop();
-                            var rt = out.pop(),
-                                lf = out.pop();
-                            out.push(o2.metadata.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf,
-                                rt));
-                        } else {
-                            break;
-                        }
+    var pres = (function(list) {
+        var stack = [],
+            out = [];
+        while ((list.length > 0)) {
+            var tok = list.shift();
+            if (tok.type) {
+                out.push(tok);
+            } else {
+                while ((stack.length > 0)) {
+                    var o2 = stack[(stack.length - 1)];
+                    if ((((!tok.right) && (o2.precedence === tok.precedence)) || (o2.precedence < tok.precedence))) {
+                        stack.pop();
+                        var rt = out.pop(),
+                            lf = out.pop();
+                        out.push(o2.node(SourceLocation.merge(lf.loc, rt.loc), o2.value, lf, rt));
+                    } else {
+                        break;
                     }
-                    stack.push(tok);
-                } else {
-                    out.push(tok);
                 }
+                stack.push(tok);
             }
-            while ((stack.length > 0)) {
-                var o = stack.pop(),
-                    rt0 = out.pop(),
-                    lf0 = out.pop();
-                out.push(o.metadata.node(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
-            }
-            return out.pop();
-        });
-    (precedence = (function(first, p, table) {
-        var x = parse.choice,
-            y0 = table.map((function(entry) {
-                return entry.sep.map((function(value) {
-                    return new(SepData)(value, entry);
-                }));
-            })),
-            sep = x.apply(null, y0);
-        return eager(cons(first, optional(NIL, cons(sep, parse.expected("binary expression", rec((
-            function(self) {
-                return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected(
-                    "binary expression", self))));
-            })))))))
+        }
+        while ((stack.length > 0)) {
+            var o = stack.pop(),
+                rt0 = out.pop(),
+                lf0 = out.pop();
+            out.push(o.node(SourceLocation.merge(lf0.loc, rt0.loc), o.value, lf0, rt0));
+        }
+        return out.pop();
+    });
+    (precedence = (function(p, table) {
+        var sep = parse.choicea(table.map((function(entry) {
+            return entry.sep.map((function(value) {
+                return ({
+                    value: value,
+                    node: entry.node,
+                    precedence: entry.precedence,
+                    right: entry.right
+                });
+            }));
+        })));
+        return eager(parse.rec((function(self) {
+            return parse.cons(p, optional(NIL, parse.cons(sep, parse.expected(
+                "binary expression", self))));
+        })))
             .map(pres);
     }));
     (positionParser = extract((function(x) {

@@ -27,7 +27,7 @@ package (
     
 // Conditional Expression
     conditionalExpression
-    git st
+    
 // Assignment
     leftHandReferenceExpression
     assignmentExpression
@@ -114,7 +114,7 @@ var args := label@'Arguments' <| let
 in
     node(
         between(punctuator '(', punctuator ')',
-            eager sepBy(punctuator ',',
+            eager <| sepBy(punctuator ',',
                 arg |> expected@"argument")),
         \loc x -> {
             x.loc := loc;
@@ -524,30 +524,9 @@ var precedenceTable := [
     }
 ];
 
-var args1 := label@'Arguments' <| let
-    arg := expression
-in
-    either(
-        attempt operatorExpression,
-        node(
-            between(punctuator '(', punctuator ')',
-                eager sepBy1(punctuator ',',
-                    arg |> expected@"argument")),
-            \loc x -> {
-                if (x.length == 1) // for single argument (normal ecmascript style)
-                    return x.(0); // return the argument itself.
-                else {
-                    x.loc := loc;
-                    return x;
-                }
-            }));
-
-binaryExpression := label@'Binary Expression' <| let
-    expr = memo unaryExpression
-in
+binaryExpression := label@'Binary Expression' <|
     precedence(
-        expr,
-        memo either(args1, expr),
+        memo unaryExpression,
         precedenceTable);
 
 // Expression

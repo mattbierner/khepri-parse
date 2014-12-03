@@ -1,10 +1,5 @@
 # ChangeLog #
 
-## 2.8.0 - December 2, 2014
-* Extended support for curry style spread call convention `a@(b, c)` to all binary
-  operators.
-** `1+(2, 3, 4)` results in `(((1 + 2) + 3) + 4)`
-
 ## 2.7.1 - December 2, 2014
 * Fixed xregexp path on systems with case sensitive file names. (Thanks @geluspeculum)
 
