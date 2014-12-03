@@ -8,7 +8,7 @@ requirejs.config({
         'nu-stream': 'dependencies/nu/dist',
         'seshet': 'dependencies/seshet/dist/seshet',
         
-        'XRegExp': 'dependencies/XRegExp/xregexp-all',
+        'xregexp': 'dependencies/XRegExp/xregexp-all',
 
         'khepri-ast': 'dependencies/khepri-ast/dist',
     }
