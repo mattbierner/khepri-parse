@@ -17,8 +17,8 @@ var __o = require("bennu")["parse"],
     _ = require("./function_parser"),
     arrayLiteral, objectLiteral, operatorExpression, letExpression, primaryExpression, accessor, memberExpression,
         newExpression, curryExpression, applicationExpression, unaryOperator, unaryExpression, binaryExpression,
-        conditionalExpression, leftHandReferenceExpression, assignmentExpression, expression, topLevelExpression,
-        always = __o["always"],
+        conditionalExpression, git, st, leftHandReferenceExpression, assignmentExpression, expression,
+        topLevelExpression, always = __o["always"],
     append = __o["append"],
     attempt = __o["attempt"],
     bind = __o["bind"],
@@ -57,7 +57,7 @@ var __o = require("bennu")["parse"],
     stringLiteral = value["stringLiteral"],
     numericLiteral = value["numericLiteral"],
     topLevelPattern = __o4["topLevelPattern"],
-    arg, reducer, x, reducer0, x1, x4, functionExpression = late((function() {
+    arg, reducer, x, reducer0, x1, arg0, x4, functionExpression = late((function() {
         var __o5 = require("./function_parser"),
             functionExpression0 = __o5["functionExpression"];
         return functionExpression0;
@@ -269,8 +269,18 @@ var createBinary = (function(loc, op, l, r) {
         "sep": prefixedOp("&&"),
         "precedence": 12,
         "node": createBinary
-    })];
-(binaryExpression = label("Binary Expression", precedence(memo(unaryExpression), precedenceTable)));
+    })],
+    args1 = label("Arguments", ((arg0 = expression), either(attempt(operatorExpression), node(between(punctuator("("),
+        punctuator(")"), eager(sepBy1(punctuator(","), expected("argument", arg0)))), (function(loc, x3) {
+        if ((x3.length == 1)) return x3[0];
+        else {
+            (x3.loc = loc);
+            return x3;
+        }
+    }))))),
+    expr;
+(binaryExpression = label("Binary Expression", ((expr = memo(unaryExpression)), precedence(expr, memo(either(args1,
+    expr)), precedenceTable))));
 (expression = binaryExpression);
 var x3;
 (leftHandReferenceExpression = label("Left Hand Reference Expression", either(operator, binds(enumeration(identifier,
@@ -307,6 +317,8 @@ var deleteExpression = label("Delete Expression", node(next(keyword("delete"), e
 (exports["unaryExpression"] = unaryExpression);
 (exports["binaryExpression"] = binaryExpression);
 (exports["conditionalExpression"] = conditionalExpression);
+(exports["git"] = git);
+(exports["st"] = st);
 (exports["leftHandReferenceExpression"] = leftHandReferenceExpression);
 (exports["assignmentExpression"] = assignmentExpression);
 (exports["expression"] = expression);
