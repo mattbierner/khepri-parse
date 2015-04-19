@@ -1,5 +1,8 @@
 # ChangeLog #
 
+## 2.7.2 - April 19, 2015
+* Fixed object pattern operator key.
+
 ## 2.7.1 - December 2, 2014
 * Fixed xregexp path on systems with case sensitive file names. (Thanks @geluspeculum)
 

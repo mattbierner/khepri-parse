@@ -61,6 +61,20 @@ exports.alias_string_key = function(test) {
     test.done();
 };
 
+exports.operator_key = function(test) {
+    var result = testParser(lexer.lex("let {(+|+)} = {} in a;"));
+    
+    test.equal(result.type, 'ObjectPattern');
+    test.equal(result.elements.length, 1);
+    test.equal(result.checked, false);
+
+    test.equal(result.elements[0].type, 'ObjectPatternElement');
+    test.equal(result.elements[0].key.type, 'IdentifierPattern');
+    test.equal(result.elements[0].key.id.name, '+|+');
+
+    test.done();
+};
+
 exports.multi = function(test) {
     var result = testParser(lexer.lex("let {a b c} = [] in a;"));
     

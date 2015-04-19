@@ -73,7 +73,7 @@ var element;
         return ast_pattern.ArrayPattern.create(loc, elements, checked);
     })))));
 (objectPatternElement = either(nodea(enumeration(stringLiteral, next(punctuator(":", "#"), unpack)), ast_pattern.ObjectPatternElement
-    .create), node(either(asPattern, identifierPattern), ast_pattern.ObjectPatternElement.create)));
+    .create), node(choice(asPattern, operatorPattern, identifierPattern), ast_pattern.ObjectPatternElement.create)));
 (objectPattern = label("Object Pattern", nodea(enumeration(optional(false, punctuator("?")), between(punctuator("{"),
     punctuator("}"), eager(sepBy1(sep, expected("object pattern element", objectPatternElement))))), (
     function(loc, checked, elements) {

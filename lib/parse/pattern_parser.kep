@@ -138,8 +138,9 @@ objectPatternElement = either(
                 unpack)),
         ast_pattern.ObjectPatternElement.create),
     node(
-        either(
+        choice( 
             asPattern,
+            operatorPattern,
             identifierPattern),
         ast_pattern.ObjectPatternElement.create));
 
