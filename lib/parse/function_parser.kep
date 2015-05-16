@@ -123,9 +123,7 @@ functionExpression = label@'Function Expression' <| let
             blockStatement,
             withStatement,
             tryStatement,
-            then(
-                expression,
-                optional (punctuator '§')))
+            expression)
 in
     nodea(
         enumeration(

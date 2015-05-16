@@ -39,11 +39,11 @@ var punctuators := [
     '?',
     '=', ':=', '=:',
     '@',
-    '...', '#',
-    '\\', '->', '§',
+    '..', '...', '#',
+    '\\', '->',
     '-|', '|-'];
 
-punctuator = label @ 'Punctuator Lexer' <|
+punctuator := label @ 'Punctuator Lexer' <|
     trie punctuators;
 
 /* Prefix Operator
@@ -57,7 +57,7 @@ prefixOperator := label @ 'Prefix Operator Lexer' <|
 
 /* Infix Operator
  ******************************************************************************/
-infixOperator = label @ 'Infix Operator Lexer' <|
+infixOperator := label @ 'Infix Operator Lexer' <|
     next(
         not next(
             trie ['->', '-|', '|-'],
@@ -76,7 +76,7 @@ infixOperator = label @ 'Infix Operator Lexer' <|
 
 /* Operator
  ******************************************************************************/
-operator = label @ 'Operator Lexer' <|
+operator := label @ 'Operator Lexer' <|
     either(
         prefixOperator,
         infixOperator);

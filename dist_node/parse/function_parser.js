@@ -23,7 +23,6 @@ var __o = require("bennu")["parse"],
     late = __o["late"],
     label = __o["label"],
     between = __o0["between"],
-    then = __o0["then"],
     nodea = __o1["nodea"],
     keyword = __o2["keyword"],
     punctuator = __o2["punctuator"],
@@ -68,10 +67,9 @@ var elements;
 (argumentsPattern = label("Arguments Pattern", either(namedArgumentList, argumentList)));
 var functionName, functionBody;
 (functionExpression = label("Function Expression", ((functionName = optional(next(keyword("function"), optional(
-    identifier)))), (functionBody = choice(blockStatement, withStatement, tryStatement, then(expression,
-    optional(punctuator("§"))))), nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern),
-        next(punctuator("->"), expected("function body", functionBody))), ast_expression.FunctionExpression
-    .create))));
+    identifier)))), (functionBody = choice(blockStatement, withStatement, tryStatement, expression)), nodea(
+    enumeration(functionName, next(punctuator("\\"), argumentsPattern), next(punctuator("->"), expected(
+        "function body", functionBody))), ast_expression.FunctionExpression.create))));
 (exports["argumentList"] = argumentList);
 (exports["namedArgumentList"] = namedArgumentList);
 (exports["argumentsPattern"] = argumentsPattern);

@@ -33,3 +33,22 @@ exports.init_values = function(test) {
     
     test.done();
 };
+
+
+exports.init_values = function(test) {
+    var result = testParser(lexer.lex("({ catch: 0 , true: 1, null: 2});"));
+    test.equal(result.properties.length, 3);
+    test.equal(result.properties[0].type, 'ObjectValue');
+    $.id(test, result.properties[0].key, 'catch');
+    $.number(test, result.properties[0].value, 0);
+    
+    test.equal(result.properties[1].type, 'ObjectValue');
+    $.id(test, result.properties[1].key, 'true');
+    $.number(test, result.properties[1].value, 1);
+    
+    test.equal(result.properties[2].type, 'ObjectValue');
+    $.id(test, result.properties[2].key, 'null');
+    $.number(test, result.properties[2].value, 2);
+    
+    test.done();
+};

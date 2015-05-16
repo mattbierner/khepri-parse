@@ -7,8 +7,8 @@ var __o = require("bennu")["parse"],
     __o0 = require("bennu")["lang"],
     ast_value = require("khepri-ast")["value"],
     token = require("./token_parser"),
-    literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, identifier, operator,
-        unaryOperator, binaryOperator, symbol, choice = __o["choice"],
+    literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral, identifier,
+        identifierOrKeyword, operator, unaryOperator, binaryOperator, symbol, choice = __o["choice"],
     either = __o["either"],
     label = __o["label"],
     between = __o0["between"],
@@ -37,6 +37,11 @@ var p3;
 (identifier = label("Identifier", token.anyIdentifier.map((function(x) {
     return ast_value.Identifier.create(x.loc, x.value);
 }))));
+(identifierOrKeyword = label("IdentifierOrKeyword", choice(token.anyIdentifier, token.anyKeyword, token.nullLiteral,
+        token.booleanLiteral)
+    .map((function(x) {
+        return ast_value.Identifier.create(x.loc, (x.value + ""));
+    }))));
 (unaryOperator = label("Unary Operator", token.unaryOperator.map((function(x) {
     return ast_value.UnaryOperator.create(x.loc, x.value);
 }))));
@@ -52,6 +57,7 @@ var p3;
 (exports["stringLiteral"] = stringLiteral);
 (exports["regularExpressionLiteral"] = regularExpressionLiteral);
 (exports["identifier"] = identifier);
+(exports["identifierOrKeyword"] = identifierOrKeyword);
 (exports["operator"] = operator);
 (exports["unaryOperator"] = unaryOperator);
 (exports["binaryOperator"] = binaryOperator);

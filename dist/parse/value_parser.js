@@ -6,7 +6,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
     exports, __o, __o0, ast_value, token) {
     "use strict";
     var literal, nullLiteral, booleanLiteral, numericLiteral, stringLiteral, regularExpressionLiteral,
-            identifier, operator, unaryOperator, binaryOperator, symbol, choice = __o["choice"],
+            identifier, identifierOrKeyword, operator, unaryOperator, binaryOperator, symbol, choice = __o[
+                "choice"],
         either = __o["either"],
         label = __o["label"],
         between = __o0["between"],
@@ -36,6 +37,11 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
     (identifier = label("Identifier", token.anyIdentifier.map((function(x) {
         return ast_value.Identifier.create(x.loc, x.value);
     }))));
+    (identifierOrKeyword = label("IdentifierOrKeyword", choice(token.anyIdentifier, token.anyKeyword, token.nullLiteral,
+            token.booleanLiteral)
+        .map((function(x) {
+            return ast_value.Identifier.create(x.loc, (x.value + ""));
+        }))));
     (unaryOperator = label("Unary Operator", token.unaryOperator.map((function(x) {
         return ast_value.UnaryOperator.create(x.loc, x.value);
     }))));
@@ -51,6 +57,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/value", "
     (exports["stringLiteral"] = stringLiteral);
     (exports["regularExpressionLiteral"] = regularExpressionLiteral);
     (exports["identifier"] = identifier);
+    (exports["identifierOrKeyword"] = identifierOrKeyword);
     (exports["operator"] = operator);
     (exports["unaryOperator"] = unaryOperator);
     (exports["binaryOperator"] = binaryOperator);

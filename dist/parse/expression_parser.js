@@ -45,6 +45,7 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         punctuator = tokenParser["punctuator"],
         prefixedOp = tokenParser["prefixedOp"],
         identifier = value["identifier"],
+        identifierOrKeyword = value["identifierOrKeyword"],
         literal = value["literal"],
         operator = value["operator"],
         stringLiteral = value["stringLiteral"],
@@ -55,6 +56,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
                 functionExpression0 = __o5["functionExpression"];
             return functionExpression0;
         }));
+    (expression = late((function() {
+        return expression;
+    })));
     (expression = late((function() {
         return expression;
     })));
@@ -80,12 +84,12 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         expected("array element", arrayElement))), node(between(punctuator("["), punctuator("]"),
         eager(arrayElements)), ast_expression.ArrayExpression.create))));
     var propertyName, propertyInitializer, objectProperties;
-    (objectLiteral = label("Object Literal", ((propertyName = choice(stringLiteral, numericLiteral, identifier)), (
-        propertyInitializer = label("Property Initializer", nodea(enumeration(then(propertyName,
-            punctuator(":")), expression), ast_value.ObjectValue.create))), (objectProperties =
-        sepBy(punctuator(","), expected("object property", propertyInitializer))), node(between(
-            punctuator("{"), punctuator("}"), eager(objectProperties)), ast_expression.ObjectExpression
-        .create))));
+    (objectLiteral = label("Object Literal", ((propertyName = choice(stringLiteral, numericLiteral,
+        identifierOrKeyword)), (propertyInitializer = label("Property Initializer", nodea(
+        enumeration(then(propertyName, punctuator(":")), expression), ast_value.ObjectValue
+        .create))), (objectProperties = sepBy(punctuator(","), expected("object property",
+        propertyInitializer))), node(between(punctuator("{"), punctuator("}"), eager(
+        objectProperties)), ast_expression.ObjectExpression.create))));
     var letBinding = label("Let Binding", nodea(enumeration(expected("pattern", topLevelPattern), punctuator(
         "=", "=:", ":="), expected("bound value", expression)), (function(loc, pattern, rec0, expr) {
         return ast_declaration.Binding.create(loc, pattern, expr, (rec0.value === ":="));
@@ -147,21 +151,22 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
         dotExpression.map((function(expr) {
             return ast_expression.OperatorExpression.create(expr.loc, expr);
         })), between(punctuator("("), punctuator(")"), expected("expression", expression)))));
-    var accessorTarget = either(identifier.map((function(x0) {
+    var accessorTarget = either(identifierOrKeyword.map((function(x0) {
             return [x0, false];
         })), between(punctuator("("), punctuator(")"), expected("accessor expression", expression))
         .map((function(x0) {
             return [x0, true];
         })));
-    (accessor = label("Accessor", node(next(punctuator("."), accessorTarget), (function(loc, __o5) {
-        var x0 = __o5[0],
-            computed = __o5[1];
-        return ({
-            "loc": loc,
-            "property": x0,
-            "computed": computed
-        });
-    }))));
+    (accessor = label("Accessor", next(punctuator("."), accessorTarget)
+        .map((function(__o5) {
+            var x0 = __o5[0],
+                computed = __o5[1];
+            return ({
+                "loc": x0.loc,
+                "property": x0,
+                "computed": computed
+            });
+        }))));
     (newExpression = label("New Expression", nodea(next(keyword("new"), enumeration(expected("new object",
         memberExpression), expected("argument list", either(args, eager(enumeration(
         curryExpression)))))), ast_expression.NewExpression.create)));
@@ -176,8 +181,8 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "nu-stream/stream", "
     })))));
     var leftHandSideExpression = label("Call Expression", ((reducer0 = (function(p, c) {
         return (c.hasOwnProperty("property") ? ast_expression.MemberExpression.create(
-                SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed, c.checked) :
-            ast_expression.CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
+                SourceLocation.merge(p.loc, c.loc), p, c.property, c.computed) : ast_expression
+            .CallExpression.create(SourceLocation.merge(p.loc, c.loc), p, c));
     })), binds(enumeration(memberExpression, many(either(argumentList, accessor))), ((x1 = foldl.bind(
         null, reducer0)), (function() {
         var args0 = arguments;

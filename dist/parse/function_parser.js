@@ -16,7 +16,6 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/expressio
         late = __o["late"],
         label = __o["label"],
         between = __o0["between"],
-        then = __o0["then"],
         nodea = __o1["nodea"],
         keyword = __o2["keyword"],
         punctuator = __o2["punctuator"],
@@ -62,9 +61,9 @@ define(["require", "exports", "bennu/parse", "bennu/lang", "khepri-ast/expressio
     var functionName, functionBody;
     (functionExpression = label("Function Expression", ((functionName = optional(next(keyword("function"),
         optional(identifier)))), (functionBody = choice(blockStatement, withStatement, tryStatement,
-        then(expression, optional(punctuator("§"))))), nodea(enumeration(functionName, next(
-        punctuator("\\"), argumentsPattern), next(punctuator("->"), expected(
-        "function body", functionBody))), ast_expression.FunctionExpression.create))));
+        expression)), nodea(enumeration(functionName, next(punctuator("\\"), argumentsPattern),
+            next(punctuator("->"), expected("function body", functionBody))), ast_expression.FunctionExpression
+        .create))));
     (exports["argumentList"] = argumentList);
     (exports["namedArgumentList"] = namedArgumentList);
     (exports["argumentsPattern"] = argumentsPattern);

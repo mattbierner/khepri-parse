@@ -1,5 +1,12 @@
 # ChangeLog #
 
+## 2.8.0 - May 15, 2015
+* Allow keywords to be used as dot expression values.
+** `x.catch(...)`.
+* Allow keywords to be used as object literal properties.
+** `{ catch: 3 }`.
+* Removed old delimited lambda logic.
+
 ## 2.7.2 - April 19, 2015
 * Fixed object pattern operator key.
 

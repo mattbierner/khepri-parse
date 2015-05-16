@@ -22,6 +22,15 @@ exports.dot_accessor = function(test) {
     test.done();
 };
 
+exports.keyword_value = function(test) {
+    validateSimpleMemberExpression(test, testParser(lexer.lex("a.catch;")), 'a', 'catch', false);
+    validateSimpleMemberExpression(test, testParser(lexer.lex("a.null;")), 'a', 'null', false);
+    validateSimpleMemberExpression(test, testParser(lexer.lex("a.true;")), 'a', 'true', false);
+    validateSimpleMemberExpression(test, testParser(lexer.lex("a.false;")), 'a', 'false', false);
+
+    test.done();
+};
+
 exports.dot_accessor_associativity = function(test) {
     var expr = testParser(lexer.lex("a.b.c;"));
     test.equal(expr.type, 'MemberExpression');

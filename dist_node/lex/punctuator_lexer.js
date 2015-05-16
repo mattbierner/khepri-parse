@@ -21,8 +21,8 @@ var __o = require("bennu")["parse"],
     then = __o1["then"],
     join = __o2["join"],
     operatorChar = oneOf("?+-*/%|&^<>=!~@"),
-    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#", "\\", "->",
-        "§", "-|", "|-"
+    punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "..", "...", "#", "\\",
+        "->", "-|", "|-"
     ];
 (punctuator = label("Punctuator Lexer", trie(punctuators)));
 (prefixOperator = label("Prefix Operator Lexer", eager(enumeration(either(trie(["~", "++", "--"]), attempt(then(

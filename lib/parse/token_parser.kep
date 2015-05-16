@@ -8,6 +8,7 @@ package (
     anyOperator
     
     keyword
+    anyKeyword
     identifier
     anyIdentifier
     
@@ -29,20 +30,20 @@ with
         token}
 in {
 
-var indexOf = Function.prototype.call.bind(Array.prototype.indexOf);
+var indexOf := Function.prototype.call.bind(Array.prototype.indexOf);
 
-var join = Function.prototype.call.bind(Array.prototype.join);
+var join := Function.prototype.call.bind(Array.prototype.join);
 
-var expectError = \msg ->
+var expectError := \msg ->
     \pos tok ->
         new ExpectError(pos, msg, ?tok : tok.value : "end of input");
 
-var typeParser = \type, msg ->
+var typeParser := \type, msg ->
     token(
         \tok -> (tok.type === type),
-        expectError(msg));
+        expectError msg);
 
-var selectAny = \type ->
+var selectAny := \type ->
     \-options(...)->
         token(
             \tok -> (tok.type === type && indexOf(options, tok.value) >= 0),
@@ -50,29 +51,23 @@ var selectAny = \type ->
 
 /* Parsers
  ******************************************************************************/
-punctuator = selectAny 'Punctuator';
+punctuator := selectAny 'Punctuator';
+anyPunctuator := typeParser@'Punctuator' 'any punctuator';
 
-anyPunctuator = typeParser('Punctuator', 'any punctuator');
+operator := selectAny 'Operator';
+anyOperator := typeParser@'Operator' 'any operator';
 
-operator = selectAny 'Operator';
+keyword := selectAny 'Keyword';
+anyKeyword := typeParser@'Keyword' 'any keyword';
 
-anyOperator  = typeParser('Operator', 'any operator');
+identifier := selectAny 'Identifier';
+anyIdentifier := typeParser@'Identifier' 'any identifier';
 
-keyword = selectAny 'Keyword';
-
-anyIdentifier = typeParser('Identifier', 'any identifier');
-
-identifier = selectAny 'Identifier';
-
-nullLiteral = typeParser('Null', 'Null literal');
-
-booleanLiteral = typeParser('Boolean', 'boolean literal');
-
-numericLiteral = typeParser('Number', 'numeric literal');
-
-stringLiteral = typeParser('String', 'string literal');
-
-regularExpressionLiteral = typeParser('RegularExpression', 'regular expression literal');
+nullLiteral := typeParser@'Null' 'Null literal';
+booleanLiteral := typeParser@'Boolean' 'boolean literal';
+numericLiteral := typeParser@'Number' 'numeric literal';
+stringLiteral := typeParser@'String' 'string literal';
+regularExpressionLiteral := typeParser@'RegularExpression' 'regular expression literal';
 
 /* Parsers
  ******************************************************************************/

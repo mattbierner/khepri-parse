@@ -19,8 +19,8 @@ define(["require", "exports", "bennu/parse", "bennu/text", "bennu/lang", "./comm
         then = __o1["then"],
         join = __o2["join"],
         operatorChar = oneOf("?+-*/%|&^<>=!~@"),
-        punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "...", "#",
-            "\\", "->", "§", "-|", "|-"
+        punctuators = ["{", "}", "(", ")", "[", "]", ",", ".", ";", ":", "?", "=", ":=", "=:", "@", "..", "...",
+            "#", "\\", "->", "-|", "|-"
         ];
     (punctuator = label("Punctuator Lexer", trie(punctuators)));
     (prefixOperator = label("Prefix Operator Lexer", eager(enumeration(either(trie(["~", "++", "--"]), attempt(

@@ -77,6 +77,7 @@ with
         prefixedOp},
     import './value_parser' value#{
         identifier
+        identifierOrKeyword
         literal
         operator
         stringLiteral
@@ -92,9 +93,10 @@ var functionExpression := late \->
         return functionExpression;
     };
 
-
 /* Forward Declarations
  ******************************************************************************/
+expression = late \-> { return expression; };
+
 expression = late \-> { return expression; };
 
 memberExpression = late \-> { return memberExpression; };
@@ -143,7 +145,7 @@ objectLiteral := label@'Object Literal' <| let
     propertyName := choice(
         stringLiteral,
         numericLiteral,
-        identifier),
+        identifierOrKeyword),
     
     propertyInitializer := label@'Property Initializer' <|
         nodea(
@@ -182,7 +184,7 @@ letExpression := label@'Let Expression' <| let
         sepBy1(punctuator ',',
             letBinding),
     
-    letBody := expression
+    letBody = expression
 in
     nodea(
         next(
@@ -216,13 +218,11 @@ conditionalExpression := label@'Conditional Expression' <|
 ////////////////////////////////////////
 var argumentList := label@'Argument List' <|
     either(
-        attempt node(
-            operatorExpression,
-            \loc x -> {
-                var a := [x];
-                a.loc := loc;
-                return a;
-            }),
+        attempt node(operatorExpression, \loc x -> {
+            var a := [x];
+            a.loc := loc;
+            return a;
+        }),
         args);
 
 // Dot Expression
@@ -281,7 +281,7 @@ var binaryOperatorExpression := label@'Binary Operator Expression' <|
                         optional punctuator(','),
                         expression)))),
         \loc flipped op arg -> let
-            operator := ast_expression.OperatorExpression.create(loc,
+            operator = ast_expression.OperatorExpression.create(loc,
                 ast_value.BinaryOperator.create(loc, op.value),
                 flipped)
         in
@@ -326,20 +326,19 @@ primaryExpression := label@'Primary Expression' <|
 // Accessor
 ////////////////////////////////////////
 var accessorTarget := either(
-    identifier.map \ x -> [x, false],
+    identifierOrKeyword.map \ x -> [x, false],
     between(punctuator '(', punctuator ')',
         expression |> expected@"accessor expression").map \x -> [x, true]);
 
 accessor := label@'Accessor' <|
-    node(
-        next(
-            punctuator '.',
-            accessorTarget),
-        \loc [x computed] -> ({
-            'loc': loc,
-            'property': x,
-            'computed': computed
-        }));
+    next(
+        punctuator '.',
+        accessorTarget)
+    .map \ [x computed] -> ({
+        'loc': x.loc,
+        'property': x,
+        'computed': computed
+    });
 
 // New Expression
 ////////////////////////////////////////
@@ -376,14 +375,13 @@ memberExpression := label@'Member Expression' <|
 // Lefthand side Expression
 ////////////////////////////////////////
 var leftHandSideExpression := label@'Call Expression' <| let
-    reducer := \p c ->
+    reducer = \p c ->
         ?c.hasOwnProperty('property')
             :ast_expression.MemberExpression.create(
                 SourceLocation.merge(p.loc, c.loc),
                 p,
                 c.property,
-                c.computed,
-                c.checked)
+                c.computed)
             :ast_expression.CallExpression.create(
                 SourceLocation.merge(p.loc, c.loc),
                 p,
@@ -398,7 +396,7 @@ in
 // Curry Expression
 ////////////////////////////////////////
 curryExpression := label@'Curry Expression' <| let
-    reducer := \f args ->
+    reducer = \f args ->
         ast_expression.CurryExpression.create(
             SourceLocation.merge(f.loc, args.loc),
             f,
@@ -460,8 +458,7 @@ var precedenceTable := [
         'sep': prefixedOp '??',
         'precedence': 0,
         'node': createBinary
-    },
-    {
+    }, {
         'sep': prefixedOp('*', '/', '%'),
         'precedence': 1,
         'node': createBinary
@@ -521,17 +518,12 @@ var precedenceTable := [
         'sep': prefixedOp '&&',
         'precedence': 12,
         'node': createBinary
-    }
-];
+    }];
 
-binaryExpression := label@'Binary Expression' <|
+expression := binaryExpression := label@'Binary Expression' <|
     precedence(
         memo unaryExpression,
         precedenceTable);
-
-// Expression
-////////////////////////////////////////
-expression := binaryExpression;
 
 // Left Hand Reference Expression
 ////////////////////////////////////////
